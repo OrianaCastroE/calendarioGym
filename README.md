@@ -1,1 +1,11 @@
 # 251525-251809-286049
+
+## Main
+
+![Build - Test - Main](https://github.com/IngSoft-DA2/251525-251809-286049.git/actions/workflows/build-test.yml/badge.svg?branch=main&event=push)
+![Code Analysis - Main](https://github.com/IngSoft-DA2/251525-251809-286049.git/actions/workflows/code-analysis.yml/badge.svg?branch=main&event=push)
+
+## Develop
+
+![Build - Test - Develop](https://github.com/IngSoft-DA2/251525-251809-286049.git/actions/workflows/build-test.yml/badge.svg?branch=develop&event=push)
+![Code Analysis - Develop](https://github.com/IngSoft-DA2/251525-251809-286049.git/actions/workflows/code-analysis.yml/badge.svg?branch=develop&event=push)
