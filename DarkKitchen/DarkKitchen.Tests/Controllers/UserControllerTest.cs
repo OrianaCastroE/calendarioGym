@@ -18,13 +18,13 @@ public class UserControllerTest
     private CreateUserDto? validAdminUser;
     private List<UserResponseDto>? users;
     private Mock<IUserService>? userServiceMock;
-    private UserController? userController;
+    private UsersController? userController;
 
     [TestInitialize]
     public void Setup()
     {
         userServiceMock = new Mock<IUserService>();
-        userController = new UserController(userServiceMock.Object);
+        userController = new UsersController(userServiceMock.Object);
         users =
         [
             new UserResponseDto { Id = 1, Name = "Name", Surname = "Surname", Email = validEmail, Phone = validPhone, Role = Role.Client }
