@@ -23,4 +23,18 @@ public class PromotionsController(IPromotionService promotionService) : Controll
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut]
+    public IActionResult UpdatePromotion([FromBody] PromotionDto updatedPromotion)
+    {
+        try
+        {
+            _promotionService.UpdatePromotion(updatedPromotion);
+            return Ok("Promotion updated correctly.");
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 }
