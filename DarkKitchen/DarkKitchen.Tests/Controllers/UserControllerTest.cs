@@ -1,5 +1,5 @@
 using DarkKitchen.API.Controllers;
-using Domain.DTOs.UserDTO;
+using Domain.DTOs.UserDTOs;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +13,8 @@ public class UserControllerTest
     private readonly string validEmail = "valid@email.com";
     private readonly string password = "ValidPassword123!";
     private readonly string validPhone = "+59899123123";
-    private SignUpDto? validUser;
+    private UserDto? validUser;
+    private UserDto? updatedUser;
     private CreateUserDto? validAdminUser;
     private List<UserResponseDto>? users;
     private Mock<IUserService>? userServiceMock;
@@ -26,12 +27,20 @@ public class UserControllerTest
         userController = new UserController(userServiceMock.Object);
         users =
         [
-            new UserResponseDto { Id = 1, Name = "Name", Surname = "Surname", Email = validEmail, Phone = validPhone, Role = "Client" }
+            new UserResponseDto { Id = 1, Name = "Name", Surname = "Surname", Email = validEmail, Phone = validPhone, Role = Role.Client }
         ];
-        validUser = new SignUpDto()
+        validUser = new UserDto()
         {
             Name = "Name",
             Surname = "Surname",
+            Email = validEmail,
+            Phone = validPhone,
+            Password = password
+        };
+        updatedUser = new UserDto()
+        {
+            Name = "UpdatedName",
+            Surname = "UpdatedSurname",
             Email = validEmail,
             Phone = validPhone,
             Password = password
@@ -72,7 +81,7 @@ public class UserControllerTest
     [TestMethod]
     public void UserSignUp_InvalidEmailFormat_ReturnsBadRequest()
     {
-        var invalidEmailUser = new SignUpDto()
+        var invalidEmailUser = new UserDto()
         {
             Name = "Name",
             Surname = "Surname",
@@ -91,7 +100,7 @@ public class UserControllerTest
     [TestMethod]
     public void UserSignUp_InvalidPhoneFormat_ReturnsBadRequest()
     {
-        var invalidPhoneUser = new SignUpDto()
+        var invalidPhoneUser = new UserDto()
         {
             Name = "Name",
             Surname = "Surname",
@@ -110,7 +119,7 @@ public class UserControllerTest
     [TestMethod]
     public void UserSignUp_InvalidPassword_ReturnsBadRequest()
     {
-        var invalidPasswordUser = new SignUpDto()
+        var invalidPasswordUser = new UserDto()
         {
             Name = "Name",
             Surname = "Surname",
@@ -151,9 +160,9 @@ public class UserControllerTest
     [TestMethod]
     public void UpdateUser_ExistingUser_ReturnsOk()
     {
-        userServiceMock.Setup(s => s.UpdateUser(validUser));
-        var result = userController.UpdateUser(validUser);
-        var resultObj = result as OkResult;
+        userServiceMock.Setup(s => s.UpdateUser(validUser!));
+        var result = userController.UpdateUser(validUser!);
+        var resultObj = result as OkObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
@@ -162,8 +171,8 @@ public class UserControllerTest
     [TestMethod]
     public void UpdateUser_UserNotFound_ReturnsNotFound()
     {
-        userServiceMock.Setup(s => s.UpdateUser(validUser)).Throws(new Exception("User not found."));
-        var result = userController.UpdateUser(validUser);
+        userServiceMock.Setup(s => s.UpdateUser(validUser!)).Throws(new Exception("User not found."));
+        var result = userController.UpdateUser(validUser!);
         var resultObj = result as NotFoundObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -173,7 +182,7 @@ public class UserControllerTest
     [TestMethod]
     public void GetUsers_ValidFilter_ReturnsOk()
     {
-        userServiceMock.Setup(s => s.GetUsers("Name", "Surname")).Returns(users);
+        userServiceMock.Setup(s => s.GetUsers("Name", "Surname")).Returns(users!);
         var result = userController.GetUsers("Name", "Surname");
         var resultObj = result as OkObjectResult;
 
@@ -197,7 +206,7 @@ public class UserControllerTest
     {
         userServiceMock.Setup(s => s.DeleteUser(validEmail));
         var result = userController.DeleteUser(validEmail);
-        var resultObj = result as OkResult;
+        var resultObj = result as OkObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
