@@ -50,4 +50,15 @@ public class PromotionsControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(400, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void UpdatePromotion_ExistingPromotion_ReturnsOk()
+    {
+        promotionServiceMock!.Setup(s => s.UpdatePromotion(validPromotion!));
+        var result = promotionsController!.UpdatePromotion(validPromotion!);
+        var resultObj = result as OkObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
+    }
 }
