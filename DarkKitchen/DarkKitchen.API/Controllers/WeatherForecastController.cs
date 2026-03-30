@@ -16,7 +16,7 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
     [HttpGet]
     public IEnumerable<WeatherForecast> Get()
     {
-        _logger.LogInformation("Getting weather forecast data.");
+        _logger.LogInformation("Generating weather forecast data.");
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),

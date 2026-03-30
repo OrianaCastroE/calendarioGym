@@ -1,4 +1,4 @@
-@DarkKitchen.API_HostAddress = http://localhost:5292
+@DarkKitchen.API_HostAddress = http://localhost:5079
 
 GET {{DarkKitchen.API_HostAddress}}/weatherforecast/
 Accept: application/json
