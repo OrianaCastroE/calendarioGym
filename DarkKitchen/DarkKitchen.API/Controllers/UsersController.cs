@@ -11,7 +11,7 @@ public class UsersController(IUserService userService) : ControllerBase
     private readonly IUserService _userService = userService;
 
     [HttpPost]
-    public IActionResult SignUp([FromBody] UserDto newUser)
+    public IActionResult SignUp([FromBody] PromotionDto newUser)
     {
         try
         {
@@ -39,7 +39,7 @@ public class UsersController(IUserService userService) : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult UpdateUser([FromBody] UserDto user)
+    public IActionResult UpdateUser([FromBody] PromotionDto user)
     {
         try
         {
