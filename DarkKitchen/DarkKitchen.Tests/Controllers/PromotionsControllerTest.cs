@@ -38,4 +38,16 @@ public class PromotionsControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void CreatePromotion_AlreadyExists_ReturnsBadRequest()
+    {
+        promotionServiceMock!.Setup(s => s.CreatePromotion(validPromotion!))
+            .Throws(new Exception("Promotion already exists."));
+        var result = promotionsController!.CreatePromotion(validPromotion!);
+        var resultObj = result as BadRequestObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj.StatusCode);
+    }
 }
