@@ -222,4 +222,14 @@ public class UserControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(404, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void DeleteUser_EmptyEmail_ReturnsBadRequest()
+    {
+        var result = userController.DeleteUser(string.Empty);
+        var resultObj = result as BadRequestObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj.StatusCode);
+    }
 }

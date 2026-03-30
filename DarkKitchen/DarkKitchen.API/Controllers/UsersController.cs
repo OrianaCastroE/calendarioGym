@@ -32,7 +32,7 @@ public class UsersController(IUserService userService) : ControllerBase
             _userService.CreateUserWithRole(newUser);
             return Created("User created correctly.", null);
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             return BadRequest(ex.Message);
         }

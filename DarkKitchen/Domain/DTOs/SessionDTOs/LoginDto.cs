@@ -1,4 +1,4 @@
-namespace Domain.DTOs.SessionDTO;
+namespace Domain.DTOs.SessionDTOs;
 
 public class LoginDto
 {
