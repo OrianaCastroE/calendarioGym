@@ -27,6 +27,7 @@ public class PromotionsControllerTest
             DateTo = new DateTime(2026, 1, 30)
         };
     }
+
     [TestMethod]
     public void CreatePromotion_ValidData_ReturnsCreated()
     {
