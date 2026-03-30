@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DarkKitchen.API.Controllers;
+using Domain.DTOs.UserDTO;
+using Domain.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 namespace DarkKitchen.Tests.Controllers;
@@ -22,7 +25,7 @@ public class UserControllerTest
     [TestMethod]
     public void UserSignUp_ValidUserWithoutRole_UserRegisteredAsClient()
     {
-        userServiceMock.Setup(s => s.UserExists().Returns(false));
+        userServiceMock.Setup(s => s.UserExists(validEmail)).Returns(false);
         var signUpDto = new SignUpDto()
         {
             Name = "Name",
@@ -32,7 +35,7 @@ public class UserControllerTest
             Password = password
         };
         var result = userController.SignUp(signUpDto);
-        var resultObj = result as ObjectResult;
+        var resultObj = result as CreatedResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj.StatusCode);
