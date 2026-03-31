@@ -37,4 +37,18 @@ public class OrdersController(IOrderService orderService) : ControllerBase
             return NotFound(ex.Message);
         }
     }
+
+    [HttpGet]
+    public IActionResult GetOrdersByStatus([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo, [FromQuery] string? address, [FromQuery] string? status)
+    {
+        try
+        {
+            var orders = _orderService.GetOrdersByStatus(dateFrom, dateTo, address, status);
+            return Ok(orders);
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 }
