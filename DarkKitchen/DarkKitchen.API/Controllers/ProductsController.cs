@@ -48,7 +48,7 @@ public class ProductsController(IProductService productService) : ControllerBase
             var products = _productService.GetMostRequestedProducts();
             return Ok(products);
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             return NotFound(ex.Message);
         }
