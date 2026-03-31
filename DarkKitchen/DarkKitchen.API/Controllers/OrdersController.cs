@@ -107,4 +107,18 @@ public class OrdersController(IOrderService orderService) : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("{orderId}/deliver")]
+    public IActionResult DeliverOrder(int orderId)
+    {
+        try
+        {
+            _orderService.DeliverOrder(orderId);
+            return Ok("Order delivered correctly.");
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
