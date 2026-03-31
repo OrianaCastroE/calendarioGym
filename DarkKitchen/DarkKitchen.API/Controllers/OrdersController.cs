@@ -51,4 +51,18 @@ public class OrdersController(IOrderService orderService) : ControllerBase
             return NotFound(ex.Message);
         }
     }
+
+    [HttpGet("{orderId}")]
+    public IActionResult GetOrderById(int orderId)
+    {
+        try
+        {
+            var order = _orderService.GetOrderById(orderId);
+            return Ok(order);
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 }
