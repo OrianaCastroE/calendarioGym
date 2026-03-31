@@ -9,17 +9,16 @@ using Moq;
 namespace DarkKitchen.Tests.Controllers;
 
 [TestClass]
-internal class ProductControllerTest
+public class ProductControllerTest
 {
-    private readonly string validProductId = "1";
+    private readonly Guid validProductId = Guid.NewGuid();
     private readonly string validProductName = "Valid Product Name";
     private readonly string validProductDescription = "Valid Product Description";
     private readonly string validCategory = "Valid Category";
     private readonly string validImageUrl = "http://example.com/image.jpg";
     private ProductDto? validProduct;
+    private CreateProductDto? validCreateProduct;
     private ProductsController? productController;
-
-
     private Mock<IProductService>? productServiceMock;
 
     [TestInitialize]
@@ -30,7 +29,15 @@ internal class ProductControllerTest
 
         validProduct = new ProductDto()
         {
-            Id = Guid.Parse(validProductId),
+            Id = validProductId,
+            Name = validProductName,
+            Description = validProductDescription,
+            Category = validCategory,
+            ImageUrl = validImageUrl
+        };
+
+        validCreateProduct = new CreateProductDto()
+        {
             Name = validProductName,
             Description = validProductDescription,
             Category = validCategory,
@@ -41,12 +48,10 @@ internal class ProductControllerTest
     [TestMethod]
     public void CreateProduct_WhenValidParams_ShouldCreateProduct()
     {
-        productServiceMock.Setup(s => s.CreateProduct(validProduct!));
-        var result = productController.CreateProduct(validProduct);
+        var result = productController.CreateProduct(validCreateProduct!);
         var resultObj = result as CreatedResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj!.StatusCode);
     }
-
 }
