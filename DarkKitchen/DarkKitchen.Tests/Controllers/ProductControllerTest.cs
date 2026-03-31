@@ -17,6 +17,7 @@ public class ProductControllerTest
     private readonly string validProductLine = "Valid Product Line";
     private readonly string validCategory = "Valid Category";
     private readonly string[] validImageUrl = ["http://example.com/image.jpg"];
+    private readonly bool isActive = true;
     private ProductDto? validProduct;
     private CreateProductDto? validCreateProduct;
     private ProductsController? productController;
@@ -34,7 +35,8 @@ public class ProductControllerTest
             Name = validProductName,
             Description = validProductDescription,
             Category = validCategory,
-            ImageUrl = validImageUrl
+            ImageUrl = validImageUrl,
+            IsActive = isActive
         };
 
         validCreateProduct = new CreateProductDto()
@@ -42,7 +44,8 @@ public class ProductControllerTest
             Name = validProductName,
             Description = validProductDescription,
             Category = validCategory,
-            ImageUrl = validImageUrl
+            ImageUrl = validImageUrl,
+            IsActive = isActive
         };
     }
 
@@ -112,5 +115,15 @@ public class ProductControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj!.StatusCode);
         Assert.AreEqual(products, resultObj.Value);
+    }
+
+    [TestMethod]
+    public void GetMostRequestedProducts_WhenNoProducts_ShouldReturnEmptyList()
+    {
+        productServiceMock.Setup(s => s.GetMostRequestedProducts()).Throws(new Exception("No products found."));
+        var result = productController.GetMostRequestedProducts();
+        var resultObj = result as NotFoundObjectResult;
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(404, resultObj.StatusCode);
     }
 }
