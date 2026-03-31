@@ -96,4 +96,15 @@ public class PromotionsControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(404, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void DisassociateProduct_ValidData_ReturnsOk()
+    {
+        promotionServiceMock!.Setup(s => s.DisassociateProduct(1, "PROD01"));
+        var result = promotionsController!.DisassociateProduct(1, "PROD01");
+        var resultObj = result as OkObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
+    }
 }
