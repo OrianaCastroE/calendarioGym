@@ -211,4 +211,16 @@ public class OrdersControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void SetOrderOnTheWay_OrderNotPrepared_ReturnsBadRequest()
+    {
+        orderServiceMock!.Setup(s => s.SetOrderOnTheWay(1))
+            .Throws(new Exception("Order is not prepared."));
+        var result = ordersController!.SetOrderOnTheWay(1);
+        var resultObj = result as BadRequestObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj.StatusCode);
+    }
 }
