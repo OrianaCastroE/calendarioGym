@@ -51,4 +51,18 @@ public class PromotionsController(IPromotionService promotionService) : Controll
             return NotFound(ex.Message);
         }
     }
+
+    [HttpDelete("{promotionId}/products/{productCode}")]
+    public IActionResult DisassociateProduct(int promotionId, string productCode)
+    {
+        try
+        {
+            _promotionService.DisassociateProduct(promotionId, productCode);
+            return Ok("Product disassociated correctly.");
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 }
