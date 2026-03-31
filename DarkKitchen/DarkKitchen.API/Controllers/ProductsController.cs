@@ -57,7 +57,14 @@ public class ProductsController(IProductService productService) : ControllerBase
     [HttpPut]
     public IActionResult UpdateProduct([FromBody] ProductDto product)
     {
-        _productService.UpdateProduct(product);
-        return Ok("Product updated correctly.");
+        try
+        {
+            _productService.UpdateProduct(product);
+            return Ok("Product updated correctly.");
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }
