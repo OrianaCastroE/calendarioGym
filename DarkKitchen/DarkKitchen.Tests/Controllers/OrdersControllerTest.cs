@@ -188,4 +188,16 @@ public class OrdersControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void CancelOrder_OrderNotPending_ReturnsBadRequest()
+    {
+        orderServiceMock!.Setup(s => s.CancelOrder(1))
+            .Throws(new Exception("Order is not pending."));
+        var result = ordersController!.CancelOrder(1);
+        var resultObj = result as BadRequestObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj.StatusCode);
+    }
 }
