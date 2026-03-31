@@ -25,4 +25,11 @@ public class ProductsController(IProductService productService) : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpGet]
+    public IActionResult GetProducts([FromQuery] string? productLine, [FromQuery] List<string>? categories, [FromQuery] string? name)
+    {
+        var products = _productService.GetProducts(productLine, categories, name);
+        return Ok(products);
+    }
 }

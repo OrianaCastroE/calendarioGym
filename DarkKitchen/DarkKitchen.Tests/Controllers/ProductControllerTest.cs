@@ -81,6 +81,7 @@ public class ProductControllerTest
         productServiceMock.Setup(s => s.GetProducts(null, null, null)).Returns(products);
         var result = productController.GetProducts(null, null, null);
         var resultObj = result as OkObjectResult;
+
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj!.StatusCode);
         Assert.AreEqual(products, resultObj.Value);
