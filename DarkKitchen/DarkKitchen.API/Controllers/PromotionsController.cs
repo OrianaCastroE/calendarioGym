@@ -65,4 +65,18 @@ public class PromotionsController(IPromotionService promotionService) : Controll
             return NotFound(ex.Message);
         }
     }
+
+    [HttpGet]
+    public IActionResult GetPromotions([FromQuery] DateTime? date, [FromQuery] string? productLine, [FromQuery] string? productName)
+    {
+        try
+        {
+            var promotions = _promotionService.GetPromotions(date, productLine, productName);
+            return Ok(promotions);
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 }
