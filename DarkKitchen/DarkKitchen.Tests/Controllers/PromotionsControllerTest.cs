@@ -143,4 +143,16 @@ public class PromotionsControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void GetPromotions_NoPromotionsFound_ReturnsNotFound()
+    {
+        promotionServiceMock!.Setup(s => s.GetPromotions(null, null, null))
+            .Throws(new Exception("No promotions found."));
+        var result = promotionsController!.GetPromotions(null, null, null);
+        var resultObj = result as NotFoundObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(404, resultObj.StatusCode);
+    }
 }
