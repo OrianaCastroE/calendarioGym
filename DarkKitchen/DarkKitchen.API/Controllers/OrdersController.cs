@@ -23,4 +23,18 @@ public class OrdersController(IOrderService orderService) : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpGet("client/{clientId}")]
+    public IActionResult GetClientOrders(int clientId, [FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo, [FromQuery] string? status)
+    {
+        try
+        {
+            var orders = _orderService.GetClientOrders(clientId, dateFrom, dateTo, status);
+            return Ok(orders);
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 }
