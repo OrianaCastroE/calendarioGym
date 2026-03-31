@@ -73,4 +73,16 @@ public class ProductControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(400, resultObj!.StatusCode);
     }
+
+    [TestMethod]
+    public void GetProducts_WhenValidProducts_ShouldReturnProducts()
+    {
+        var products = new List<ProductDto> { validProduct! };
+        productServiceMock.Setup(s => s.GetProducts(null, null, null)).Returns(products);
+        var result = productController.GetProducts(null, null, null);
+        var resultObj = result as OkObjectResult;
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj!.StatusCode);
+        Assert.AreEqual(products, resultObj.Value);
+    }
 }
