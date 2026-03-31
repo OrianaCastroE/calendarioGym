@@ -93,4 +93,18 @@ public class OrdersController(IOrderService orderService) : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("{orderId}/on-the-way")]
+    public IActionResult SetOrderOnTheWay(int orderId)
+    {
+        try
+        {
+            _orderService.SetOrderOnTheWay(orderId);
+            return Ok("Order is on the way.");
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
