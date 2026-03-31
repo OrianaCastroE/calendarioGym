@@ -96,4 +96,27 @@ public class OrdersControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void GetClientOrders_NoOrdersFound_ReturnsNotFound()
+    {
+        orderServiceMock!.Setup(s => s.GetClientOrders(1, null, null, null))
+            .Throws(new Exception("No orders found."));
+        var result = ordersController!.GetClientOrders(1, null, null, null);
+        var resultObj = result as NotFoundObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(404, resultObj.StatusCode);
+    }
+
+    [TestMethod]
+    public void GetOrdersByStatus_ValidFilter_ReturnsOk()
+    {
+        orderServiceMock!.Setup(s => s.GetOrdersByStatus(It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, null)).Returns(orders!);
+        var result = ordersController!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null);
+        var resultObj = result as OkObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
+    }
 }
