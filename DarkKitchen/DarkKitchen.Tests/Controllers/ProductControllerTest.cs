@@ -135,4 +135,14 @@ public class ProductControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj!.StatusCode);
     }
+
+    [TestMethod]
+    public void UpdateProduct_WhenProductNotFound_ShouldntUpdateProduct()
+    {
+        productServiceMock.Setup(s => s.UpdateProduct(validProduct!)).Throws(new Exception("Product not found."));
+        var result = productController.UpdateProduct(validProduct!);
+        var resultObj = result as NotFoundObjectResult;
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(404, resultObj!.StatusCode);
+    }
 }
