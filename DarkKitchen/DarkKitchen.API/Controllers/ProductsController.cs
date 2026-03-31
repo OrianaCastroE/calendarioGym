@@ -15,7 +15,14 @@ public class ProductsController(IProductService productService) : ControllerBase
     [HttpPost]
     public IActionResult CreateProduct([FromBody] CreateProductDto newProduct)
     {
-        _productService.CreateProduct(newProduct);
-        return Created("Product created correctly.", null);
+        try
+        {
+            _productService.CreateProduct(newProduct);
+            return Created("Product created correctly.", null);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

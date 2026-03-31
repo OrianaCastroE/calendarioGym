@@ -15,7 +15,7 @@ public class ProductControllerTest
     private readonly string validProductName = "Valid Product Name";
     private readonly string validProductDescription = "Valid Product Description";
     private readonly string validCategory = "Valid Category";
-    private readonly string validImageUrl = "http://example.com/image.jpg";
+    private readonly string[] validImageUrl = ["http://example.com/image.jpg"];
     private ProductDto? validProduct;
     private CreateProductDto? validCreateProduct;
     private ProductsController? productController;
@@ -53,5 +53,23 @@ public class ProductControllerTest
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj!.StatusCode);
+    }
+
+    [TestMethod]
+    public void CreateProduct_WhenNameIsNull_ShouldntCreateProduct()
+    {
+        var invalidProduct = new CreateProductDto()
+        {
+            Name = null,
+            Description = validProductDescription,
+            Category = validCategory,
+            ImageUrl = validImageUrl
+        };
+
+        var result = productController!.CreateProduct(invalidProduct);
+        var resultObj = result as BadRequestObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj!.StatusCode);
     }
 }
