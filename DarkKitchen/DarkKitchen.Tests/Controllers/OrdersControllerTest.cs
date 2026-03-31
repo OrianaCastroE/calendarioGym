@@ -85,4 +85,15 @@ public class OrdersControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(400, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void GetClientOrders_ValidFilter_ReturnsOk()
+    {
+        orderServiceMock!.Setup(s => s.GetClientOrders(1, null, null, null)).Returns(orders!);
+        var result = ordersController!.GetClientOrders(1, null, null, null);
+        var resultObj = result as OkObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
+    }
 }
