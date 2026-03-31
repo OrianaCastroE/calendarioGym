@@ -95,7 +95,7 @@ public class ProductControllerTest
         List<string> categories = [];
         productServiceMock.Setup(s => s.GetProducts(validProductLine, categories, validProductName)).Throws(new Exception("No products found."));
         var result = productController.GetProducts(validProductLine, categories, validProductName);
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as NotFoundObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(404, resultObj.StatusCode);
