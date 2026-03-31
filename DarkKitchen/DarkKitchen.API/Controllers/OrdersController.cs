@@ -65,4 +65,18 @@ public class OrdersController(IOrderService orderService) : ControllerBase
             return NotFound(ex.Message);
         }
     }
+
+    [HttpPut("{orderId}/prepare")]
+    public IActionResult PrepareOrder(int orderId)
+    {
+        try
+        {
+            _orderService.PrepareOrder(orderId);
+            return Ok("Order prepared correctly.");
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
