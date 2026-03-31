@@ -126,4 +126,13 @@ public class ProductControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(404, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void UpdateProduct_WhenValidParams_ShouldUpdateProduct()
+    {
+        var result = productController.UpdateProduct(validProduct!);
+        var resultObj = result as OkObjectResult;
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj!.StatusCode);
+    }
 }

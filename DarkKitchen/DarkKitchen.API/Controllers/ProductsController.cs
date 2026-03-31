@@ -53,4 +53,10 @@ public class ProductsController(IProductService productService) : ControllerBase
             return NotFound(ex.Message);
         }
     }
+
+    [HttpPut]
+    public IActionResult UpdateProduct([FromBody] ProductDto product)
+    {
+        return BadRequest();
+    }
 }
