@@ -58,7 +58,7 @@ public class ProductControllerTest
     [TestMethod]
     public void CreateProduct_WhenNameIsNull_ShouldntCreateProduct()
     {
-        var invalidProduct = new CreateProductDto()
+        var nullProductName = new CreateProductDto()
         {
             Name = null,
             Description = validProductDescription,
@@ -66,7 +66,8 @@ public class ProductControllerTest
             ImageUrl = validImageUrl
         };
 
-        var result = productController!.CreateProduct(invalidProduct);
+        productServiceMock.Setup(s => s.CreateProduct(nullProductName)).Throws(new Exception("Invalid name."));
+        var result = productController.CreateProduct(nullProductName);
         var resultObj = result as BadRequestObjectResult;
 
         Assert.IsNotNull(resultObj);
