@@ -119,4 +119,16 @@ public class OrdersControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void GetOrdersByStatus_NoOrdersFound_ReturnsNotFound()
+    {
+        orderServiceMock!.Setup(s => s.GetOrdersByStatus(It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, null))
+            .Throws(new Exception("No orders found."));
+        var result = ordersController!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null);
+        var resultObj = result as NotFoundObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(404, resultObj.StatusCode);
+    }
 }
