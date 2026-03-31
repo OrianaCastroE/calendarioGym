@@ -43,7 +43,14 @@ public class ProductsController(IProductService productService) : ControllerBase
     [HttpGet]
     public IActionResult GetMostRequestedProducts()
     {
-        var products = _productService.GetMostRequestedProducts();
-        return Ok(products);
+        try
+        {
+            var products = _productService.GetMostRequestedProducts();
+            return Ok(products);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }
