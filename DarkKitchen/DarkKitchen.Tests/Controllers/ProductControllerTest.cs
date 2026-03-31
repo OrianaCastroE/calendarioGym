@@ -14,6 +14,7 @@ public class ProductControllerTest
     private readonly Guid validProductId = Guid.NewGuid();
     private readonly string validProductName = "Valid Product Name";
     private readonly string validProductDescription = "Valid Product Description";
+    private readonly string validProductLine = "Valid Product Line";
     private readonly string validCategory = "Valid Category";
     private readonly string[] validImageUrl = ["http://example.com/image.jpg"];
     private ProductDto? validProduct;
@@ -77,13 +78,26 @@ public class ProductControllerTest
     [TestMethod]
     public void GetProducts_WhenValidProducts_ShouldReturnProducts()
     {
-        var products = new List<ProductDto> { validProduct! };
-        productServiceMock.Setup(s => s.GetProducts(null, null, null)).Returns(products);
-        var result = productController.GetProducts(null, null, null);
+        List<string> categories = ["Fútbol", "Baloncesto", "Tenis"];
+        var products = new List<ProductDto>();
+        productServiceMock.Setup(s => s.GetProducts(validProductLine, categories, validProductName)).Returns(products!);
+        var result = productController.GetProducts(validProductLine, categories, validProductName);
         var resultObj = result as OkObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj!.StatusCode);
         Assert.AreEqual(products, resultObj.Value);
+    }
+
+    [TestMethod]
+    public void GetProducts_WhenNoProducts_ShouldReturnEmptyList()
+    {
+        List<string> categories = [];
+        productServiceMock.Setup(s => s.GetProducts(validProductLine, categories, validProductName)).Throws(new Exception("No products found."));
+        var result = productController.GetProducts(validProductLine, categories, validProductName);
+        var resultObj = result as OkObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(404, resultObj.StatusCode);
     }
 }
