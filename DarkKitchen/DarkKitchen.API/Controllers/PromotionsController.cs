@@ -37,4 +37,18 @@ public class PromotionsController(IPromotionService promotionService) : Controll
             return NotFound(ex.Message);
         }
     }
+
+    [HttpPost("{promotionId}/products/{productCode}")]
+    public IActionResult AssociateProduct(int promotionId, string productCode)
+    {
+        try
+        {
+            _promotionService.AssociateProduct(promotionId, productCode);
+            return Ok("Product associated correctly.");
+        }
+        catch(Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 }
