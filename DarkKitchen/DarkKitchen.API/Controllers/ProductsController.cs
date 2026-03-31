@@ -38,6 +38,11 @@ public class ProductsController(IProductService productService) : ControllerBase
         {
             return NotFound("Products not found.");
         }
+    }
 
+    [HttpGet]
+    public IActionResult GetMostRequestedProducts()
+    {
+        return BadRequest();
     }
 }
