@@ -12,6 +12,8 @@ public class PromotionsControllerTest
     private Mock<IPromotionService>? promotionServiceMock;
     private PromotionsController? promotionsController;
     private PromotionDto? validPromotion;
+    private PromotionResponseDto? promotionResponse;
+    private List<PromotionResponseDto>? promotions;
 
     [TestInitialize]
     public void Setup()
@@ -26,6 +28,17 @@ public class PromotionsControllerTest
             DateFrom = new DateTime(2026, 1, 25),
             DateTo = new DateTime(2026, 1, 30)
         };
+
+        promotionResponse = new PromotionResponseDto()
+        {
+            Id = 1,
+            Name = "Black Friday",
+            DiscountPercentage = 10,
+            DateFrom = new DateTime(2026, 1, 25),
+            DateTo = new DateTime(2026, 1, 30)
+        };
+
+        promotions = [promotionResponse];
     }
 
     [TestMethod]
@@ -118,5 +131,16 @@ public class PromotionsControllerTest
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(404, resultObj.StatusCode);
+    }
+
+    [TestMethod]
+    public void GetPromotions_ValidFilter_ReturnsOk()
+    {
+        promotionServiceMock!.Setup(s => s.GetPromotions(null, null, null)).Returns(promotions!);
+        var result = promotionsController!.GetPromotions(null, null, null);
+        var resultObj = result as OkObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
     }
 }
