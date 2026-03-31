@@ -84,4 +84,16 @@ public class PromotionsControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void AssociateProduct_PromotionNotFound_ReturnsNotFound()
+    {
+        promotionServiceMock!.Setup(s => s.AssociateProduct(1, "PROD01"))
+            .Throws(new Exception("Promotion not found."));
+        var result = promotionsController!.AssociateProduct(1, "PROD01");
+        var resultObj = result as NotFoundObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(404, resultObj.StatusCode);
+    }
 }
