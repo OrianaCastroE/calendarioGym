@@ -72,4 +72,17 @@ public class SessionsControllerTests
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(400, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void Login_InvalidEmailFormat_ReturnsBadRequest()
+    {
+        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new Exception("Invalid credentials."));
+
+        var loginDto = new LoginDto { Email = "notanemail", Password = password };
+        var result = sessionController.Login(loginDto);
+        var resultObj = result as BadRequestObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj.StatusCode);
+    }
 }
