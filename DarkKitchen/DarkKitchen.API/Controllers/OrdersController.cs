@@ -121,4 +121,18 @@ public class OrdersController(IOrderService orderService) : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("{orderId}/not-delivered")]
+    public IActionResult SetOrderNotDelivered(int orderId)
+    {
+        try
+        {
+            _orderService.SetOrderNotDelivered(orderId);
+            return Ok("Order marked as not delivered.");
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
