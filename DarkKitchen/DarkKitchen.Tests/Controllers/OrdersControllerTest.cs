@@ -142,4 +142,16 @@ public class OrdersControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void GetOrderById_OrderNotFound_ReturnsNotFound()
+    {
+        orderServiceMock!.Setup(s => s.GetOrderById(1))
+            .Throws(new Exception("Order not found."));
+        var result = ordersController!.GetOrderById(1);
+        var resultObj = result as NotFoundObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(404, resultObj.StatusCode);
+    }
 }
