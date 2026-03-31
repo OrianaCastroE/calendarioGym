@@ -16,7 +16,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         try
         {
             var order = _orderService.CreateOrder(newOrder);
-            return Created("", order);
+            return Created(string.Empty, order);
         }
         catch(Exception ex)
         {

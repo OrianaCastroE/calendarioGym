@@ -61,4 +61,28 @@ public class OrdersControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void CreateOrder_NoProducts_ReturnsBadRequest()
+    {
+        var emptyOrder = new OrderDto()
+        {
+            ClientId = 1,
+            DeliveryType = "express",
+            Address = new AddressDto()
+            {
+                Street = "18 de Julio",
+                DoorNumber = "1234",
+                Apartment = "101"
+            },
+            Products = []
+        };
+        orderServiceMock!.Setup(s => s.CreateOrder(emptyOrder))
+            .Throws(new Exception("Order must have at least one product."));
+        var result = ordersController!.CreateOrder(emptyOrder);
+        var resultObj = result as BadRequestObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj.StatusCode);
+    }
 }
