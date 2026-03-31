@@ -223,4 +223,15 @@ public class OrdersControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(400, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void DeliverOrder_ValidId_ReturnsOk()
+    {
+        orderServiceMock!.Setup(s => s.DeliverOrder(1));
+        var result = ordersController!.DeliverOrder(1);
+        var resultObj = result as OkObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
+    }
 }
