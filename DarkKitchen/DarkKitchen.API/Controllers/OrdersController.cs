@@ -79,4 +79,18 @@ public class OrdersController(IOrderService orderService) : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("{orderId}/cancel")]
+    public IActionResult CancelOrder(int orderId)
+    {
+        try
+        {
+            _orderService.CancelOrder(orderId);
+            return Ok("Order cancelled correctly.");
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
