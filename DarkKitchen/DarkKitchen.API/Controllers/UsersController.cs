@@ -71,11 +71,6 @@ public class UsersController(IUserService userService) : ControllerBase
     {
         try
         {
-            if(string.IsNullOrEmpty(email))
-            {
-                return BadRequest("Email is required.");
-            }
-
             _userService.DeleteUser(email);
             return Ok("User deleted correctly.");
         }
