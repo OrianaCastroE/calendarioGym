@@ -224,12 +224,13 @@ public class UsersControllerTest
     }
 
     [TestMethod]
-    public void DeleteUser_EmptyEmail_ReturnsBadRequest()
+    public void DeleteUser_EmptyEmail_ReturnsNotFound()
     {
+        userServiceMock.Setup(s => s.DeleteUser(string.Empty)).Throws(new Exception("Invalid email."));
         var result = userController.DeleteUser(string.Empty);
-        var resultObj = result as BadRequestObjectResult;
+        var resultObj = result as NotFoundObjectResult;
 
         Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        Assert.AreEqual(404, resultObj.StatusCode);
     }
 }
