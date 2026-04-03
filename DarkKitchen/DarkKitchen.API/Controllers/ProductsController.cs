@@ -40,7 +40,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         }
     }
 
-    [HttpGet]
+    [HttpGet("most-requested")]
     public IActionResult GetMostRequestedProducts()
     {
         try
