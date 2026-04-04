@@ -1,6 +1,6 @@
 using DarkKitchen.API.Controllers;
-using DarkKitchen.Models.PromotionDTOs;
 using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Models.PromotionDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 

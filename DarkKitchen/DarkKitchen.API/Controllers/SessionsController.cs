@@ -1,6 +1,6 @@
 using DarkKitchen.Domain.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using DarkKitchen.Models.SessionDTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DarkKitchen.API.Controllers;
 
