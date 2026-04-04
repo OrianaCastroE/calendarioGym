@@ -1,10 +1,11 @@
-﻿using Domain.DTOs.UserDTOs;
+﻿using DarkKitchen.Models.UserDTOs;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Models.UserDTOs;
 
 namespace DarkKitchen.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/users")]
 [ApiController]
 public class UsersController(IUserService userService) : ControllerBase
 {
@@ -13,70 +14,35 @@ public class UsersController(IUserService userService) : ControllerBase
     [HttpPost]
     public IActionResult SignUp([FromBody] UserDto newUser)
     {
-        try
-        {
-            _userService.CreateUser(newUser);
-            return Created("User created correctly.", null);
-        }
-        catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+         _userService.CreateUser(newUser);
+         return Created("User created correctly.", null);
     }
 
     [HttpPost("admin")]
     public IActionResult CreateUserWithRole([FromBody] CreateUserDto newUser)
     {
-        try
-        {
-            _userService.CreateUserWithRole(newUser);
-            return Created("User created correctly.", null);
-        }
-        catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        _userService.CreateUserWithRole(newUser);
+        return Created("User created correctly.", null);
     }
 
     [HttpPut]
     public IActionResult UpdateUser([FromBody] UserDto user)
     {
-        try
-        {
-            _userService.UpdateUser(user);
-            return Ok("User updated correctly.");
-        }
-        catch(Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        _userService.UpdateUser(user);
+        return Ok("User updated correctly.");
     }
 
     [HttpGet]
     public IActionResult GetUsers([FromQuery] string? name, [FromQuery] string? surname)
     {
-        try
-        {
-            var users = _userService.GetUsers(name!, surname!);
-            return Ok(users);
-        }
-        catch(Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var users = _userService.GetUsers(name!, surname!);
+        return Ok(users);
     }
 
     [HttpDelete("{email}")]
     public IActionResult DeleteUser(string email)
     {
-        try
-        {
-            _userService.DeleteUser(email);
-            return Ok("User deleted correctly.");
-        }
-        catch(Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        _userService.DeleteUser(email);
+        return Ok("User deleted correctly.");
     }
 }
