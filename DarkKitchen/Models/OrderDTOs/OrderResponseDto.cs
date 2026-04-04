@@ -1,4 +1,4 @@
-﻿namespace Domain.DTOs.OrderDTOs;
+﻿namespace Models.OrderDTOs;
 
 public class OrderResponseDto
 {

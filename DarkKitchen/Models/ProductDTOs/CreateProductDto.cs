@@ -1,4 +1,4 @@
-﻿namespace Domain.DTOs.ProductDTOs;
+﻿namespace Models.ProductDTOs;
 
 public class CreateProductDto
 {

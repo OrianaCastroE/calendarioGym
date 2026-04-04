@@ -1,4 +1,4 @@
-﻿namespace Domain.DTOs.PromotionDTOs;
+﻿namespace Models.PromotionDTOs;
 
 public class PromotionDto
 {

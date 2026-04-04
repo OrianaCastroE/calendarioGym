@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Domain.DTOs.UserDTOs;
+﻿namespace DarkKitchen.Models.UserDTOs;
 
 public class CreateUserDto
 {
@@ -9,5 +7,5 @@ public class CreateUserDto
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public string? Password { get; set; }
-    public Role Role { get; set; }
+    public string? Role { get; set; }
 }

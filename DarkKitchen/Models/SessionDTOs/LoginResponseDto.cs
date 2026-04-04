@@ -1,4 +1,4 @@
-namespace Domain.DTOs.SessionDTOs;
+namespace Models.SessionDTOs;
 
 public class LoginResponseDto
 {
