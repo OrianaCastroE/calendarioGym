@@ -1,7 +1,7 @@
 using DarkKitchen.API.Controllers;
-using Domain.Interfaces;
+using DarkKitchen.Models.PromotionDTOs;
+using DarkKitchen.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Models.PromotionDTOs;
 using Moq;
 
 namespace DarkKitchen.Tests.Controllers;

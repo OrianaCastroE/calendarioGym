@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DarkKitchen.API\DarkKitchen.API.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\DarkKitchen.Domain\DarkKitchen.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
