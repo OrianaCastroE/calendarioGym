@@ -17,10 +17,10 @@ public class PromotionsController(IPromotionService promotionService) : Controll
         return Created(string.Empty, newPromotion);
     }
 
-    [HttpPut]
-    public IActionResult UpdatePromotion([FromBody] PromotionDto updatedPromotion)
+    [HttpPut("{id}")]
+    public IActionResult UpdatePromotion(int id, [FromBody] PromotionDto updatedPromotion)
     {
-        _promotionService.UpdatePromotion(updatedPromotion);
+        _promotionService.UpdatePromotion(id, updatedPromotion);
         return Ok("Promotion updated correctly.");
     }
 

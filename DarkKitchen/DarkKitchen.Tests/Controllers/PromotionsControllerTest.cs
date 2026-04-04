@@ -10,6 +10,7 @@ namespace DarkKitchen.Tests.Controllers;
 [TestClass]
 public class PromotionsControllerTest
 {
+    private readonly int promotionId = 1;
     private Mock<IPromotionService>? promotionServiceMock;
     private PromotionsController? promotionsController;
     private PromotionDto? validPromotion;
@@ -32,7 +33,7 @@ public class PromotionsControllerTest
 
         promotionResponse = new PromotionResponseDto()
         {
-            Id = 1,
+            Id = promotionId,
             Name = "Black Friday",
             DiscountPercentage = 10,
             DateFrom = new DateTime(2026, 1, 25),
@@ -64,8 +65,8 @@ public class PromotionsControllerTest
     [TestMethod]
     public void UpdatePromotion_ExistingPromotion_ReturnsOk()
     {
-        promotionServiceMock!.Setup(s => s.UpdatePromotion(validPromotion!));
-        var result = promotionsController!.UpdatePromotion(validPromotion!);
+        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion!));
+        var result = promotionsController!.UpdatePromotion(promotionId, validPromotion!);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -75,9 +76,9 @@ public class PromotionsControllerTest
     [TestMethod]
     public void UpdatePromotion_PromotionNotFound_ThrowsNotFoundException()
     {
-        promotionServiceMock!.Setup(s => s.UpdatePromotion(validPromotion!)).Throws(new NotFoundException("Promotion not found."));
+        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion!)).Throws(new NotFoundException("Promotion not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotion(validPromotion!));
+        Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotion(promotionId, validPromotion!));
     }
 
     [TestMethod]
