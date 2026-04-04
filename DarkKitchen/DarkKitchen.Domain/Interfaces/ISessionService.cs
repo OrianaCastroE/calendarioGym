@@ -1,6 +1,6 @@
-using Models.SessionDTOs;
+using DarkKitchen.Models.SessionDTOs;
 
-namespace Domain.Interfaces;
+namespace DarkKitchen.Domain.Interfaces;
 
 public interface ISessionService
 {

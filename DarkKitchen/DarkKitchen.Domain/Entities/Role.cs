@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities;
+﻿namespace DarkKitchen.Domain.Entities;
 
 /// <summary>
 /// Represents the role of a user in the system.

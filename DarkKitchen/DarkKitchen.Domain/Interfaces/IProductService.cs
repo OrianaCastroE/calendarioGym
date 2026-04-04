@@ -1,6 +1,6 @@
-﻿using Models.ProductDTOs;
+﻿using DarkKitchen.Models.ProductDTOs;
 
-namespace Domain.Interfaces;
+namespace DarkKitchen.Domain.Interfaces;
 
 public interface IProductService
 {

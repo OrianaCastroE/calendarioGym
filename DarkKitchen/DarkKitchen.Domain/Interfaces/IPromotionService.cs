@@ -1,6 +1,6 @@
-﻿using Models.PromotionDTOs;
+﻿using DarkKitchen.Models.PromotionDTOs;
 
-namespace Domain.Interfaces;
+namespace DarkKitchen.Domain.Interfaces;
 
 public interface IPromotionService
 {
