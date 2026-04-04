@@ -81,10 +81,11 @@ public class PromotionsControllerTest
     }
 
     [TestMethod]
-    public void AssociateProduct_ValidData_ReturnsOk()
+    public void UpdatePromotionProducts_ValidData_ReturnsOk()
     {
-        promotionServiceMock!.Setup(s => s.AssociateProduct(1, "PROD01"));
-        var result = promotionsController!.AssociateProduct(1, "PROD01");
+        var dto = new UpdatePromotionProductsDto { Products = [1, 2, 3] };
+        promotionServiceMock!.Setup(s => s.UpdatePromotionProducts(1, dto.Products));
+        var result = promotionsController!.UpdatePromotionProducts(1, dto);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -92,30 +93,12 @@ public class PromotionsControllerTest
     }
 
     [TestMethod]
-    public void AssociateProduct_PromotionNotFound_ThrowsNotFoundException()
+    public void UpdatePromotionProducts_PromotionNotFound_ThrowsNotFoundException()
     {
-        promotionServiceMock!.Setup(s => s.AssociateProduct(1, "PROD01")).Throws(new NotFoundException("Promotion not found."));
+        var dto = new UpdatePromotionProductsDto { Products = [1, 2, 3] };
+        promotionServiceMock!.Setup(s => s.UpdatePromotionProducts(1, dto.Products)).Throws(new NotFoundException("Promotion not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => promotionsController!.AssociateProduct(1, "PROD01"));
-    }
-
-    [TestMethod]
-    public void DisassociateProduct_ValidData_ReturnsOk()
-    {
-        promotionServiceMock!.Setup(s => s.DisassociateProduct(1, "PROD01"));
-        var result = promotionsController!.DisassociateProduct(1, "PROD01");
-        var resultObj = result as ObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(200, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void DisassociateProduct_PromotionNotFound_ThrowsNotFoundException()
-    {
-        promotionServiceMock!.Setup(s => s.DisassociateProduct(1, "PROD01")).Throws(new NotFoundException("Promotion not found."));
-
-        Assert.ThrowsException<NotFoundException>(() => promotionsController!.DisassociateProduct(1, "PROD01"));
+        Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotionProducts(1, dto));
     }
 
     [TestMethod]
