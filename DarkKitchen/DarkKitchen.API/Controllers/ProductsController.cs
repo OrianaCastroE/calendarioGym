@@ -1,7 +1,6 @@
-// using Domain.DTOs.ProductDTOs;
-using Domain.DTOs.ProductDTOs;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Models.ProductDTOs;
 
 namespace DarkKitchen.API.Controllers;
 

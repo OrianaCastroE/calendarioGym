@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Models\DarkKitchen.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
