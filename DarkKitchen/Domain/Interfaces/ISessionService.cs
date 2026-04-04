@@ -1,4 +1,4 @@
-using Domain.DTOs.SessionDTOs;
+using Models.SessionDTOs;
 
 namespace Domain.Interfaces;
 

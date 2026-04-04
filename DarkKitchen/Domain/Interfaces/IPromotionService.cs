@@ -1,4 +1,4 @@
-﻿using Domain.DTOs.PromotionDTOs;
+﻿using Models.PromotionDTOs;
 
 namespace Domain.Interfaces;
 

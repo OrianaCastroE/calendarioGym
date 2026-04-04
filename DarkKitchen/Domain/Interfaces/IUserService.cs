@@ -1,4 +1,5 @@
-﻿using Domain.DTOs.UserDTOs;
+﻿using DarkKitchen.Models.UserDTOs;
+using Models.UserDTOs;
 
 namespace Domain.Interfaces;
 

@@ -1,4 +1,4 @@
-﻿using Domain.DTOs.OrderDTOs;
+﻿using Models.OrderDTOs;
 
 namespace Domain.Interfaces;
 
