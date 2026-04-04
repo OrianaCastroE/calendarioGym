@@ -1,6 +1,7 @@
 ﻿using DarkKitchen.API.Controllers;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -17,7 +18,7 @@ public class ProductControllerTest
     private readonly string validCategory = "Valid Category";
     private readonly string[] validImageUrl = ["http://example.com/image.jpg"];
     private readonly bool isActive = true;
-    private ProductDto? validProduct;
+    private UpdateProductDto? validProduct;
     private CreateProductDto? validCreateProduct;
     private ProductsController? productController;
     private Mock<IProductService>? productServiceMock;
@@ -28,7 +29,7 @@ public class ProductControllerTest
         productServiceMock = new Mock<IProductService>();
         productController = new ProductsController(productServiceMock.Object);
 
-        validProduct = new ProductDto()
+        validProduct = new UpdateProductDto()
         {
             Id = validProductId,
             Name = validProductName,
@@ -44,7 +45,6 @@ public class ProductControllerTest
             Description = validProductDescription,
             Category = validCategory,
             ImageUrl = validImageUrl,
-            IsActive = isActive
         };
     }
 
@@ -78,7 +78,7 @@ public class ProductControllerTest
     public void GetProducts_WhenValidProducts_ReturnsOk()
     {
         List<string> categories = ["Fútbol", "Baloncesto", "Tenis"];
-        var products = new List<ProductDto>();
+        var products = new List<UpdateProductDto>();
         productServiceMock.Setup(s => s.GetProducts(validProductLine, categories, validProductName)).Returns(products!);
         var result = productController.GetProducts(validProductLine, categories, validProductName);
         var resultObj = result as ObjectResult;
@@ -100,9 +100,14 @@ public class ProductControllerTest
     [TestMethod]
     public void GetMostRequestedProducts_WhenValidProducts_ReturnsOkWithProdcuts()
     {
-        var products = new List<ProductDto> { validProduct! };
-        productServiceMock.Setup(s => s.GetMostRequestedProducts()).Returns(products);
-        var result = productController.GetMostRequestedProducts();
+        var products = new List<UpdateProductDto> { validProduct! };
+        var dates = new DateRangeDto
+        {
+            DateFrom = DateTime.Now.AddDays(-7),
+            DateTo = DateTime.Now
+        };
+        productServiceMock.Setup(s => s.GetMostRequestedProducts(dates)).Returns(products);
+        var result = productController.GetMostRequestedProducts(dates);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -113,9 +118,14 @@ public class ProductControllerTest
     [TestMethod]
     public void GetMostRequestedProducts_WhenNoProducts_ThrowsNotFoundException()
     {
-        productServiceMock.Setup(s => s.GetMostRequestedProducts()).Throws(new NotFoundException("No products found."));
+        var dates = new DateRangeDto
+        {
+            DateFrom = DateTime.Now.AddDays(-7),
+            DateTo = DateTime.Now
+        };
+        productServiceMock.Setup(s => s.GetMostRequestedProducts(dates)).Throws(new NotFoundException("No products found."));
 
-        Assert.ThrowsException<NotFoundException>(productController.GetMostRequestedProducts);
+        Assert.ThrowsException<NotFoundException>(() => productController.GetMostRequestedProducts(dates));
     }
 
     [TestMethod]
