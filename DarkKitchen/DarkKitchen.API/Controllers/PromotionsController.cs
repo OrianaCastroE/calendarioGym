@@ -24,18 +24,11 @@ public class PromotionsController(IPromotionService promotionService) : Controll
         return Ok("Promotion updated correctly.");
     }
 
-    [HttpPost("{promotionId}/products/{productCode}")]
-    public IActionResult AssociateProduct(int promotionId, string productCode)
+    [HttpPut("{id}/products")]
+    public IActionResult UpdatePromotionProducts(int id, [FromBody] UpdatePromotionProductsDto dto)
     {
-        _promotionService.AssociateProduct(promotionId, productCode);
-        return Ok("Product associated correctly.");
-    }
-
-    [HttpDelete("{promotionId}/products/{productCode}")]
-    public IActionResult DisassociateProduct(int promotionId, string productCode)
-    {
-        _promotionService.DisassociateProduct(promotionId, productCode);
-        return Ok("Product disassociated correctly.");
+        _promotionService.UpdatePromotionProducts(id, dto.Products);
+        return Ok("Promotion products updated correctly.");
     }
 
     [HttpGet]
