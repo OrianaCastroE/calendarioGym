@@ -70,6 +70,7 @@ public class ProductControllerTest
         };
 
         productServiceMock.Setup(s => s.CreateProduct(nullProductName)).Throws(new BadRequestException("Invalid name."));
+
         Assert.ThrowsException<BadRequestException>(() => productController.CreateProduct(nullProductName));
     }
 
@@ -92,6 +93,7 @@ public class ProductControllerTest
     {
         List<string> categories = [];
         productServiceMock.Setup(s => s.GetProducts(validProductLine, categories, validProductName)).Throws(new NotFoundException("No products found."));
+
         Assert.ThrowsException<NotFoundException>(() => productController.GetProducts(validProductLine, categories, validProductName));
     }
 
@@ -112,6 +114,7 @@ public class ProductControllerTest
     public void GetMostRequestedProducts_WhenNoProducts_ThrowsNotFoundException()
     {
         productServiceMock.Setup(s => s.GetMostRequestedProducts()).Throws(new NotFoundException("No products found."));
+
         Assert.ThrowsException<NotFoundException>(productController.GetMostRequestedProducts);
     }
 
@@ -120,6 +123,7 @@ public class ProductControllerTest
     {
         var result = productController.UpdateProduct(validProduct!);
         var resultObj = result as ObjectResult;
+
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj!.StatusCode);
     }
@@ -128,6 +132,29 @@ public class ProductControllerTest
     public void UpdateProduct_WhenProductNotFound_ThrowsNotFoundException()
     {
         productServiceMock.Setup(s => s.UpdateProduct(validProduct!)).Throws(new NotFoundException("Product not found."));
+
         Assert.ThrowsException<NotFoundException>(() => productController.UpdateProduct(validProduct!));
+    }
+
+    [TestMethod]
+    public void UpdateProductState_WhenProductFound_ReturnsOk()
+    {
+        var id = 1;
+        var isActive = true;
+        var result = productController.UpdateStatus(id, isActive);
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj!.StatusCode);
+    }
+
+    [TestMethod]
+    public void UpdateProductState_WhenProductNotFound_ThrowsNotFoundException()
+    {
+        var id = 1;
+        var isActive = true;
+        productServiceMock.Setup(s => s.UpdateStatus(id, isActive)).Throws(new NotFoundException("Product not found."));
+
+        Assert.ThrowsException<NotFoundException>(() => productController.UpdateStatus(id, isActive));
     }
 }
