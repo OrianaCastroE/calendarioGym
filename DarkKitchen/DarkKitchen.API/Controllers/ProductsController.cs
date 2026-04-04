@@ -1,4 +1,5 @@
 using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ public class ProductsController(IProductService productService) : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult UpdateProduct([FromBody] ProductDto product)
+    public IActionResult UpdateProduct([FromBody] UpdateProductDto product)
     {
         _productService.UpdateProduct(product);
         return Ok("Product updated correctly.");
@@ -33,9 +34,9 @@ public class ProductsController(IProductService productService) : ControllerBase
     }
 
     [HttpGet("most-requested")]
-    public IActionResult GetMostRequestedProducts()
+    public IActionResult GetMostRequestedProducts([FromBody] DateRangeDto dates)
     {
-        var products = _productService.GetMostRequestedProducts();
+        var products = _productService.GetMostRequestedProducts(dates);
         return Ok(products);
     }
 
