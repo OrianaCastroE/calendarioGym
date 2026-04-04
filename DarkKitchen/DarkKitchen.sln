@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.4.11620.152 stable
+VisualStudioVersion = 18.4.11620.152
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.API", "DarkKitchen.API\DarkKitchen.API.csproj", "{B1C2D3E4-F567-890A-BCDE-F01234567890}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.Tests", "DarkKitchen.Tests\DarkKitchen.Tests.csproj", "{0A6C19E5-CAA9-421F-A593-7ECFFF59F004}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{18FC770C-61FE-49FC-B106-56E6CD3A88ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.Domain", "DarkKitchen.Domain\DarkKitchen.Domain.csproj", "{18FC770C-61FE-49FC-B106-56E6CD3A88ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.Services", "DarkKitchen.Services\DarkKitchen.Services.csproj", "{79E5BA79-A0D6-4DF4-9B78-83CE3E998E11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.Models", "DarkKitchen.Models\DarkKitchen.Models.csproj", "{B29373CF-829F-4301-83D3-D9ABE9C94B3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{18FC770C-61FE-49FC-B106-56E6CD3A88ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18FC770C-61FE-49FC-B106-56E6CD3A88ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18FC770C-61FE-49FC-B106-56E6CD3A88ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79E5BA79-A0D6-4DF4-9B78-83CE3E998E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79E5BA79-A0D6-4DF4-9B78-83CE3E998E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79E5BA79-A0D6-4DF4-9B78-83CE3E998E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79E5BA79-A0D6-4DF4-9B78-83CE3E998E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B29373CF-829F-4301-83D3-D9ABE9C94B3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B29373CF-829F-4301-83D3-D9ABE9C94B3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B29373CF-829F-4301-83D3-D9ABE9C94B3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B29373CF-829F-4301-83D3-D9ABE9C94B3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

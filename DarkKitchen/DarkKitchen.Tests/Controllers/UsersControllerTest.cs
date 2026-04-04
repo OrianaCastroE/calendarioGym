@@ -1,7 +1,8 @@
 using DarkKitchen.API.Controllers;
-using Domain.DTOs.UserDTOs;
-using Domain.Entities;
-using Domain.Interfaces;
+using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Exceptions;
+using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Models.UserDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -27,7 +28,7 @@ public class UsersControllerTest
         userController = new UsersController(userServiceMock.Object);
         users =
         [
-            new UserResponseDto { Id = 1, Name = "Name", Surname = "Surname", Email = validEmail, Phone = validPhone, Role = Role.Client }
+            new UserResponseDto { Id = 1, Name = "Name", Surname = "Surname", Email = validEmail, Phone = validPhone, Role = Role.Client.ToString() }
         ];
         validUser = new UserDto()
         {
@@ -52,7 +53,7 @@ public class UsersControllerTest
             Email = validEmail,
             Phone = validPhone,
             Password = password,
-            Role = Role.Admin
+            Role = Role.Admin.ToString()
         };
     }
 
@@ -61,25 +62,21 @@ public class UsersControllerTest
     {
         userServiceMock.Setup(s => s.CreateUser(validUser!));
         var result = userController.SignUp(validUser!);
-        var resultObj = result as CreatedResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void UserSignUp_UserAlreadyExists_ReturnsBadRequest()
+    public void UserSignUp_UserAlreadyExists_ThrowsBadRequestException()
     {
-        userServiceMock.Setup(s => s.CreateUser(validUser!)).Throws(new Exception("User already exists."));
-        var result = userController.SignUp(validUser!);
-        var resultObj = result as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        userServiceMock.Setup(s => s.CreateUser(validUser!)).Throws(new BadRequestException("User already exists."));
+        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(validUser!));
     }
 
     [TestMethod]
-    public void UserSignUp_InvalidEmailFormat_ReturnsBadRequest()
+    public void UserSignUp_InvalidEmailFormat_ThrowsBadRequestException()
     {
         var invalidEmailUser = new UserDto()
         {
@@ -89,16 +86,12 @@ public class UsersControllerTest
             Phone = validPhone,
             Password = password
         };
-        userServiceMock.Setup(s => s.CreateUser(invalidEmailUser)).Throws(new Exception("Invalid email address."));
-        var result = userController.SignUp(invalidEmailUser);
-        var resultObj = result as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        userServiceMock.Setup(s => s.CreateUser(invalidEmailUser)).Throws(new BadRequestException("Invalid email address."));
+        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(invalidEmailUser));
     }
 
     [TestMethod]
-    public void UserSignUp_InvalidPhoneFormat_ReturnsBadRequest()
+    public void UserSignUp_InvalidPhoneFormat_ThrowsBadRequestException()
     {
         var invalidPhoneUser = new UserDto()
         {
@@ -108,16 +101,12 @@ public class UsersControllerTest
             Phone = "invalid-phone",
             Password = password
         };
-        userServiceMock.Setup(s => s.CreateUser(invalidPhoneUser)).Throws(new Exception("Invalid phone number."));
-        var result = userController.SignUp(invalidPhoneUser);
-        var resultObj = result as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        userServiceMock.Setup(s => s.CreateUser(invalidPhoneUser)).Throws(new BadRequestException("Invalid phone number."));
+        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(invalidPhoneUser));
     }
 
     [TestMethod]
-    public void UserSignUp_InvalidPassword_ReturnsBadRequest()
+    public void UserSignUp_InvalidPassword_ThrowsBadRequestException()
     {
         var invalidPasswordUser = new UserDto()
         {
@@ -127,12 +116,8 @@ public class UsersControllerTest
             Phone = validPhone,
             Password = "short"
         };
-        userServiceMock.Setup(s => s.CreateUser(invalidPasswordUser)).Throws(new Exception("Password does not meet complexity requirements."));
-        var restult = userController.SignUp(invalidPasswordUser);
-        var resultObj = restult as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        userServiceMock.Setup(s => s.CreateUser(invalidPasswordUser)).Throws(new BadRequestException("Password does not meet complexity requirements."));
+        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(invalidPasswordUser));
     }
 
     [TestMethod]
@@ -140,21 +125,17 @@ public class UsersControllerTest
     {
         userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser!));
         var result = userController.CreateUserWithRole(validAdminUser!);
-        var resultObj = result as CreatedResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void CreateUserWithRole_UserAlreadyExists_ReturnsBadRequest()
+    public void CreateUserWithRole_UserAlreadyExists_ThrowsBadRequestException()
     {
-        userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser!)).Throws(new Exception("User already exists."));
-        var result = userController.CreateUserWithRole(validAdminUser!);
-        var resultObj = result as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser!)).Throws(new BadRequestException("User already exists."));
+        Assert.ThrowsException<BadRequestException>(() => userController.CreateUserWithRole(validAdminUser!));
     }
 
     [TestMethod]
@@ -162,21 +143,17 @@ public class UsersControllerTest
     {
         userServiceMock.Setup(s => s.UpdateUser(validUser!));
         var result = userController.UpdateUser(validUser!);
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void UpdateUser_UserNotFound_ReturnsNotFound()
+    public void UpdateUser_UserNotFound_ThrowsNotFoundException()
     {
-        userServiceMock.Setup(s => s.UpdateUser(validUser!)).Throws(new Exception("User not found."));
-        var result = userController.UpdateUser(validUser!);
-        var resultObj = result as NotFoundObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        userServiceMock.Setup(s => s.UpdateUser(validUser!)).Throws(new NotFoundException("User not found."));
+        Assert.ThrowsException<NotFoundException>(() => userController.UpdateUser(validUser!));
     }
 
     [TestMethod]
@@ -184,21 +161,17 @@ public class UsersControllerTest
     {
         userServiceMock.Setup(s => s.GetUsers("Name", "Surname")).Returns(users!);
         var result = userController.GetUsers("Name", "Surname");
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void GetUsers_NoUsersFound_ReturnsNotFound()
+    public void GetUsers_NoUsersFound_ThrowsNotFoundException()
     {
-        userServiceMock.Setup(s => s.GetUsers("Name", "Surname")).Throws(new Exception("No users found."));
-        var result = userController.GetUsers("Name", "Surname");
-        var resultObj = result as NotFoundObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        userServiceMock.Setup(s => s.GetUsers("Name", "Surname")).Throws(new NotFoundException("No users found."));
+        Assert.ThrowsException<NotFoundException>(() => userController.GetUsers("Name", "Surname"));
     }
 
     [TestMethod]
@@ -206,31 +179,23 @@ public class UsersControllerTest
     {
         userServiceMock.Setup(s => s.DeleteUser(validEmail));
         var result = userController.DeleteUser(validEmail);
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void DeleteUser_UserNotFound_ReturnsNotFound()
+    public void DeleteUser_UserNotFound_ThrowsNotFoundException()
     {
-        userServiceMock.Setup(s => s.DeleteUser(validEmail)).Throws(new Exception("User not found."));
-        var result = userController.DeleteUser(validEmail);
-        var resultObj = result as NotFoundObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        userServiceMock.Setup(s => s.DeleteUser(validEmail)).Throws(new NotFoundException("User not found."));
+        Assert.ThrowsException<NotFoundException>(() => userController.DeleteUser(validEmail));
     }
 
     [TestMethod]
-    public void DeleteUser_EmptyEmail_ReturnsNotFound()
+    public void DeleteUser_EmptyEmail_ThrowsBadRequestException()
     {
-        userServiceMock.Setup(s => s.DeleteUser(string.Empty)).Throws(new Exception("Invalid email."));
-        var result = userController.DeleteUser(string.Empty);
-        var resultObj = result as NotFoundObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        userServiceMock.Setup(s => s.DeleteUser(string.Empty)).Throws(new BadRequestException("Email can't be empty."));
+        Assert.ThrowsException<BadRequestException>(() => userController.DeleteUser(string.Empty));
     }
 }

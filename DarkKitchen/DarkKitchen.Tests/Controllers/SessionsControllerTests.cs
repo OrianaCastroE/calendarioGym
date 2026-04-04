@@ -1,6 +1,6 @@
 using DarkKitchen.API.Controllers;
-using Domain.DTOs.SessionDTOs;
-using Domain.Interfaces;
+using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Models.SessionDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
