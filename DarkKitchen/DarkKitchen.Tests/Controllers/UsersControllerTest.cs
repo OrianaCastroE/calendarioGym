@@ -1,8 +1,9 @@
 using DarkKitchen.API.Controllers;
-using Domain.DTOs.UserDTOs;
+using DarkKitchen.Models.UserDTOs;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Models.UserDTOs;
 using Moq;
 
 namespace DarkKitchen.Tests.Controllers;
@@ -27,7 +28,7 @@ public class UsersControllerTest
         userController = new UsersController(userServiceMock.Object);
         users =
         [
-            new UserResponseDto { Id = 1, Name = "Name", Surname = "Surname", Email = validEmail, Phone = validPhone, Role = Role.Client }
+            new UserResponseDto { Id = 1, Name = "Name", Surname = "Surname", Email = validEmail, Phone = validPhone, Role = Role.Client.ToString() }
         ];
         validUser = new UserDto()
         {
@@ -52,7 +53,7 @@ public class UsersControllerTest
             Email = validEmail,
             Phone = validPhone,
             Password = password,
-            Role = Role.Admin
+            Role = Role.Admin.ToString()
         };
     }
 

@@ -1,7 +1,7 @@
 using DarkKitchen.API.Controllers;
-using Domain.DTOs.OrderDTOs;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Models.OrderDTOs;
 using Moq;
 
 namespace DarkKitchen.Tests.Controllers;

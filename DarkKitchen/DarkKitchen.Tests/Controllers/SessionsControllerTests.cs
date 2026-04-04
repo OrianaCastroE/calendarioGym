@@ -1,7 +1,7 @@
 using DarkKitchen.API.Controllers;
-using Domain.DTOs.SessionDTOs;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Models.SessionDTOs;
 using Moq;
 
 namespace DarkKitchen.Tests.Controllers;
