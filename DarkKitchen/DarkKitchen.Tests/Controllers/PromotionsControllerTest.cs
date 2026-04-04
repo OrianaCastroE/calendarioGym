@@ -1,4 +1,5 @@
 using DarkKitchen.API.Controllers;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.PromotionDTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -46,22 +47,18 @@ public class PromotionsControllerTest
     {
         promotionServiceMock!.Setup(s => s.CreatePromotion(validPromotion!));
         var result = promotionsController!.CreatePromotion(validPromotion!);
-        var resultObj = result as CreatedResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void CreatePromotion_AlreadyExists_ReturnsBadRequest()
+    public void CreatePromotion_AlreadyExists_ThrowsBadRequestException()
     {
-        promotionServiceMock!.Setup(s => s.CreatePromotion(validPromotion!))
-            .Throws(new Exception("Promotion already exists."));
-        var result = promotionsController!.CreatePromotion(validPromotion!);
-        var resultObj = result as BadRequestObjectResult;
+        promotionServiceMock!.Setup(s => s.CreatePromotion(validPromotion!)).Throws(new BadRequestException("Promotion already exists."));
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        Assert.ThrowsException<BadRequestException>(() => promotionsController!.CreatePromotion(validPromotion!));
     }
 
     [TestMethod]
@@ -69,22 +66,18 @@ public class PromotionsControllerTest
     {
         promotionServiceMock!.Setup(s => s.UpdatePromotion(validPromotion!));
         var result = promotionsController!.UpdatePromotion(validPromotion!);
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void UpdatePromotion_PromotionNotFound_ReturnsNotFound()
+    public void UpdatePromotion_PromotionNotFound_ThrowsNotFoundException()
     {
-        promotionServiceMock!.Setup(s => s.UpdatePromotion(validPromotion!))
-            .Throws(new Exception("Promotion not found."));
-        var result = promotionsController!.UpdatePromotion(validPromotion!);
-        var resultObj = result as NotFoundObjectResult;
+        promotionServiceMock!.Setup(s => s.UpdatePromotion(validPromotion!)).Throws(new NotFoundException("Promotion not found."));
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotion(validPromotion!));
     }
 
     [TestMethod]
@@ -92,22 +85,18 @@ public class PromotionsControllerTest
     {
         promotionServiceMock!.Setup(s => s.AssociateProduct(1, "PROD01"));
         var result = promotionsController!.AssociateProduct(1, "PROD01");
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void AssociateProduct_PromotionNotFound_ReturnsNotFound()
+    public void AssociateProduct_PromotionNotFound_ThrowsNotFoundException()
     {
-        promotionServiceMock!.Setup(s => s.AssociateProduct(1, "PROD01"))
-            .Throws(new Exception("Promotion not found."));
-        var result = promotionsController!.AssociateProduct(1, "PROD01");
-        var resultObj = result as NotFoundObjectResult;
+        promotionServiceMock!.Setup(s => s.AssociateProduct(1, "PROD01")).Throws(new NotFoundException("Promotion not found."));
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        Assert.ThrowsException<NotFoundException>(() => promotionsController!.AssociateProduct(1, "PROD01"));
     }
 
     [TestMethod]
@@ -115,22 +104,18 @@ public class PromotionsControllerTest
     {
         promotionServiceMock!.Setup(s => s.DisassociateProduct(1, "PROD01"));
         var result = promotionsController!.DisassociateProduct(1, "PROD01");
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void DisassociateProduct_PromotionNotFound_ReturnsNotFound()
+    public void DisassociateProduct_PromotionNotFound_ThrowsNotFoundException()
     {
-        promotionServiceMock!.Setup(s => s.DisassociateProduct(1, "PROD01"))
-            .Throws(new Exception("Promotion not found."));
-        var result = promotionsController!.DisassociateProduct(1, "PROD01");
-        var resultObj = result as NotFoundObjectResult;
+        promotionServiceMock!.Setup(s => s.DisassociateProduct(1, "PROD01")).Throws(new NotFoundException("Promotion not found."));
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        Assert.ThrowsException<NotFoundException>(() => promotionsController!.DisassociateProduct(1, "PROD01"));
     }
 
     [TestMethod]
@@ -138,7 +123,7 @@ public class PromotionsControllerTest
     {
         promotionServiceMock!.Setup(s => s.GetPromotions(null, null, null)).Returns(promotions!);
         var result = promotionsController!.GetPromotions(null, null, null);
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
@@ -147,12 +132,8 @@ public class PromotionsControllerTest
     [TestMethod]
     public void GetPromotions_NoPromotionsFound_ReturnsNotFound()
     {
-        promotionServiceMock!.Setup(s => s.GetPromotions(null, null, null))
-            .Throws(new Exception("No promotions found."));
-        var result = promotionsController!.GetPromotions(null, null, null);
-        var resultObj = result as NotFoundObjectResult;
+        promotionServiceMock!.Setup(s => s.GetPromotions(null, null, null)).Throws(new NotFoundException("No promotions found."));
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        Assert.ThrowsException<NotFoundException>(() => promotionsController!.GetPromotions(null, null, null));
     }
 }
