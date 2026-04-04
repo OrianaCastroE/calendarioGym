@@ -38,4 +38,11 @@ public class ProductsController(IProductService productService) : ControllerBase
         var products = _productService.GetMostRequestedProducts();
         return Ok(products);
     }
+
+    [HttpPatch("{id}")]
+    public IActionResult UpdateStatus(int id, [FromBody] ProductStatusDto status)
+    {
+        _productService.UpdateStatus(id, status);
+        return Ok("Product status updated correctly.");
+    }
 }

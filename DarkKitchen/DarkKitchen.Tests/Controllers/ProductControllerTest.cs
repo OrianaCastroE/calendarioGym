@@ -140,8 +140,11 @@ public class ProductControllerTest
     public void UpdateProductState_WhenProductFound_ReturnsOk()
     {
         var id = 1;
-        var isActive = true;
-        var result = productController.UpdateStatus(id, isActive);
+        var status = new ProductStatusDto
+        {
+            IsActive = true
+        };
+        var result = productController.UpdateStatus(id, status);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -152,9 +155,12 @@ public class ProductControllerTest
     public void UpdateProductState_WhenProductNotFound_ThrowsNotFoundException()
     {
         var id = 1;
-        var isActive = true;
-        productServiceMock.Setup(s => s.UpdateStatus(id, isActive)).Throws(new NotFoundException("Product not found."));
+        var status = new ProductStatusDto
+        {
+            IsActive = true
+        };
+        productServiceMock.Setup(s => s.UpdateStatus(id, status)).Throws(new NotFoundException("Product not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => productController.UpdateStatus(id, isActive));
+        Assert.ThrowsException<NotFoundException>(() => productController.UpdateStatus(id, status));
     }
 }
