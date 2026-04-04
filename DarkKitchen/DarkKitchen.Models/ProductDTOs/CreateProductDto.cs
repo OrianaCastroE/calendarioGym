@@ -7,5 +7,4 @@ public class CreateProductDto
     public string? ProductLine { get; set; }
     public string? Category { get; set; }
     public string[]? ImageUrl { get; set; } // A chequear
-    public bool? IsActive { get; set; }
 }
