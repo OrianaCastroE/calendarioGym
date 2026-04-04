@@ -1,4 +1,4 @@
-﻿namespace Models.ProductDTOs;
+﻿namespace DarkKitchen.Models.ProductDTOs;
 
 public class CreateProductDto
 {

@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Models\DarkKitchen.Models.csproj" />
+    <ProjectReference Include="..\DarkKitchen.Domain\DarkKitchen.Domain.csproj" />
+    <ProjectReference Include="..\DarkKitchen.Models\DarkKitchen.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>

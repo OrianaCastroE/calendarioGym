@@ -1,5 +1,5 @@
-﻿using DarkKitchen.Models.ResponseDTOs;
-using Domain.Exceptions;
+﻿using DarkKitchen.Domain.Exceptions;
+using DarkKitchen.Models.ResponseDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -16,7 +16,7 @@ public class ExceptionFilter : IExceptionFilter
             Message = "Internal server error."
         };
 
-        if(context.Exception is InvalidInputException)
+        if(context.Exception is BadRequestException)
         {
             statusCode = 400;
             response.Message = "An error occurred.";

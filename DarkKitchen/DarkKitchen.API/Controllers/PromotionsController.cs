@@ -1,6 +1,6 @@
-﻿using Domain.Interfaces;
+﻿using DarkKitchen.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Models.PromotionDTOs;
+using DarkKitchen.Models.PromotionDTOs;
 
 namespace DarkKitchen.API.Controllers;
 

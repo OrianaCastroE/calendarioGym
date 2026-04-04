@@ -7,11 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.API", "DarkKitc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.Tests", "DarkKitchen.Tests\DarkKitchen.Tests.csproj", "{0A6C19E5-CAA9-421F-A593-7ECFFF59F004}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{18FC770C-61FE-49FC-B106-56E6CD3A88ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.Domain", "DarkKitchen.Domain\DarkKitchen.Domain.csproj", "{18FC770C-61FE-49FC-B106-56E6CD3A88ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.Services", "DarkKitchen.Services\DarkKitchen.Services.csproj", "{79E5BA79-A0D6-4DF4-9B78-83CE3E998E11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.Models", "Models\DarkKitchen.Models.csproj", "{B29373CF-829F-4301-83D3-D9ABE9C94B3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKitchen.Models", "DarkKitchen.Models\DarkKitchen.Models.csproj", "{B29373CF-829F-4301-83D3-D9ABE9C94B3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,6 @@
-﻿using DarkKitchen.Models.UserDTOs;
-using Domain.Interfaces;
+﻿using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Models.UserDTOs;
 using Microsoft.AspNetCore.Mvc;
-using Models.UserDTOs;
 
 namespace DarkKitchen.API.Controllers;
 
@@ -14,8 +13,8 @@ public class UsersController(IUserService userService) : ControllerBase
     [HttpPost]
     public IActionResult SignUp([FromBody] UserDto newUser)
     {
-         _userService.CreateUser(newUser);
-         return Created("User created correctly.", null);
+        _userService.CreateUser(newUser);
+        return Created("User created correctly.", null);
     }
 
     [HttpPost("admin")]

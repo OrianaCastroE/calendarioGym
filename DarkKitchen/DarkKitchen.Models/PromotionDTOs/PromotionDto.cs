@@ -1,8 +1,7 @@
-﻿namespace Models.PromotionDTOs;
+﻿namespace DarkKitchen.Models.PromotionDTOs;
 
-public class PromotionResponseDto
+public class PromotionDto
 {
-    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public int DiscountPercentage { get; set; }
     public DateTime DateFrom { get; set; }

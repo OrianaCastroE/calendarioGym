@@ -1,4 +1,4 @@
-﻿namespace Models.UserDTOs;
+﻿namespace DarkKitchen.Models.UserDTOs;
 
 public class UserDto
 {

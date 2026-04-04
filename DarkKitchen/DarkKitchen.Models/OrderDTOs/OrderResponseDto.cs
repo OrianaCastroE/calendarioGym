@@ -1,4 +1,4 @@
-﻿namespace Models.OrderDTOs;
+﻿namespace DarkKitchen.Models.OrderDTOs;
 
 public class OrderResponseDto
 {

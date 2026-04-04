@@ -1,4 +1,4 @@
-namespace Models.SessionDTOs;
+namespace DarkKitchen.Models.SessionDTOs;
 
 public class LoginResponseDto
 {
