@@ -1,8 +1,8 @@
 ﻿namespace DarkKitchen.Models.ProductDTOs;
 
-public class ProductDto
+public class UpdateProductDto
 {
-    public Guid? Id { get; set; } // Código identificador
+    public Guid? Id { get; set; } // Guid o int?
     public string? Name { get; set; }
     public string? Description { get; set; }
     public string? ProductLine { get; set; }

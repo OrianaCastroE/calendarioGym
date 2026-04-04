@@ -1,10 +1,11 @@
 using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkKitchen.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/products")]
 [ApiController]
 
 public class ProductsController(IProductService productService) : ControllerBase
@@ -14,56 +15,35 @@ public class ProductsController(IProductService productService) : ControllerBase
     [HttpPost]
     public IActionResult CreateProduct([FromBody] CreateProductDto newProduct)
     {
-        try
-        {
-            _productService.CreateProduct(newProduct);
-            return Created("Product created correctly.", null);
-        }
-        catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        _productService.CreateProduct(newProduct);
+        return Created("Product created correctly.", null);
+    }
+
+    [HttpPut]
+    public IActionResult UpdateProduct([FromBody] UpdateProductDto product)
+    {
+        _productService.UpdateProduct(product);
+        return Ok("Product updated correctly.");
     }
 
     [HttpGet]
     public IActionResult GetProducts([FromQuery] string? productLine, [FromQuery] List<string>? categories, [FromQuery] string? name)
     {
-        try
-        {
-            var products = _productService.GetProducts(productLine, categories, name);
-            return Ok(products);
-        }
-        catch
-        {
-            return NotFound("Products not found.");
-        }
+        var products = _productService.GetProducts(productLine, categories, name);
+        return Ok(products);
     }
 
     [HttpGet("most-requested")]
-    public IActionResult GetMostRequestedProducts()
+    public IActionResult GetMostRequestedProducts([FromBody] DateRangeDto dates)
     {
-        try
-        {
-            var products = _productService.GetMostRequestedProducts();
-            return Ok(products);
-        }
-        catch(Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var products = _productService.GetMostRequestedProducts(dates);
+        return Ok(products);
     }
 
-    [HttpPut]
-    public IActionResult UpdateProduct([FromBody] ProductDto product)
+    [HttpPatch("{id}")]
+    public IActionResult UpdateStatus(int id, [FromBody] ProductStatusDto status)
     {
-        try
-        {
-            _productService.UpdateProduct(product);
-            return Ok("Product updated correctly.");
-        }
-        catch(Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        _productService.UpdateStatus(id, status);
+        return Ok("Product status updated correctly.");
     }
 }
