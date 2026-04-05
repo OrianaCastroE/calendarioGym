@@ -137,4 +137,31 @@ public class OrdersControllerTest
 
         Assert.ThrowsException<NotFoundException>(() => ordersController!.GetOrderById(1));
     }
+
+    [TestMethod]
+    public void UpdateOrderStatus_ValidStatus_ReturnsOk()
+    {
+        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, "Preparing"));
+        var result = ordersController!.UpdateOrderStatus(1, "Preparing");
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_InvalidStatus_ThrowsBadRequestException()
+    {
+        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, "InvalidStatus")).Throws(new BadRequestException("Invalid order status."));
+
+        Assert.ThrowsException<BadRequestException>(() => ordersController!.UpdateOrderStatus(1, "InvalidStatus"));
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_OrderNotFound_ThrowsNotFoundException()
+    {
+        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, "Preparing")).Throws(new NotFoundException("Order not found."));
+
+        Assert.ThrowsException<NotFoundException>(() => ordersController!.UpdateOrderStatus(1, "Preparing"));
+    }
 }
