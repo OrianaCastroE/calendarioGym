@@ -38,38 +38,10 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(order);
     }
 
-    [HttpPut("{orderId}/prepare")]
-    public IActionResult PrepareOrder(int orderId)
+    [HttpPut("{orderId}/status")]
+    public IActionResult UpdateOrderStatus(int orderId, [FromBody] string newStatus)
     {
-        _orderService.PrepareOrder(orderId);
-        return Ok("Order prepared correctly.");
-    }
-
-    [HttpPut("{orderId}/cancel")]
-    public IActionResult CancelOrder(int orderId)
-    {
-        _orderService.CancelOrder(orderId);
-        return Ok("Order cancelled correctly.");
-    }
-
-    [HttpPut("{orderId}/on-the-way")]
-    public IActionResult SetOrderOnTheWay(int orderId)
-    {
-        _orderService.SetOrderOnTheWay(orderId);
-        return Ok("Order is on the way.");
-    }
-
-    [HttpPut("{orderId}/deliver")]
-    public IActionResult DeliverOrder(int orderId)
-    {
-        _orderService.DeliverOrder(orderId);
-        return Ok("Order delivered correctly.");
-    }
-
-    [HttpPut("{orderId}/not-delivered")]
-    public IActionResult SetOrderNotDelivered(int orderId)
-    {
-        _orderService.SetOrderNotDelivered(orderId);
-        return Ok("Order marked as not delivered.");
+        _orderService.UpdateOrderStatus(orderId, newStatus);
+        return Ok("Order status updated.");
     }
 }
