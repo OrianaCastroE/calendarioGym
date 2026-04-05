@@ -8,5 +8,5 @@ public interface IOrderService
     public List<OrderResponseDto> GetClientOrders(int clientId, DateTime? dateFrom, DateTime? dateTo, string? status);
     public List<OrderResponseDto> GetOrdersByStatus(DateTime dateFrom, DateTime dateTo, string? address, string? status);
     public OrderResponseDto GetOrderById(int orderId);
-    public void UpdateOrderStatus(int orderId, string newStatus);
+    public void UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus);
 }

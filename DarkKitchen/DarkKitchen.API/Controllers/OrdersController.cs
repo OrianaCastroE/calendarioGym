@@ -17,10 +17,11 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Created(string.Empty, order);
     }
 
-    [HttpGet("client/{clientId}")]
-    public IActionResult GetClientOrders(int clientId, [FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo, [FromQuery] string? status)
+    [HttpGet("client")]
+    public IActionResult GetClientOrders([FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo, [FromQuery] string? status)
     {
-        var orders = _orderService.GetClientOrders(clientId, dateFrom, dateTo, status);
+        // TODO: extract clientId from token (as in some other controllers)
+        var orders = _orderService.GetClientOrders(0, dateFrom, dateTo, status);
         return Ok(orders);
     }
 
@@ -38,8 +39,8 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(order);
     }
 
-    [HttpPut("{orderId}/status")]
-    public IActionResult UpdateOrderStatus(int orderId, [FromBody] string newStatus)
+    [HttpPatch("{orderId}/status")]
+    public IActionResult UpdateOrderStatus(int orderId, [FromBody] UpdateOrderStatusDto newStatus)
     {
         _orderService.UpdateOrderStatus(orderId, newStatus);
         return Ok("Order status updated.");
