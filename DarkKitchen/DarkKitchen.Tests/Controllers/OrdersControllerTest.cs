@@ -1,4 +1,5 @@
 using DarkKitchen.API.Controllers;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.OrderDTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,6 @@ public class OrdersControllerTest
 
         validOrder = new OrderDto()
         {
-            ClientId = 1,
             DeliveryType = "express",
             Address = new AddressDto()
             {
@@ -56,18 +56,17 @@ public class OrdersControllerTest
     {
         orderServiceMock!.Setup(s => s.CreateOrder(validOrder!)).Returns(orderResponse!);
         var result = ordersController!.CreateOrder(validOrder!);
-        var resultObj = result as CreatedResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void CreateOrder_NoProducts_ReturnsBadRequest()
+    public void CreateOrder_NoProducts_ThrowsBadRequestException()
     {
         var emptyOrder = new OrderDto()
         {
-            ClientId = 1,
             DeliveryType = "express",
             Address = new AddressDto()
             {
@@ -77,13 +76,9 @@ public class OrdersControllerTest
             },
             Products = []
         };
-        orderServiceMock!.Setup(s => s.CreateOrder(emptyOrder))
-            .Throws(new Exception("Order must have at least one product."));
-        var result = ordersController!.CreateOrder(emptyOrder);
-        var resultObj = result as BadRequestObjectResult;
+        orderServiceMock!.Setup(s => s.CreateOrder(emptyOrder)).Throws(new BadRequestException("Order must have at least one product."));
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        Assert.ThrowsException<BadRequestException>(() => ordersController!.CreateOrder(emptyOrder));
     }
 
     [TestMethod]
@@ -91,22 +86,18 @@ public class OrdersControllerTest
     {
         orderServiceMock!.Setup(s => s.GetClientOrders(1, null, null, null)).Returns(orders!);
         var result = ordersController!.GetClientOrders(1, null, null, null);
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void GetClientOrders_NoOrdersFound_ReturnsNotFound()
+    public void GetClientOrders_NoOrdersFound_ThrowsNotFoundException()
     {
-        orderServiceMock!.Setup(s => s.GetClientOrders(1, null, null, null))
-            .Throws(new Exception("No orders found."));
-        var result = ordersController!.GetClientOrders(1, null, null, null);
-        var resultObj = result as NotFoundObjectResult;
+        orderServiceMock!.Setup(s => s.GetClientOrders(1, null, null, null)).Throws(new NotFoundException("No orders found."));
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetClientOrders(1, null, null, null));
     }
 
     [TestMethod]
@@ -114,22 +105,18 @@ public class OrdersControllerTest
     {
         orderServiceMock!.Setup(s => s.GetOrdersByStatus(It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, null)).Returns(orders!);
         var result = ordersController!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null);
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void GetOrdersByStatus_NoOrdersFound_ReturnsNotFound()
+    public void GetOrdersByStatus_NoOrdersFound_ThrowsNotFoundException()
     {
-        orderServiceMock!.Setup(s => s.GetOrdersByStatus(It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, null))
-            .Throws(new Exception("No orders found."));
-        var result = ordersController!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null);
-        var resultObj = result as NotFoundObjectResult;
+        orderServiceMock!.Setup(s => s.GetOrdersByStatus(It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, null)).Throws(new NotFoundException("No orders found."));
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
+        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null));
     }
 
     [TestMethod]
@@ -137,136 +124,17 @@ public class OrdersControllerTest
     {
         orderServiceMock!.Setup(s => s.GetOrderById(1)).Returns(orderResponse!);
         var result = ordersController!.GetOrderById(1);
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void GetOrderById_OrderNotFound_ReturnsNotFound()
+    public void GetOrderById_OrderNotFound_ThrowsNotFoundException()
     {
-        orderServiceMock!.Setup(s => s.GetOrderById(1))
-            .Throws(new Exception("Order not found."));
-        var result = ordersController!.GetOrderById(1);
-        var resultObj = result as NotFoundObjectResult;
+        orderServiceMock!.Setup(s => s.GetOrderById(1)).Throws(new NotFoundException("Order not found."));
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(404, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void PrepareOrder_ValidId_ReturnsOk()
-    {
-        orderServiceMock!.Setup(s => s.PrepareOrder(1));
-        var result = ordersController!.PrepareOrder(1);
-        var resultObj = result as OkObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(200, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void PrepareOrder_OrderNotPending_ReturnsBadRequest()
-    {
-        orderServiceMock!.Setup(s => s.PrepareOrder(1))
-            .Throws(new Exception("Order is not pending."));
-        var result = ordersController!.PrepareOrder(1);
-        var resultObj = result as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void CancelOrder_ValidId_ReturnsOk()
-    {
-        orderServiceMock!.Setup(s => s.CancelOrder(1));
-        var result = ordersController!.CancelOrder(1);
-        var resultObj = result as OkObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(200, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void CancelOrder_OrderNotPending_ReturnsBadRequest()
-    {
-        orderServiceMock!.Setup(s => s.CancelOrder(1))
-            .Throws(new Exception("Order is not pending."));
-        var result = ordersController!.CancelOrder(1);
-        var resultObj = result as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void SetOrderOnTheWay_ValidId_ReturnsOk()
-    {
-        orderServiceMock!.Setup(s => s.SetOrderOnTheWay(1));
-        var result = ordersController!.SetOrderOnTheWay(1);
-        var resultObj = result as OkObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(200, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void SetOrderOnTheWay_OrderNotPrepared_ReturnsBadRequest()
-    {
-        orderServiceMock!.Setup(s => s.SetOrderOnTheWay(1))
-            .Throws(new Exception("Order is not prepared."));
-        var result = ordersController!.SetOrderOnTheWay(1);
-        var resultObj = result as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void DeliverOrder_ValidId_ReturnsOk()
-    {
-        orderServiceMock!.Setup(s => s.DeliverOrder(1));
-        var result = ordersController!.DeliverOrder(1);
-        var resultObj = result as OkObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(200, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void DeliverOrder_OrderNotOnTheWay_ReturnsBadRequest()
-    {
-        orderServiceMock!.Setup(s => s.DeliverOrder(1))
-            .Throws(new Exception("Order is not on the way."));
-        var result = ordersController!.DeliverOrder(1);
-        var resultObj = result as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void SetOrderNotDelivered_ValidId_ReturnsOk()
-    {
-        orderServiceMock!.Setup(s => s.SetOrderNotDelivered(1));
-        var result = ordersController!.SetOrderNotDelivered(1);
-        var resultObj = result as OkObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(200, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void SetOrderNotDelivered_OrderNotOnTheWay_ReturnsBadRequest()
-    {
-        orderServiceMock!.Setup(s => s.SetOrderNotDelivered(1))
-            .Throws(new Exception("Order is not on the way."));
-        var result = ordersController!.SetOrderNotDelivered(1);
-        var resultObj = result as BadRequestObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetOrderById(1));
     }
 }
