@@ -110,6 +110,11 @@ public class ProductService(IProductRepository repository) : IProductService
     {
         IEnumerable<Product> products = _repository.GetMostRequestedProducts(dates);
 
+        if(!products.Any())
+        {
+            throw new NotFoundException("No products found.");
+        }
+
         return products.Select(p => new UpdateProductDto
         {
             Id = p.Id,
