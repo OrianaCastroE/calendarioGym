@@ -61,4 +61,14 @@ public class ProductServiceTest
         var dto = new CreateProductDto { Name = null };
         Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
     }
+
+    [TestMethod]
+       public void CreateProduct_WhenNameIsEmpty_ThrowsBadRequestException()
+       {
+            var dto = new CreateProductDto
+            {
+                Name = string.Empty
+            };
+            Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
+       }
 }
