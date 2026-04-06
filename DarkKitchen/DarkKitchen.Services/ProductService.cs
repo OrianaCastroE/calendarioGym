@@ -12,7 +12,21 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public void CreateProduct(CreateProductDto newProduct)
     {
-        throw new NotImplementedException();
+        var product = new Product
+        {
+            Code = newProduct.Code ?? string.Empty,
+            Name = newProduct.Name ?? string.Empty,
+            Description = newProduct.Description,
+            ProductLine = newProduct.ProductLine,
+            Category = newProduct.Category,
+            Price = newProduct.Price ?? 0,
+            IsActive = true,
+            Images = newProduct.ImageUrl?
+                .Select(url => new ProductImage { Url = url })
+                .ToList() ?? []
+        };
+
+        _repository.Add(product);
     }
 
     public void UpdateProduct(UpdateProductDto updatedProduct)
