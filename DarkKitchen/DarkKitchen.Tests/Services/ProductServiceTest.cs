@@ -1,8 +1,7 @@
 using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
-
-// using DarkKitchen.Models.DateDTOs;
+using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 using DarkKitchen.Services;
 using Moq;
@@ -114,5 +113,14 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilter>())).Returns([]);
         Assert.ThrowsException<NotFoundException>(() => productService!.GetProducts(null, null, null));
+    }
+
+    [TestMethod]
+    public void GetMostRequestedProducts_WhenProductsExist_ReturnsMappedDtos()
+    {
+        var dates = new DateRangeDto { DateFrom = DateTime.Now.AddDays(-7), DateTo = DateTime.Now };
+        productRepositoryMock!.Setup(r => r.GetMostRequestedProducts(dates)).Returns([validProduct!]);
+        var result = productService!.GetMostRequestedProducts(dates);
+        Assert.AreEqual(1, result.Count());
     }
 }
