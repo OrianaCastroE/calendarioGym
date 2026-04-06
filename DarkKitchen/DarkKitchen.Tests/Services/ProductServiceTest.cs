@@ -54,4 +54,11 @@ public class ProductServiceTest
         productService!.CreateProduct(validCreateProductDto!);
         productRepositoryMock!.Verify(r => r.Add(It.IsAny<Product>()), Times.Once);
     }
+
+    [TestMethod]
+    public void CreateProduct_WhenNameIsNull_ThrowsBadRequestException()
+    {
+        var dto = new CreateProductDto { Name = null };
+        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
+    }
 }
