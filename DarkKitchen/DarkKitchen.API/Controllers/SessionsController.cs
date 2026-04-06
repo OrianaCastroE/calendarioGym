@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DarkKitchen.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/sessions")]
 [ApiController]
 public class SessionsController(ISessionService sessionService) : ControllerBase
 {
@@ -13,14 +13,7 @@ public class SessionsController(ISessionService sessionService) : ControllerBase
     [HttpPost]
     public IActionResult Login([FromBody] LoginDto loginDto)
     {
-        try
-        {
-            var response = _sessionService.Login(loginDto);
-            return Ok(response);
-        }
-        catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var response = _sessionService.Login(loginDto);
+        return Ok(response);
     }
 }
