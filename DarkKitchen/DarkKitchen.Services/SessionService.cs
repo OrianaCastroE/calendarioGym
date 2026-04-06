@@ -16,7 +16,7 @@ public class SessionService(IUserRepository userRepository, IConfiguration confi
     public LoginResponseDto Login(LoginDto loginDto)
     {
         var user = userRepository.GetByEmail(loginDto.Email!);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+        if(user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
         {
             throw new UnauthorizedException("Invalid credentials.");
         }
