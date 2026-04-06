@@ -43,7 +43,25 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public IEnumerable<UpdateProductDto> GetProducts(string? productLine, List<string>? categories, string? name)
     {
-        throw new NotImplementedException();
+        var filter = new ProductFilter
+        {
+            ProductLine = productLine,
+            Categories = categories,
+            Name = name
+        };
+
+        return _repository.GetProducts(filter).Select(p => new UpdateProductDto
+        {
+            Id = p.Id,
+            Code = p.Code,
+            Name = p.Name,
+            Description = p.Description,
+            ProductLine = p.ProductLine,
+            Category = p.Category,
+            Price = p.Price,
+            IsActive = p.IsActive,
+            ImageUrl = p.Images?.Select(i => i.Url).ToArray()
+        });
     }
 
     public IEnumerable<UpdateProductDto> GetMostRequestedProducts(DateRangeDto dates)
