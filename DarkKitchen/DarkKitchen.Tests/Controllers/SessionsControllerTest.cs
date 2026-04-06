@@ -7,7 +7,7 @@ using Moq;
 namespace DarkKitchen.Tests.Controllers;
 
 [TestClass]
-public class SessionsControllerTests
+public class SessionsControllerTest
 {
     private readonly string validEmail = "valid@email.com";
     private readonly string password = "ValidPassword123!";
