@@ -34,7 +34,11 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public void UpdateProduct(UpdateProductDto updatedProduct)
     {
-        throw new NotImplementedException();
+        Product product = _repository.GetById(updatedProduct.Id ?? 0)
+        ?? throw new NotFoundException("Product not found.");
+
+        _repository.Update(product);
+        _repository.Save();
     }
 
     public IEnumerable<UpdateProductDto> GetProducts(string? productLine, List<string>? categories, string? name)
