@@ -16,6 +16,7 @@ public class ProductServiceTest
     private ProductService? productService;
     private Product? validProduct;
     private CreateProductDto? validCreateProductDto;
+    private UpdateProductDto? validUpdateProductDto;
 
     [TestInitialize]
     public void Setup()
@@ -46,6 +47,19 @@ public class ProductServiceTest
             Price = 100,
             ImageUrl = ["http://example.com/image.jpg"]
         };
+
+        validUpdateProductDto = new UpdateProductDto
+        {
+            Id = 1,
+            Code = "PROD01",
+            Name = "Updated Product",
+            Description = "Updated Description",
+            ProductLine = "Updated Line",
+            Category = "Updated Category",
+            Price = 150,
+            IsActive = true,
+            ImageUrl = ["http://example.com/updated_image.jpg"]
+        };
     }
 
     [TestMethod]
@@ -70,5 +84,13 @@ public class ProductServiceTest
                 Name = string.Empty
             };
             Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
+    }
+
+    [TestMethod]
+       public void UpdateProduct_WhenProductExists_CallsRepository()
+       {
+            productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+            productService!.UpdateProduct(validUpdateProductDto!);
+            productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
        }
 }
