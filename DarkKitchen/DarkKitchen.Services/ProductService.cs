@@ -85,6 +85,13 @@ public class ProductService(IProductRepository repository) : IProductService
             Name = name
         };
 
+        IEnumerable<Product> products = _repository.GetProducts(filter);
+
+        if(!products.Any())
+        {
+            throw new NotFoundException("No products found.");
+        }
+
         return _repository.GetProducts(filter).Select(p => new UpdateProductDto
         {
             Id = p.Id,
