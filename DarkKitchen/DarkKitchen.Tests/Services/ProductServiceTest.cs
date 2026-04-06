@@ -123,4 +123,12 @@ public class ProductServiceTest
         var result = productService!.GetMostRequestedProducts(dates);
         Assert.AreEqual(1, result.Count());
     }
+
+    [TestMethod]
+    public void GetMostRequestedProducts_WhenNoProductsFound_ThrowsNotFoundException()
+    {
+        var dates = new DateRangeDto { DateFrom = DateTime.Now.AddDays(-7), DateTo = DateTime.Now };
+        productRepositoryMock!.Setup(r => r.GetMostRequestedProducts(dates)).Returns([]);
+        Assert.ThrowsException<NotFoundException>(() => productService!.GetMostRequestedProducts(dates));
+    }
 }
