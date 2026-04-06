@@ -37,41 +37,6 @@ public class ProductService(IProductRepository repository) : IProductService
         Product product = _repository.GetById(updatedProduct.Id ?? 0)
         ?? throw new NotFoundException("Product not found.");
 
-        if(updatedProduct.Name != null)
-        {
-            product.Name = updatedProduct.Name;
-        }
-
-        if(updatedProduct.Description != null)
-        {
-            product.Description = updatedProduct.Description;
-        }
-
-        if(updatedProduct.ProductLine != null)
-        {
-            product.ProductLine = updatedProduct.ProductLine;
-        }
-
-        if(updatedProduct.Category != null)
-        {
-            product.Category = updatedProduct.Category;
-        }
-
-        if(updatedProduct.Price.HasValue)
-        {
-            product.Price = updatedProduct.Price.Value;
-        }
-
-        if(updatedProduct.IsActive.HasValue)
-        {
-            product.IsActive = updatedProduct.IsActive.Value;
-        }
-
-        if(updatedProduct.ImageUrl != null)
-        {
-            product.Images = updatedProduct.ImageUrl.Select(url => new ProductImage { Url = url, ProductId = product.Id }).ToList();
-        }
-
         _repository.Update(product);
         _repository.Save();
     }

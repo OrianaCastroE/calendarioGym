@@ -1,4 +1,3 @@
-using System.Net.NetworkInformation;
 using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
@@ -148,5 +147,23 @@ public class ProductServiceTest
         productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
         var status = new ProductStatusDto { IsActive = false };
         Assert.ThrowsException<NotFoundException>(() => productService!.UpdateStatus(1, status));
+    }
+
+    [TestMethod]
+    public void UpdateProduct_WhenFieldsAreNull_DoesNotUpdate()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+
+        var dtoWithNulls = new UpdateProductDto { Id = 1 };
+
+        productService!.UpdateProduct(dtoWithNulls);
+
+        productRepositoryMock.Verify(r => r.Update(It.Is<Product>(p =>
+            p.Name == validProduct!.Name &&
+            p.Description == validProduct!.Description &&
+            p.ProductLine == validProduct!.ProductLine &&
+            p.Category == validProduct!.Category &&
+            p.Price == validProduct!.Price
+        )), Times.Once);
     }
 }
