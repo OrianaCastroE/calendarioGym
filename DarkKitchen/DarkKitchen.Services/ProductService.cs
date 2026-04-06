@@ -131,6 +131,10 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public void UpdateStatus(int id, ProductStatusDto status)
     {
-        throw new NotImplementedException();
+        Product product = _repository.GetById(id);
+
+        product.IsActive = status.IsActive;
+        _repository.Update(product);
+        _repository.Save();
     }
 }
