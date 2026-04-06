@@ -77,20 +77,27 @@ public class ProductServiceTest
     }
 
     [TestMethod]
-       public void CreateProduct_WhenNameIsEmpty_ThrowsBadRequestException()
-       {
-            var dto = new CreateProductDto
-            {
-                Name = string.Empty
-            };
-            Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
+    public void CreateProduct_WhenNameIsEmpty_ThrowsBadRequestException()
+    {
+        var dto = new CreateProductDto
+        {
+            Name = string.Empty
+        };
+        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
     }
 
     [TestMethod]
-       public void UpdateProduct_WhenProductExists_CallsRepository()
-       {
-            productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
-            productService!.UpdateProduct(validUpdateProductDto!);
-            productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
-       }
+    public void UpdateProduct_WhenProductExists_CallsRepository()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+        productService!.UpdateProduct(validUpdateProductDto!);
+        productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateProduct_WhenProductNotFound_ThrowsNotFoundException()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
+        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateProduct(validUpdateProductDto!));
+    }
 }

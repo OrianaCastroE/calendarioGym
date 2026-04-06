@@ -34,8 +34,7 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public void UpdateProduct(UpdateProductDto updatedProduct)
     {
-        Product product = _repository.GetById(updatedProduct.Id ?? 0)
-        ?? throw new NotFoundException("Product not found.");
+        Product product = _repository.GetById(updatedProduct.Id ?? 0);
 
         _repository.Update(product);
         _repository.Save();
