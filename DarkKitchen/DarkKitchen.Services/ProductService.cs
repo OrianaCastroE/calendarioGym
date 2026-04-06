@@ -131,7 +131,8 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public void UpdateStatus(int id, ProductStatusDto status)
     {
-        Product product = _repository.GetById(id);
+        Product product = _repository.GetById(id)
+            ?? throw new NotFoundException("Product not found.");
 
         product.IsActive = status.IsActive;
         _repository.Update(product);
