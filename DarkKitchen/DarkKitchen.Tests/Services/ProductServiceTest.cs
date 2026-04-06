@@ -100,4 +100,12 @@ public class ProductServiceTest
         productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
         Assert.ThrowsException<NotFoundException>(() => productService!.UpdateProduct(validUpdateProductDto!));
     }
+
+    [TestMethod]
+    public void GetProducts_WhenProductsExist_ReturnsMappedDtos()
+    {
+        productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilter>())).Returns([validProduct!]);
+        var result = productService!.GetProducts("Valid Line", null, null);
+        Assert.AreEqual(1, result.Count());
+    }
 }
