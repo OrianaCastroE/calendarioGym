@@ -53,10 +53,11 @@ public class SessionServiceTest
     }
 
     [TestMethod]
-    public void Login_WithInvalidCredentials_ThrowsUnauthorizedException()
+    public void Login_WithWrongPassword_ThrowsUnauthorizedException()
     {
-        userRepositoryMock!.Setup(r => r.GetByEmail(email)).Throws(new UnauthorizedException("Invalid credentials."));
+        userRepositoryMock!.Setup(r => r.GetByEmail(email)).Returns(user!);
+        var wrongPasswordDto = new LoginDto { Email = email, Password = "wrongPassword1!" };
 
-        Assert.ThrowsException<UnauthorizedException>(() => sessionService!.Login(loginDto!));
+        Assert.ThrowsException<UnauthorizedException>(() => sessionService!.Login(wrongPasswordDto));
     }
 }
