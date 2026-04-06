@@ -14,18 +14,15 @@ public class ProductService(IProductRepository repository) : IProductService
     {
         var product = new Product
         {
-            Code = newProduct.Code ?? string.Empty,
-            Name = newProduct.Name ?? string.Empty,
+            Code = newProduct.Code!,
+            Name = newProduct.Name!,
             Description = newProduct.Description,
             ProductLine = newProduct.ProductLine,
             Category = newProduct.Category,
-            Price = newProduct.Price ?? 0,
+            Price = newProduct.Price!.Value,
             IsActive = true,
-            Images = newProduct.ImageUrl?
-                .Select(url => new ProductImage { Url = url })
-                .ToList() ?? []
+            Images = newProduct.ImageUrl!.Select(url => new ProductImage { Url = url }).ToList()
         };
-
         _repository.Add(product);
     }
 
