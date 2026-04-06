@@ -1,4 +1,5 @@
 using DarkKitchen.API.Controllers;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.SessionDTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -28,61 +29,49 @@ public class SessionsControllerTest
 
         var loginDto = new LoginDto { Email = validEmail, Password = password };
         var result = sessionController.Login(loginDto);
-        var resultObj = result as OkObjectResult;
+        var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
 
     [TestMethod]
-    public void Login_InvalidCredentials_ReturnsBadRequest()
+    public void Login_InvalidCredentials_ThrowsBadRequestException()
     {
-        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new Exception("Invalid credentials."));
+        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new BadRequestException("Invalid credentials."));
 
         var loginDto = new LoginDto { Email = validEmail, Password = "wrongpassword" };
-        var result = sessionController.Login(loginDto);
-        var resultObj = result as BadRequestObjectResult;
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
 
     [TestMethod]
-    public void Login_NullEmail_ReturnsBadRequest()
+    public void Login_NullEmail_ThrowsBadRequestException()
     {
-        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new Exception("Email is required."));
+        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new BadRequestException("Email is required."));
 
         var loginDto = new LoginDto { Email = null, Password = password };
-        var result = sessionController.Login(loginDto);
-        var resultObj = result as BadRequestObjectResult;
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
 
     [TestMethod]
-    public void Login_NullPassword_ReturnsBadRequest()
+    public void Login_NullPassword_ThrowsBadRequestException()
     {
-        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new Exception("Password is required."));
+        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new BadRequestException("Password is required."));
 
         var loginDto = new LoginDto { Email = validEmail, Password = null };
-        var result = sessionController.Login(loginDto);
-        var resultObj = result as BadRequestObjectResult;
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
 
     [TestMethod]
-    public void Login_InvalidEmailFormat_ReturnsBadRequest()
+    public void Login_InvalidEmailFormat_ThrowsBadRequestException()
     {
-        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new Exception("Invalid credentials."));
+        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new BadRequestException("Invalid credentials."));
 
         var loginDto = new LoginDto { Email = "notanemail", Password = password };
-        var result = sessionController.Login(loginDto);
-        var resultObj = result as BadRequestObjectResult;
 
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(400, resultObj.StatusCode);
+        Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
 }
