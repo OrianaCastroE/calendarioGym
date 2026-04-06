@@ -11,21 +11,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DarkKitchen.Services;
 
-public class SessionService : ISessionService
+public class SessionService(IUserRepository userRepository, IConfiguration configuration) : ISessionService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IConfiguration _configuration;
-
-    public SessionService(IUserRepository userRepository, IConfiguration configuration)
-    {
-        _userRepository = userRepository;
-        _configuration = configuration;
-    }
-
     public LoginResponseDto Login(LoginDto loginDto)
     {
-        var user = _userRepository.GetByEmail(loginDto.Email!);
-        if(user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+        var user = userRepository.GetByEmail(loginDto.Email!);
+        if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
         {
             throw new UnauthorizedException("Invalid credentials.");
         }
@@ -35,7 +26,7 @@ public class SessionService : ISessionService
 
     private string GenerateToken(User user)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var claims = new[]
         {
