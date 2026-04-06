@@ -108,4 +108,11 @@ public class ProductServiceTest
         var result = productService!.GetProducts("Valid Line", null, null);
         Assert.AreEqual(1, result.Count());
     }
+
+    [TestMethod]
+    public void GetProducts_WhenNoProductsFound_ThrowsNotFoundException()
+    {
+        productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilter>())).Returns([]);
+        Assert.ThrowsException<NotFoundException>(() => productService!.GetProducts(null, null, null));
+    }
 }
