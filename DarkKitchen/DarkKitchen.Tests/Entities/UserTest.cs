@@ -5,6 +5,7 @@ namespace DarkKitchen.Tests.Entities;
 [TestClass]
 public class UserTest
 {
+    private readonly int id = 1;
     private readonly string name = "Name";
     private readonly string surname = "Surname";
     private readonly string email = "valid@email.com";
@@ -18,6 +19,7 @@ public class UserTest
     {
         user = new User
         {
+            Id = id,
             Name = name,
             Surname = surname,
             Email = email,
