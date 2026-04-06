@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
@@ -130,5 +131,14 @@ public class ProductServiceTest
         var dates = new DateRangeDto { DateFrom = DateTime.Now.AddDays(-7), DateTo = DateTime.Now };
         productRepositoryMock!.Setup(r => r.GetMostRequestedProducts(dates)).Returns([]);
         Assert.ThrowsException<NotFoundException>(() => productService!.GetMostRequestedProducts(dates));
+    }
+
+    [TestMethod]
+    public void UpdateStatus_WhenProductExists_CallsRepository()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+        var status = new ProductStatusDto { IsActive = false };
+        productService!.UpdateStatus(1, status);
+        productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
     }
 }
