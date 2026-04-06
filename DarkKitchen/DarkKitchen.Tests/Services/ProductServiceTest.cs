@@ -141,4 +141,12 @@ public class ProductServiceTest
         productService!.UpdateStatus(1, status);
         productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
     }
+
+    [TestMethod]
+    public void UpdateStatus_WhenProductNotFound_ThrowsNotFoundException()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
+        var status = new ProductStatusDto { IsActive = false };
+        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateStatus(1, status));
+    }
 }
