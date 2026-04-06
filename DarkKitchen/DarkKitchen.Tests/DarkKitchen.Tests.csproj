@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DarkKitchen.API\DarkKitchen.API.csproj" />
     <ProjectReference Include="..\DarkKitchen.Domain\DarkKitchen.Domain.csproj" />
+    <ProjectReference Include="..\DarkKitchen.Services\DarkKitchen.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
