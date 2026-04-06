@@ -1,5 +1,6 @@
 using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
@@ -12,6 +13,11 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public void CreateProduct(CreateProductDto newProduct)
     {
+        if (newProduct.Name is null)
+        {
+            throw new BadRequestException("Name is required.");
+        }
+
         var product = new Product
         {
             Code = newProduct.Code!,
