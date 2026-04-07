@@ -54,4 +54,13 @@ public class PromotionServiceTest
 
         Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion!));
     }
+
+    [TestMethod]
+    public void CreatePromotion_InvalidDateRange_ThrowsException()
+    {
+        validPromotion!.DateFrom = new DateTime(2026, 1, 30);
+        validPromotion!.DateTo = new DateTime(2026, 1, 25);
+
+        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion!));
+    }
 }
