@@ -46,4 +46,12 @@ public class PromotionServiceTest
         promotionRepositoryMock!.Verify(r => r.Add(It.IsAny<Promotion>()), Times.Once);
         promotionRepositoryMock!.Verify(r => r.Save(), Times.Once);
     }
+
+    [TestMethod]
+    public void CreatePromotion_InvalidDiscountPercentage_ThrowsException()
+    {
+        validPromotion!.DiscountPercentage = 0;
+
+        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion!));
+    }
 }
