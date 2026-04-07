@@ -16,6 +16,11 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
             throw new Exception("Discount percentage must be between 1 and 100.");
         }
 
+        if(newPromotion.DateFrom >= newPromotion.DateTo)
+        {
+            throw new Exception("DateFrom must be before DateTo.");
+        }
+
         var promotion = new Promotion()
         {
             Name = newPromotion.Name,
