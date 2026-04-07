@@ -13,7 +13,7 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public void CreateProduct(CreateProductDto newProduct)
     {
-        if (newProduct.Name == null || newProduct.Name == string.Empty)
+        if(newProduct.Name == null || newProduct.Name == string.Empty)
         {
             throw new BadRequestException("Name is required.");
         }
