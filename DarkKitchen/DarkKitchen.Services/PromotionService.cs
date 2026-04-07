@@ -67,6 +67,15 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
 
     public List<PromotionResponseDto> GetPromotions(DateTime? date, string? productLine, string? productName)
     {
-        throw new NotImplementedException();
+        var promotions = _promotionRepository.GetPromotions(date, productLine, productName);
+
+        return promotions.Select(p => new PromotionResponseDto()
+        {
+            Id = p.Id,
+            Name = p.Name,
+            DiscountPercentage = p.DiscountPercentage,
+            DateFrom = p.DateFrom,
+            DateTo = p.DateTo
+        }).ToList();
     }
 }
