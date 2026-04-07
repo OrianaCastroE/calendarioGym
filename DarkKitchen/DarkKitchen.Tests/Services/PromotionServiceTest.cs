@@ -63,4 +63,12 @@ public class PromotionServiceTest
 
         Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion!));
     }
+
+    [TestMethod]
+    public void CreatePromotion_EmptyName_ThrowsException()
+    {
+        validPromotion!.Name = string.Empty;
+
+        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion!));
+    }
 }
