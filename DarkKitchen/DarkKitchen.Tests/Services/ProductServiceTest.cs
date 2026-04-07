@@ -163,7 +163,25 @@ public class ProductServiceTest
             p.Description == validProduct!.Description &&
             p.ProductLine == validProduct!.ProductLine &&
             p.Category == validProduct!.Category &&
-            p.Price == validProduct!.Price
-        )), Times.Once);
+            p.Price == validProduct!.Price)),
+            Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateProduct_WhenOnlyNameIsProvided_UpdatesOnlyName()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+
+        var dtoOnlyName = new UpdateProductDto { Id = 1, Name = "New Name" };
+
+        productService!.UpdateProduct(dtoOnlyName);
+
+        productRepositoryMock.Verify(r => r.Update(It.Is<Product>(p =>
+            p.Name == "New Name" &&
+            p.Description == validProduct!.Description &&
+            p.ProductLine == validProduct!.ProductLine &&
+            p.Category == validProduct!.Category &&
+            p.Price == validProduct!.Price)),
+            Times.Once);
     }
 }
