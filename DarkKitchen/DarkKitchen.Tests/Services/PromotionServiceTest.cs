@@ -109,4 +109,16 @@ public class PromotionServiceTest
 
         Assert.ThrowsException<Exception>(() => promotionService!.UpdatePromotionProducts(1, [1, 2, 3]));
     }
+
+    [TestMethod]
+    public void GetPromotions_ValidFilter_ReturnsPromotions()
+    {
+        promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null))
+            .Returns([promotionEntity!]);
+
+        var result = promotionService!.GetPromotions(null, null, null);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
+    }
 }
