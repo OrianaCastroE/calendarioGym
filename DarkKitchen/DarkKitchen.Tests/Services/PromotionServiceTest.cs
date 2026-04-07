@@ -82,4 +82,12 @@ public class PromotionServiceTest
         promotionRepositoryMock!.Verify(r => r.Update(It.IsAny<Promotion>()), Times.Once);
         promotionRepositoryMock!.Verify(r => r.Save(), Times.Once);
     }
+
+    [TestMethod]
+    public void UpdatePromotion_PromotionNotFound_ThrowsException()
+    {
+        promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns((Promotion?)null);
+
+        Assert.ThrowsException<Exception>(() => promotionService!.UpdatePromotion(1, validPromotion!));
+    }
 }
