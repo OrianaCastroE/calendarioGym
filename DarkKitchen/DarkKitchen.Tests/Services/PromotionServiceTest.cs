@@ -71,4 +71,15 @@ public class PromotionServiceTest
 
         Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion!));
     }
+
+    [TestMethod]
+    public void UpdatePromotion_ValidData_PromotionUpdated()
+    {
+        promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns(promotionEntity!);
+
+        promotionService!.UpdatePromotion(1, validPromotion!);
+
+        promotionRepositoryMock!.Verify(r => r.Update(It.IsAny<Promotion>()), Times.Once);
+        promotionRepositoryMock!.Verify(r => r.Save(), Times.Once);
+    }
 }
