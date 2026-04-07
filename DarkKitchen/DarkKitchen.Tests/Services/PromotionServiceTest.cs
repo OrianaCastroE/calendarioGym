@@ -37,4 +37,13 @@ public class PromotionServiceTest
             DateTo = new DateTime(2026, 1, 30)
         };
     }
+
+    [TestMethod]
+    public void CreatePromotion_ValidData_PromotionCreated()
+    {
+        promotionService!.CreatePromotion(validPromotion!);
+
+        promotionRepositoryMock!.Verify(r => r.Add(It.IsAny<Promotion>()), Times.Once);
+        promotionRepositoryMock!.Verify(r => r.Save(), Times.Once);
+    }
 }
