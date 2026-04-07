@@ -40,7 +40,16 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
 
     public void UpdatePromotion(int id, PromotionDto updatedPromotion)
     {
-        throw new NotImplementedException();
+        var promotion = _promotionRepository.GetById(id)
+            ?? throw new Exception("Promotion not found.");
+
+        promotion.Name = updatedPromotion.Name;
+        promotion.DiscountPercentage = updatedPromotion.DiscountPercentage;
+        promotion.DateFrom = updatedPromotion.DateFrom;
+        promotion.DateTo = updatedPromotion.DateTo;
+
+        _promotionRepository.Update(promotion);
+        _promotionRepository.Save();
     }
 
     public void UpdatePromotionProducts(int promotionId, List<int> productIds)
