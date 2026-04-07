@@ -11,6 +11,11 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
 
     public void CreatePromotion(PromotionDto newPromotion)
     {
+        if(string.IsNullOrEmpty(newPromotion.Name))
+        {
+            throw new Exception("Name cannot be empty.");
+        }
+
         if(newPromotion.DiscountPercentage <= 0 || newPromotion.DiscountPercentage > 100)
         {
             throw new Exception("Discount percentage must be between 1 and 100.");
