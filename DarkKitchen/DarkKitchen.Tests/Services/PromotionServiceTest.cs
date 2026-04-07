@@ -121,4 +121,16 @@ public class PromotionServiceTest
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
     }
+
+    [TestMethod]
+    public void GetPromotions_NoPromotionsFound_ReturnsEmptyList()
+    {
+        promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null))
+            .Returns([]);
+
+        var result = promotionService!.GetPromotions(null, null, null);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count);
+    }
 }
