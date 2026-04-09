@@ -13,6 +13,11 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void CreateUser(UserDto newUser)
     {
+        if(string.IsNullOrEmpty(newUser.Name))
+        {
+            throw new ArgumentException("Name cannot be empty or whitespace.");
+        }
+
         var user = new User
         {
             Name = newUser.Name,
@@ -22,6 +27,7 @@ public class UserService(IUserRepository userRepository) : IUserService
             Password = newUser.Password,
             Role = Role.Client,
         };
+
         _userRepository.Add(user);
     }
 
