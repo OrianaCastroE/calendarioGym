@@ -79,4 +79,13 @@ public class UserServiceTest
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password cannot be longer than 25 characters.", ex.Message);
     }
+
+    [TestMethod]
+    public void CreateUser_WhenShortPassword_ShouldThrowExceptionAndNotCreateUser()
+    {
+        _validUser!.Password = "shortPassword";
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.CreateUser(_validUser));
+        Assert.AreEqual("Password must be at least 15 characters long.", ex.Message);
+    }
 }
