@@ -110,6 +110,12 @@ public class UserService(IUserRepository userRepository) : IUserService
     public void DeleteUser(string email)
     {
         User? user = _userRepository.GetByEmail(email);
+
+        if(user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
         _userRepository.Delete(user);
     }
 
