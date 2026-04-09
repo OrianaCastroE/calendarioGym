@@ -83,10 +83,10 @@ public class UserService(IUserRepository userRepository) : IUserService
         User user = _userRepository.GetByEmail(updatedUser.Email!)
             ?? throw new UserNotFoundException();
 
-        user.Name = updatedUser.Name;
-        user.Surname = updatedUser.Surname;
-        user.Phone = updatedUser.Phone;
-        user.Password = updatedUser.Password;
+        if(updatedUser.Name != null) { user.Name = updatedUser.Name; }
+        if(updatedUser.Surname != null) { user.Surname = updatedUser.Surname; }
+        if(updatedUser.Phone != null) { user.Phone = updatedUser.Phone; }
+        if(updatedUser.Password != null) { user.Password = updatedUser.Password; }
 
         _userRepository.Update(user);
     }
