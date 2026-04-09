@@ -277,4 +277,23 @@ public class UserServiceTest
 
         Assert.AreEqual("User not found.", ex.Message);
     }
+
+    [TestMethod]
+    public void DeleteUser_WhenEmailIsEmpty_ShouldThrowException()
+    {
+        _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail(It.IsAny<string>()))
+            .Returns((User?)null);
+
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.DeleteUser(string.Empty));
+
+        Assert.AreEqual("Email cannot be empty or whitespace.", ex.Message);
+
+        _userRepositoryMock!
+            .Verify(repository => repository.GetByEmail(It.IsAny<string>()), Times.Never);
+
+        _userRepositoryMock!
+            .Verify(repository => repository.Delete(It.IsAny<User>()), Times.Never);
+    }
 }
