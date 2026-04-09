@@ -18,6 +18,10 @@ public class UserService(IUserRepository userRepository) : IUserService
             throw new ArgumentException("Name cannot be empty or whitespace.");
         }
 
+        if(string.IsNullOrEmpty(newUser.Surname)) {
+            throw new ArgumentException("Surname cannot be empty or whitespace.");
+        }
+
         var user = new User
         {
             Name = newUser.Name,
