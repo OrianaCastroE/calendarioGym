@@ -109,6 +109,8 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void DeleteUser(string email)
     {
+        User? user = _userRepository.GetByEmail(email);
+        _userRepository.Delete(user);
     }
 
     // lo dejo para el final porque todavía no sé como implementarlo
