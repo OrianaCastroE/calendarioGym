@@ -285,7 +285,7 @@ public class UserServiceTest
             .Setup(repository => repository.GetByEmail(It.IsAny<string>()))
             .Returns((User?)null);
 
-        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+        EmailEmptyException ex = Assert.ThrowsException<EmailEmptyException>(() =>
             _userService!.DeleteUser(string.Empty));
 
         Assert.AreEqual("Email cannot be empty or whitespace.", ex.Message);

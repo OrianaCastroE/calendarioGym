@@ -109,6 +109,11 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void DeleteUser(string email)
     {
+        if(string.IsNullOrWhiteSpace(email))
+        {
+            throw new EmailEmptyException();
+        }
+
         User? user = _userRepository.GetByEmail(email);
 
         if(user == null)
