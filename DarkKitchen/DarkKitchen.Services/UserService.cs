@@ -75,6 +75,11 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void UpdateUser(UserDto updatedUser)
     {
+        if(string.IsNullOrWhiteSpace(updatedUser.Email))
+        {
+            throw new ArgumentException("Email cannot be empty or whitespace.");
+        }
+
         User user = _userRepository.GetByEmail(updatedUser.Email!)
             ?? throw new ArgumentException("User not found.");
 
