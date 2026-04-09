@@ -28,6 +28,11 @@ public class UserService(IUserRepository userRepository) : IUserService
             throw new ArgumentException("Email is not valid.");
         }
 
+        if(newUser.Password.Length > 25)
+        {
+            throw new ArgumentException("Password cannot be longer than 25 characters.");
+        }
+
         var user = new User
         {
             Name = newUser.Name,
