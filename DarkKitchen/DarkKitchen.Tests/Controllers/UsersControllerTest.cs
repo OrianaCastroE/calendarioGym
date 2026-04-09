@@ -121,24 +121,6 @@ public class UsersControllerTest
     }
 
     [TestMethod]
-    public void CreateUserWithRole_ValidData_ReturnsCreated()
-    {
-        userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser!));
-        var result = userController.CreateUserWithRole(validAdminUser!);
-        var resultObj = result as ObjectResult;
-
-        Assert.IsNotNull(resultObj);
-        Assert.AreEqual(201, resultObj.StatusCode);
-    }
-
-    [TestMethod]
-    public void CreateUserWithRole_UserAlreadyExists_ThrowsBadRequestException()
-    {
-        userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser!)).Throws(new BadRequestException("User already exists."));
-        Assert.ThrowsException<BadRequestException>(() => userController.CreateUserWithRole(validAdminUser!));
-    }
-
-    [TestMethod]
     public void UpdateUser_ExistingUser_ReturnsOk()
     {
         userServiceMock.Setup(s => s.UpdateUser(validUser!));

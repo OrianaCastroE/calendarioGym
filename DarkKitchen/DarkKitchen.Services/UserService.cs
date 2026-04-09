@@ -138,9 +138,4 @@ public class UserService(IUserRepository userRepository) : IUserService
 
         _userRepository.Delete(user);
     }
-
-    // lo dejo para el final porque todavía no sé como implementarlo
-    public void CreateUserWithRole(CreateUserDto newUser)
-    {
-    }
 }
