@@ -41,4 +41,19 @@ public class UserServiceTest
         _userRepositoryMock!
             .Verify(repository => repository.Add(It.IsAny<User>()), Times.Once);
     }
+
+    [TestMethod]
+    public void CreateUser_WhenInvalidName_ShouldNotCreateUser()
+    {
+        _validUser!.Name = string.Empty;
+        if (string.IsNullOrEmpty(_validUser.Name))
+        {
+            throw new ArgumentException("Name cannot be empty or whitespace.");
+        }
+
+        _userService!.CreateUser(_validUser!);
+
+        _userRepositoryMock!
+            .Verify(repository => repository.Add(It.IsAny<User>()), Times.Never);
+    }
 }
