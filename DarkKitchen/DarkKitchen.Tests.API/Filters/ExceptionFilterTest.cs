@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 
-namespace DarkKitchen.Tests.Filters;
+namespace DarkKitchen.Tests.API.Filters;
 
 [TestClass]
 public class ExceptionFilterTest
