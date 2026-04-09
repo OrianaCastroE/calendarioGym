@@ -54,7 +54,12 @@ public class UserService(IUserRepository userRepository) : IUserService
             throw new ArgumentException("Password must contain at least one special character.");
         }
 
-            var user = new User
+        if(!newUser.Password.Any(char.IsDigit))
+        {
+            throw new ArgumentException("Password must contain at least one number.");
+        }
+
+        var user = new User
         {
             Name = newUser.Name,
             Surname = newUser.Surname,
