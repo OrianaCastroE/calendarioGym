@@ -18,8 +18,14 @@ public class UserService(IUserRepository userRepository) : IUserService
             throw new ArgumentException("Name cannot be empty or whitespace.");
         }
 
-        if(string.IsNullOrEmpty(newUser.Surname)) {
+        if(string.IsNullOrEmpty(newUser.Surname))
+        {
             throw new ArgumentException("Surname cannot be empty or whitespace.");
+        }
+
+        if(!newUser.Email.Contains("@"))
+        {
+            throw new ArgumentException("Email is not valid.");
         }
 
         var user = new User
