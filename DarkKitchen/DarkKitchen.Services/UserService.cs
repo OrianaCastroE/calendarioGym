@@ -33,6 +33,11 @@ public class UserService(IUserRepository userRepository) : IUserService
             throw new ArgumentException("Password cannot be longer than 25 characters.");
         }
 
+        if(newUser.Password.Length < 15)
+        {
+            throw new ArgumentException("Password must be at least 15 characters long.");
+        }
+
         var user = new User
         {
             Name = newUser.Name,
