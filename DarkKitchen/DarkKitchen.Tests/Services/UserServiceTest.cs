@@ -12,6 +12,7 @@ public class UserServiceTest
     private Mock<IUserRepository>? _userRepositoryMock;
     private UserService? _userService;
     private UserDto? _validUser;
+    private UserDto? _updateUser;
 
     [TestInitialize]
     public void SetUp()
@@ -26,6 +27,15 @@ public class UserServiceTest
             Email = "validEmail@gmail.com",
             Phone = "099123456",
             Password = "validPassword123!",
+        };
+
+        _updateUser = new UserDto
+        {
+            Name = "updatedName",
+            Surname = "updatedSurname",
+            Email = "updatedEmail@gmail.com",
+            Phone = "099654321",
+            Password = "updatedPassword123!",
         };
     }
 
@@ -123,5 +133,16 @@ public class UserServiceTest
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one number.", ex.Message);
+    }
+
+    [TestMethod]
+    public void UpdateUser_WhenUserNotFound_ShouldThrowExceptionAndNotUpdateUser()
+    {
+        _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail(It.IsAny<string>()))
+            .Returns((User)null);
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.UpdateUser(new UserDto { Email = "fakeUser@gmail.com" }));
+        Assert.AreEqual("User not found.", ex.Message);
     }
 }
