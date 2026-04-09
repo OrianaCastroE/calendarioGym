@@ -12,7 +12,7 @@ public class UserServiceTest
     private Mock<IUserRepository>? _userRepositoryMock;
     private UserService? _userService;
     private UserDto? _validUser;
-    private UserDto? _updateUser;
+    private User? _user;
 
     [TestInitialize]
     public void SetUp()
@@ -29,13 +29,14 @@ public class UserServiceTest
             Password = "validPassword123!",
         };
 
-        _updateUser = new UserDto
+        _user = new User
         {
-            Name = "updatedName",
-            Surname = "updatedSurname",
-            Email = "updatedEmail@gmail.com",
-            Phone = "099654321",
-            Password = "updatedPassword123!",
+            Name = _validUser.Name!,
+            Surname = _validUser.Surname!,
+            Email = _validUser.Email!,
+            Phone = _validUser.Phone!,
+            Password = _validUser.Password!,
+            Role = Role.Client,
         };
     }
 
@@ -152,5 +153,32 @@ public class UserServiceTest
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
             _userService!.UpdateUser(new UserDto { Email = null }));
         Assert.AreEqual("Email cannot be empty or whitespace.", ex.Message);
+    }
+
+    [TestMethod]
+    public void UpdateUser_WhenValidUser_ShouldUpdateUser()
+    {
+        var dto = new UserDto
+        {
+            Name = "UpdatedName",
+            Surname = "UpdatedSurname",
+            Email = _user.Email,
+            Phone = "099999999",
+            Password = "UpdatedPassword1!"
+        };
+
+        _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail(_user.Email))
+            .Returns(_user);
+
+        _userRepositoryMock!
+            .Setup(repository => repository.Update(It.IsAny<User>()))
+            .Returns((User user) => user);
+
+        _userService.UpdateUser(dto);
+
+        User result = _userRepositoryMock.Object.GetByEmail(_user.Email)!;
+        Assert.AreEqual("UpdatedName", result.Name);
+        Assert.AreEqual("UpdatedSurname", result.Surname);
     }
 }
