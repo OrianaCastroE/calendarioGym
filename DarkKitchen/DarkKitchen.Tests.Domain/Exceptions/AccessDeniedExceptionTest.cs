@@ -1,16 +1,16 @@
 using DarkKitchen.Domain.Exceptions;
 
-namespace DarkKitchen.Tests.Exceptions;
+namespace DarkKitchen.Tests.Domain.Exceptions;
 
 [TestClass]
-public class BadRequestExceptionTest
+public class AccessDeniedExceptionTest
 {
     private readonly string message = "Test exception message.";
 
     [TestMethod]
-    public void BadRequestException_WithMessage_StoresMessage()
+    public void AccessDeniedException_WithMessage_StoresMessage()
     {
-        var ex = new BadRequestException(message);
+        var ex = new AccessDeniedException(message);
 
         Assert.IsNotNull(ex);
         Assert.AreEqual(message, ex.Message);

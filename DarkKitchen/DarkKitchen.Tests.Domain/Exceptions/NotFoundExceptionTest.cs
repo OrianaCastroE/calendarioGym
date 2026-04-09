@@ -1,16 +1,16 @@
 using DarkKitchen.Domain.Exceptions;
 
-namespace DarkKitchen.Tests.Exceptions;
+namespace DarkKitchen.Tests.Domain.Exceptions;
 
 [TestClass]
-public class UnauthorizedExceptionTest
+public class NotFoundExceptionTest
 {
     private readonly string message = "Test exception message.";
 
     [TestMethod]
-    public void UnauthorizedException_WithMessage_StoresMessage()
+    public void NotFoundException_WithMessage_StoresMessage()
     {
-        var ex = new UnauthorizedException(message);
+        var ex = new NotFoundException(message);
 
         Assert.IsNotNull(ex);
         Assert.AreEqual(message, ex.Message);

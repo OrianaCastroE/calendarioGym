@@ -6,7 +6,7 @@ using DarkKitchen.Models.ProductDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace DarkKitchen.Tests.Controllers;
+namespace DarkKitchen.Tests.API.Controllers;
 
 [TestClass]
 public class ProductControllerTest
