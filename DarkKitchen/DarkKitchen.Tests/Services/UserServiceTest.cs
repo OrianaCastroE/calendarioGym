@@ -88,4 +88,13 @@ public class UserServiceTest
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must be at least 15 characters long.", ex.Message);
     }
+
+    [TestMethod]
+    public void CreateUser_PasswordDoesNotContainsUpperLetter_ShouldThrowExceptionAndNotCreateUser()
+    {
+        _validUser!.Password = "lowerpasswordddd";
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.CreateUser(_validUser));
+        Assert.AreEqual("Password must contain at least one uppercase letter.", ex.Message);
+    }
 }
