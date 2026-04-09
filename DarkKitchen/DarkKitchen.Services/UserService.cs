@@ -1,4 +1,5 @@
 ﻿using DarkKitchen.Domain.DataAccess.Interfaces;
+using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.UserDTOs;
 
@@ -6,13 +7,22 @@ namespace DarkKitchen.Services;
 
 public class UserService(IUserRepository userRepository) : IUserService
 {
-    private readonly IUserRepository _userRepository = userRepository
-        ?? throw new ArgumentNullException(nameof(userRepository));
+    private readonly IUserRepository _userRepository = userRepository;
 
     public IUserRepository UserRepository => _userRepository;
 
     public void CreateUser(UserDto newUser)
     {
+        var user = new User
+        {
+            Name = newUser.Name,
+            Surname = newUser.Surname,
+            Email = newUser.Email,
+            Phone = newUser.Phone,
+            Password = newUser.Password,
+            Role = Role.Client,
+        };
+        _userRepository.Add(user);
     }
 
     public void UpdateUser(UserDto updatedUser)
