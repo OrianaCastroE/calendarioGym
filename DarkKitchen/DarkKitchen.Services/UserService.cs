@@ -43,6 +43,11 @@ public class UserService(IUserRepository userRepository) : IUserService
             throw new ArgumentException("Password must contain at least one uppercase letter.");
         }
 
+        if(!newUser.Password.Any(char.IsLower))
+        {
+            throw new ArgumentException("Password must contain at least one lowercase letter.");
+        }
+
         var user = new User
         {
             Name = newUser.Name,
