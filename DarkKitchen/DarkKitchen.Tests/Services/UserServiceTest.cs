@@ -195,4 +195,31 @@ public class UserServiceTest
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
     }
+
+    [TestMethod]
+    public void GetUsers_WhenRepositoryReturnsUsers_ShouldReturnMappedDtos()
+    {
+        _user = new User
+        {
+            Name = "validName",
+            Surname = "validSurname",
+            Email = "validEmail@gmail.com",
+            Phone = "099123456",
+            Password = "PasswordSegura123!",
+            Role = Role.Client,
+        };
+
+        var users = new List<User> { _user };
+
+        _userRepositoryMock!
+            .Setup(repository => repository.GetUsers("validName", "validSurname"))
+            .Returns(users);
+
+        List<UserResponseDto> result = _userService!.GetUsers("validName", "validSurname");
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("validName", result[0].Name);
+        Assert.AreEqual("validSurname", result[0].Surname);
+        Assert.AreEqual("validEmail@gmail.com", result[0].Email);
+    }
 }
