@@ -106,4 +106,13 @@ public class UserServiceTest
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one lowercase letter.", ex.Message);
     }
+
+    [TestMethod]
+    public void CreateUser_WhenPasswordDoesNotContainSpecialCharacter_ShouldThrowExceptionAndNotCreateUser()
+    {
+        _validUser!.Password = "PassWithoutSpecialChar123";
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.CreateUser(_validUser));
+        Assert.AreEqual("Password must contain at least one special character.", ex.Message);
+    }
 }
