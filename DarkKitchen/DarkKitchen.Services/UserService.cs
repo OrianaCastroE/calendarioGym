@@ -24,7 +24,7 @@ public class UserService(IUserRepository userRepository) : IUserService
             throw new SurnameEmptyException();
         }
 
-        if(!newUser.Email.Contains("@"))
+        if(!newUser.Email.Contains('@'))
         {
             throw new InvalidEmailException();
         }
