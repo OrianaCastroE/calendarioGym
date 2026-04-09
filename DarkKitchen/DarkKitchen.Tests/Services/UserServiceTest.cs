@@ -145,4 +145,12 @@ public class UserServiceTest
             _userService!.UpdateUser(new UserDto { Email = "fakeUser@gmail.com" }));
         Assert.AreEqual("User not found.", ex.Message);
     }
+
+    [TestMethod]
+    public void UpdateUser_WhenEmailIsNull_ShouldThrowExceptionAndNotUpdateUser()
+    {
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.UpdateUser(new UserDto { Email = null }));
+        Assert.AreEqual("Email cannot be empty or whitespace.", ex.Message);
+    }
 }
