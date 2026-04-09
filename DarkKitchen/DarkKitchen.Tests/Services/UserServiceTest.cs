@@ -182,4 +182,17 @@ public class UserServiceTest
         Assert.AreEqual("UpdatedName", result.Name);
         Assert.AreEqual("UpdatedSurname", result.Surname);
     }
+
+    [TestMethod]
+    public void GetUsers_WhenThereAreNoUsers_ShouldReturnEmptyList()
+    {
+        _userRepositoryMock!
+            .Setup(repository => repository.GetUsers("validName", "validSurname"))
+            .Returns([]);
+
+        List<UserResponseDto> result = _userService!.GetUsers("validName", "validSurname");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count);
+    }
 }
