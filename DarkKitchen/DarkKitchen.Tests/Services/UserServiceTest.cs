@@ -247,4 +247,21 @@ public class UserServiceTest
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual("validName", result[0].Name);
     }
+
+    [TestMethod]
+    public void DeleteUser_WhenUserExists_ShouldDeleteUser()
+    {
+        _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail("validEmail@gmail.com"))
+            .Returns(_user!);
+
+        _userService!.DeleteUser("validEmail@gmail.com");
+
+        _userRepositoryMock!
+            .Verify(repository => repository.Delete(_user!), Times.Once);
+
+        _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail("validEmail@gmail.com"))
+            .Returns((User?)null);
+    }
 }
