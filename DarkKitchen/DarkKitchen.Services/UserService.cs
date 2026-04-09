@@ -16,48 +16,48 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         if(string.IsNullOrEmpty(newUser.Name))
         {
-            throw new ArgumentException("Name cannot be empty or whitespace.");
+            throw new NameEmptyException();
         }
 
         if(string.IsNullOrEmpty(newUser.Surname))
         {
-            throw new ArgumentException("Surname cannot be empty or whitespace.");
+            throw new SurnameEmptyException();
         }
 
         if(!newUser.Email.Contains("@"))
         {
-            throw new ArgumentException("Email is not valid.");
+            throw new InvalidEmailException();
         }
 
         if(newUser.Password.Length > 25)
         {
-            throw new ArgumentException("Password cannot be longer than 25 characters.");
+            throw new PasswordTooLongException();
         }
 
         if(newUser.Password.Length < 15)
         {
-            throw new ArgumentException("Password must be at least 15 characters long.");
+            throw new PasswordTooShortException();
         }
 
         if(!newUser.Password.Any(char.IsUpper))
         {
-            throw new ArgumentException("Password must contain at least one uppercase letter.");
+            throw new PasswordMissingUppercaseException();
         }
 
         if(!newUser.Password.Any(char.IsLower))
         {
-            throw new ArgumentException("Password must contain at least one lowercase letter.");
+            throw new PasswordMissingLowercaseException();
         }
 
         var specialChars = "!@#$%^&*()_+-=[]{};:,.<>?/~";
         if(!newUser.Password.Any(specialChars.Contains))
         {
-            throw new ArgumentException("Password must contain at least one special character.");
+            throw new PasswordMissingSpecialCharacterException();
         }
 
         if(!newUser.Password.Any(char.IsDigit))
         {
-            throw new ArgumentException("Password must contain at least one number.");
+            throw new PasswordMissingNumberException();
         }
 
         var user = new User
@@ -77,11 +77,11 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         if(string.IsNullOrWhiteSpace(updatedUser.Email))
         {
-            throw new ArgumentException("Email cannot be empty or whitespace.");
+            throw new EmailEmptyException();
         }
 
         User user = _userRepository.GetByEmail(updatedUser.Email!)
-            ?? throw new ArgumentException("User not found.");
+            ?? throw new UserNotFoundException();
 
         user.Name = updatedUser.Name;
         user.Surname = updatedUser.Surname;
