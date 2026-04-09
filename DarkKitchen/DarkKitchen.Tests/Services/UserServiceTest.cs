@@ -61,4 +61,13 @@ public class UserServiceTest
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Surname cannot be empty or whitespace.", ex.Message);
     }
+
+    [TestMethod]
+    public void CreateUser_WhenInvalidEmail_ShouldCreateUser()
+    {
+        _validUser!.Email = "invalidEmail";
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.CreateUser(_validUser));
+        Assert.AreEqual("Email is not valid.", ex.Message);
+    }
 }
