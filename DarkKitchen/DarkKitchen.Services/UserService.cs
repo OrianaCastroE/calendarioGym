@@ -93,7 +93,18 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public List<UserResponseDto> GetUsers(string name, string surname)
     {
-        return new List<UserResponseDto>();
+        List<User> users = _userRepository.GetUsers(name, surname);
+
+        var result = users.Select(user => new UserResponseDto
+        {
+            Name = user.Name,
+            Surname = user.Surname,
+            Email = user.Email,
+            Phone = user.Phone,
+            Role = user.Role.ToString(),
+        }).ToList();
+
+        return result;
     }
 
     public void DeleteUser(string email)
