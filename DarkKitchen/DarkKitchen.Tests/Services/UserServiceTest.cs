@@ -97,4 +97,13 @@ public class UserServiceTest
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one uppercase letter.", ex.Message);
     }
+
+    [TestMethod]
+    public void CreateUser_PasswordDoesNotContainsLowerLetter_ShouldThrowExceptionAndNotCreateUser()
+    {
+        _validUser!.Password = "UPPERPASSWORDDDD";
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.CreateUser(_validUser));
+        Assert.AreEqual("Password must contain at least one lowercase letter.", ex.Message);
+    }
 }
