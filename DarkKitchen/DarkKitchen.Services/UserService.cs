@@ -1,5 +1,6 @@
 ﻿using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.UserDTOs;
 
@@ -74,6 +75,15 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void UpdateUser(UserDto updatedUser)
     {
+        User user = _userRepository.GetByEmail(updatedUser.Email!)
+            ?? throw new ArgumentException("User not found.");
+
+        user.Name = updatedUser.Name;
+        user.Surname = updatedUser.Surname;
+        user.Phone = updatedUser.Phone;
+        user.Password = updatedUser.Password;
+
+        _userRepository.Update(user);
     }
 
     public List<UserResponseDto> GetUsers(string name, string surname)
