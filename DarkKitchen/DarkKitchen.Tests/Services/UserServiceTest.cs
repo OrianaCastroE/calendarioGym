@@ -264,4 +264,17 @@ public class UserServiceTest
             .Setup(repository => repository.GetByEmail("validEmail@gmail.com"))
             .Returns((User?)null);
     }
+
+    [TestMethod]
+    public void DeleteUser_WhenUserDoesNotExist_ShouldThrowException()
+    {
+        _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail("fakeUser@gmail.com"))
+            .Returns((User?)null);
+
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.DeleteUser("fakeUser@gmail.com"));
+
+        Assert.AreEqual("User not found.", ex.Message);
+    }
 }
