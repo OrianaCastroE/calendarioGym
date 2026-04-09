@@ -222,4 +222,29 @@ public class UserServiceTest
         Assert.AreEqual("validSurname", result[0].Surname);
         Assert.AreEqual("validEmail@gmail.com", result[0].Email);
     }
+
+    [TestMethod]
+    public void GetUsers_WhenUsersExist_ShouldReturnUsers()
+    {
+        _user = new User
+        {
+            Name = "validName",
+            Surname = "validSurname",
+            Email = "validEmail@gmail.com",
+            Phone = "099123456",
+            Password = "PasswordSegura123!",
+            Role = Role.Client,
+        };
+
+        var users = new List<User> { _user };
+        _userRepositoryMock!
+            .Setup(repository => repository.GetUsers("validName", "validSurname"))
+            .Returns(users);
+
+        var result = _userService!.GetUsers("validName", "validSurname");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("validName", result[0].Name);
+    }
 }
