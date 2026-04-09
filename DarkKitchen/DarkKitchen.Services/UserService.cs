@@ -93,7 +93,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public List<UserResponseDto> GetUsers(string name, string surname)
     {
-        return null;
+        return new List<UserResponseDto>();
     }
 
     public void DeleteUser(string email)
