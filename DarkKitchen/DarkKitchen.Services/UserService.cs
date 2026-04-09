@@ -138,4 +138,9 @@ public class UserService(IUserRepository userRepository) : IUserService
 
         _userRepository.Delete(user);
     }
+
+    public void CreateUserWithRole(CreateUserDto newUser)
+    {
+        throw new NotImplementedException();
+    }
 }
