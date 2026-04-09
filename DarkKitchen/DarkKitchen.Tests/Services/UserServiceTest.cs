@@ -63,11 +63,20 @@ public class UserServiceTest
     }
 
     [TestMethod]
-    public void CreateUser_WhenInvalidEmail_ShouldCreateUser()
+    public void CreateUser_WhenInvalidEmail_ShouldThrowExceptionAndNotCreateUser()
     {
         _validUser!.Email = "invalidEmail";
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Email is not valid.", ex.Message);
+    }
+
+    [TestMethod]
+    public void CreateUser_WhenLongPassword_ShouldThrowExceptionAndNotCreateUser()
+    {
+        _validUser!.Password = "longPassworddddddddddddddddddd";
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+            _userService!.CreateUser(_validUser));
+        Assert.AreEqual("Password cannot be longer than 25 characters.", ex.Message);
     }
 }
