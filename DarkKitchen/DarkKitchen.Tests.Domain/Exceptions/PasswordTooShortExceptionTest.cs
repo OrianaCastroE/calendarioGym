@@ -1,6 +1,6 @@
 using DarkKitchen.Domain.Exceptions;
 
-namespace DarkKitchen.Tests.Exceptions;
+namespace DarkKitchen.Tests.Domain.Exceptions;
 
 [TestClass]
 public class PasswordTooShortExceptionTest

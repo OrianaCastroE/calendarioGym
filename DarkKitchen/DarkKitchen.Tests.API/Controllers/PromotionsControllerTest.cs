@@ -5,7 +5,7 @@ using DarkKitchen.Models.PromotionDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace DarkKitchen.Tests.Controllers;
+namespace DarkKitchen.Tests.API.Controllers;
 
 [TestClass]
 public class PromotionsControllerTest

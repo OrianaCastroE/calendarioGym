@@ -1,6 +1,6 @@
 using DarkKitchen.Domain.Entities;
 
-namespace DarkKitchen.Tests.Entities;
+namespace DarkKitchen.Tests.Domain.Entities;
 
 [TestClass]
 public class UserTest
