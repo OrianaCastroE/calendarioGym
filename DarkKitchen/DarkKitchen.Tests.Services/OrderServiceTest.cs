@@ -122,4 +122,15 @@ public class OrderServiceTest
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
     }
+
+    [TestMethod]
+    public void GetOrderById_ValidId_ReturnsOrder()
+    {
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+
+        var result = orderService!.GetOrderById(1);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Id);
+    }
 }
