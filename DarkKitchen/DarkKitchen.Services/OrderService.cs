@@ -102,6 +102,12 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
 
     public void UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus)
     {
-        throw new NotImplementedException();
+        var order = orderRepository.GetById(orderId)
+            ?? throw new Exception("Order not found.");
+
+        order.Status = newStatus.Status!;
+
+        orderRepository.Update(order);
+        orderRepository.Save();
     }
 }

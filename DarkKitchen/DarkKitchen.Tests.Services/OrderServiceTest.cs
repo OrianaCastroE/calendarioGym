@@ -141,4 +141,15 @@ public class OrderServiceTest
 
         Assert.ThrowsException<Exception>(() => orderService!.GetOrderById(1));
     }
+
+    [TestMethod]
+    public void UpdateOrderStatus_ValidData_StatusUpdated()
+    {
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto() { Status = "Prepared" });
+
+        orderRepositoryMock!.Verify(r => r.Update(It.IsAny<Order>()), Times.Once);
+        orderRepositoryMock!.Verify(r => r.Save(), Times.Once);
+    }
 }
