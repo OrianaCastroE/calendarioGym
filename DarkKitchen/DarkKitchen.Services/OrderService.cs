@@ -85,7 +85,19 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
 
     public OrderResponseDto GetOrderById(int orderId)
     {
-        throw new NotImplementedException();
+        var order = orderRepository.GetById(orderId)
+            ?? throw new Exception("Order not found.");
+
+        return new OrderResponseDto()
+        {
+            Id = order.Id,
+            ClientId = order.ClientId,
+            Status = order.Status,
+            CreatedAt = order.CreatedAt,
+            Subtotal = order.Subtotal,
+            ShippingCost = order.ShippingCost,
+            Total = order.Total
+        };
     }
 
     public void UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus)
