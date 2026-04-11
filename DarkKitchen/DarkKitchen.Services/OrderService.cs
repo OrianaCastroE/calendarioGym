@@ -59,7 +59,18 @@ public class OrderService(
 
     public List<OrderResponseDto> GetClientOrders(int clientId, DateTime? dateFrom, DateTime? dateTo, string? status)
     {
-        throw new NotImplementedException();
+        var orders = orderRepository.GetClientOrders(clientId, dateFrom, dateTo, status);
+
+        return orders.Select(o => new OrderResponseDto()
+        {
+            Id = o.Id,
+            ClientId = o.ClientId,
+            Status = o.Status,
+            CreatedAt = o.CreatedAt,
+            Subtotal = o.Subtotal,
+            ShippingCost = o.ShippingCost,
+            Total = o.Total
+        }).ToList();
     }
 
     public List<OrderResponseDto> GetOrdersByStatus(DateTime dateFrom, DateTime dateTo, string? address, string? status)
