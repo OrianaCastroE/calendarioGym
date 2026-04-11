@@ -1,6 +1,8 @@
 using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.OrderDTOs;
+using DarkKitchen.Services;
 using Moq;
 
 namespace DarkKitchen.Tests.Services;
