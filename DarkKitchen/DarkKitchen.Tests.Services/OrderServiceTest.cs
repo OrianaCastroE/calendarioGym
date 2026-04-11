@@ -65,4 +65,17 @@ public class OrderServiceTest
             Total = 256.2m
         };
     }
+
+    [TestMethod]
+    public void CreateOrder_ValidData_OrderCreated()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(1)).Returns(productEntity!);
+        promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null)).Returns([]);
+
+        var result = orderService!.CreateOrder(validOrder!);
+
+        orderRepositoryMock!.Verify(r => r.Add(It.IsAny<Order>()), Times.Once);
+        orderRepositoryMock!.Verify(r => r.Save(), Times.Once);
+        Assert.IsNotNull(result);
+    }
 }
