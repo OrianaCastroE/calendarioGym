@@ -3,67 +3,57 @@ using DarkKitchen.Domain.Entities;
 namespace DarkKitchen.Tests.Domain.Entities;
 
 [TestClass]
-public class OrderTest
+public class OrderProductTest
 {
     private readonly int id = 1;
-    private readonly int clientId = 1;
-    private readonly string deliveryType = "express";
-    private readonly string street = "18 de Julio";
-    private readonly string doorNumber = "1234";
-    private readonly string apartment = "101";
-    private readonly string status = "Pending";
-    private readonly DateTime createdAt = new DateTime(2026, 1, 25);
-    private Order? order;
+    private readonly int orderId = 1;
+    private readonly int productId = 1;
+    private readonly int quantity = 2;
+    private readonly decimal unitPrice = 100;
+    private readonly decimal discountPercentage = 10;
+    private OrderProduct? orderProduct;
 
     [TestInitialize]
     public void Setup()
     {
-        order = new Order
+        orderProduct = new OrderProduct
         {
             Id = id,
-            ClientId = clientId,
-            DeliveryType = deliveryType,
-            Street = street,
-            DoorNumber = doorNumber,
-            Apartment = apartment,
-            Status = status,
-            CreatedAt = createdAt
+            OrderId = orderId,
+            ProductId = productId,
+            Quantity = quantity,
+            UnitPrice = unitPrice,
+            DiscountPercentage = discountPercentage
         };
     }
 
     [TestMethod]
-    public void Order_WithValidData_HasCorrectClientId()
+    public void OrderProduct_WithValidData_HasCorrectOrderId()
     {
-        Assert.AreEqual(clientId, order!.ClientId);
+        Assert.AreEqual(orderId, orderProduct!.OrderId);
     }
 
     [TestMethod]
-    public void Order_WithValidData_HasCorrectDeliveryType()
+    public void OrderProduct_WithValidData_HasCorrectProductId()
     {
-        Assert.AreEqual(deliveryType, order!.DeliveryType);
+        Assert.AreEqual(productId, orderProduct!.ProductId);
     }
 
     [TestMethod]
-    public void Order_WithValidData_HasCorrectStreet()
+    public void OrderProduct_WithValidData_HasCorrectQuantity()
     {
-        Assert.AreEqual(street, order!.Street);
+        Assert.AreEqual(quantity, orderProduct!.Quantity);
     }
 
     [TestMethod]
-    public void Order_WithValidData_HasCorrectDoorNumber()
+    public void OrderProduct_WithValidData_HasCorrectUnitPrice()
     {
-        Assert.AreEqual(doorNumber, order!.DoorNumber);
+        Assert.AreEqual(unitPrice, orderProduct!.UnitPrice);
     }
 
     [TestMethod]
-    public void Order_WithValidData_HasCorrectStatus()
+    public void OrderProduct_WithValidData_HasCorrectDiscountPercentage()
     {
-        Assert.AreEqual(status, order!.Status);
-    }
-
-    [TestMethod]
-    public void Order_WithValidData_HasCorrectCreatedAt()
-    {
-        Assert.AreEqual(createdAt, order!.CreatedAt);
+        Assert.AreEqual(discountPercentage, orderProduct!.DiscountPercentage);
     }
 }
