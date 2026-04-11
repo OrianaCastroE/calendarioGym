@@ -1,5 +1,7 @@
-﻿using DarkKitchen.Domain.Interfaces;
+﻿using System.Security.Claims;
+using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.OrderDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkKitchen.API.Controllers;
@@ -10,6 +12,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
 {
     private readonly IOrderService _orderService = orderService;
 
+    [Authorize(Roles = "Client")]
     [HttpPost]
     public IActionResult CreateOrder([FromBody] OrderDto newOrder)
     {
@@ -17,14 +20,16 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Created(string.Empty, order);
     }
 
+    [Authorize(Roles = "Client")]
     [HttpGet("client")]
     public IActionResult GetClientOrders([FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo, [FromQuery] string? status)
     {
-        // TODO: extract clientId from token (as in some other controllers)
-        var orders = _orderService.GetClientOrders(0, dateFrom, dateTo, status);
+        var clientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var orders = _orderService.GetClientOrders(clientId, dateFrom, dateTo, status);
         return Ok(orders);
     }
 
+    [Authorize(Roles = "Dispatcher")]
     [HttpGet]
     public IActionResult GetOrdersByStatus([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo, [FromQuery] string? address, [FromQuery] string? status)
     {
@@ -32,6 +37,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(orders);
     }
 
+    [Authorize(Roles = "Admin, Dispatcher")]
     [HttpGet("{orderId}")]
     public IActionResult GetOrderById(int orderId)
     {
@@ -39,9 +45,11 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(order);
     }
 
+    [Authorize(Roles = "Admin, Dispatcher")]
     [HttpPatch("{orderId}/status")]
     public IActionResult UpdateOrderStatus(int orderId, [FromBody] UpdateOrderStatusDto newStatus)
     {
+        // TODO: Add role validation in service layer to ensure only allowed roles can update to certain statuses
         _orderService.UpdateOrderStatus(orderId, newStatus);
         return Ok("Order status updated.");
     }
