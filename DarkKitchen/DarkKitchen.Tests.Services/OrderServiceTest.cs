@@ -102,4 +102,16 @@ public class OrderServiceTest
 
         Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
     }
+
+    [TestMethod]
+    public void GetClientOrders_ValidData_ReturnsOrders()
+    {
+        orderRepositoryMock!.Setup(r => r.GetClientOrders(1, null, null, null))
+            .Returns([orderEntity!]);
+
+        var result = orderService!.GetClientOrders(1, null, null, null);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
+    }
 }
