@@ -78,4 +78,12 @@ public class OrderServiceTest
         orderRepositoryMock!.Verify(r => r.Save(), Times.Once);
         Assert.IsNotNull(result);
     }
+
+    [TestMethod]
+    public void CreateOrder_NoProducts_ThrowsException()
+    {
+        validOrder!.Products = [];
+
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
+    }
 }
