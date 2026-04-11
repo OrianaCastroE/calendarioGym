@@ -16,6 +16,9 @@ public class OrderService(
 
     public OrderResponseDto CreateOrder(OrderDto newOrder)
     {
+        if(newOrder.Products.Count == 0)
+            throw new Exception("Order must have at least one product.");
+
         var order = new Order()
         {
             DeliveryType = newOrder.DeliveryType,
