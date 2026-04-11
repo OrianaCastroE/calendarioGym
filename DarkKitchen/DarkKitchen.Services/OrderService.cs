@@ -17,7 +17,14 @@ public class OrderService(
     public OrderResponseDto CreateOrder(OrderDto newOrder)
     {
         if(newOrder.Products.Count == 0)
+        {
             throw new Exception("Order must have at least one product.");
+        }
+
+        if(newOrder.DeliveryType != "express" && newOrder.DeliveryType != "24hs")
+        {
+            throw new Exception("Invalid delivery type.");
+        }
 
         var order = new Order()
         {
