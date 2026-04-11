@@ -86,4 +86,12 @@ public class OrderServiceTest
 
         Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
     }
+
+    [TestMethod]
+    public void CreateOrder_InvalidDeliveryType_ThrowsException()
+    {
+        validOrder!.DeliveryType = "invalid";
+
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
+    }
 }
