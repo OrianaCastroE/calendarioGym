@@ -133,4 +133,12 @@ public class OrderServiceTest
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Id);
     }
+
+    [TestMethod]
+    public void GetOrderById_OrderNotFound_ThrowsException()
+    {
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns((Order?)null);
+
+        Assert.ThrowsException<Exception>(() => orderService!.GetOrderById(1));
+    }
 }
