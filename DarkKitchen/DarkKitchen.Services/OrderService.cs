@@ -26,6 +26,16 @@ public class OrderService(
             throw new Exception("Invalid delivery type.");
         }
 
+        if(string.IsNullOrEmpty(newOrder.Address.Street))
+        {
+            throw new Exception("Street cannot be empty.");
+        }
+
+        if(string.IsNullOrEmpty(newOrder.Address.DoorNumber))
+        {
+            throw new Exception("Door number cannot be empty.");
+        }
+
         var order = new Order()
         {
             DeliveryType = newOrder.DeliveryType,
