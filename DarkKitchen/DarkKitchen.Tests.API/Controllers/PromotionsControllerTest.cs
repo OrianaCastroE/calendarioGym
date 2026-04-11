@@ -59,7 +59,7 @@ public class PromotionsControllerTest
     {
         promotionServiceMock!.Setup(s => s.CreatePromotion(validPromotion!)).Throws(new BadRequestException("Promotion already exists."));
 
-        Assert.ThrowsException<BadRequestException>(() => promotionsController!.CreatePromotion(validPromotion!));
+        Assert.ThrowsExactly<BadRequestException>(() => promotionsController!.CreatePromotion(validPromotion!));
     }
 
     [TestMethod]
@@ -78,7 +78,7 @@ public class PromotionsControllerTest
     {
         promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion!)).Throws(new NotFoundException("Promotion not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotion(promotionId, validPromotion!));
+        Assert.ThrowsExactly<NotFoundException>(() => promotionsController!.UpdatePromotion(promotionId, validPromotion!));
     }
 
     [TestMethod]
@@ -99,7 +99,7 @@ public class PromotionsControllerTest
         var dto = new UpdatePromotionProductsDto { Products = [1, 2, 3] };
         promotionServiceMock!.Setup(s => s.UpdatePromotionProducts(1, dto.Products)).Throws(new NotFoundException("Promotion not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotionProducts(1, dto));
+        Assert.ThrowsExactly<NotFoundException>(() => promotionsController!.UpdatePromotionProducts(1, dto));
     }
 
     [TestMethod]
@@ -118,6 +118,6 @@ public class PromotionsControllerTest
     {
         promotionServiceMock!.Setup(s => s.GetPromotions(null, null, null)).Throws(new NotFoundException("No promotions found."));
 
-        Assert.ThrowsException<NotFoundException>(() => promotionsController!.GetPromotions(null, null, null));
+        Assert.ThrowsExactly<NotFoundException>(() => promotionsController!.GetPromotions(null, null, null));
     }
 }

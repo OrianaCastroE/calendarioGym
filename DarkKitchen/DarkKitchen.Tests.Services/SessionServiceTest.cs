@@ -58,6 +58,6 @@ public class SessionServiceTest
         userRepositoryMock!.Setup(r => r.GetByEmail(email)).Returns(user!);
         var wrongPasswordDto = new LoginDto { Email = email, Password = "wrongPassword1!" };
 
-        Assert.ThrowsException<UnauthorizedException>(() => sessionService!.Login(wrongPasswordDto));
+        Assert.ThrowsExactly<UnauthorizedException>(() => sessionService!.Login(wrongPasswordDto));
     }
 }

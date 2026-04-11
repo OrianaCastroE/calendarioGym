@@ -78,7 +78,7 @@ public class OrdersControllerTest
         };
         orderServiceMock!.Setup(s => s.CreateOrder(emptyOrder)).Throws(new BadRequestException("Order must have at least one product."));
 
-        Assert.ThrowsException<BadRequestException>(() => ordersController!.CreateOrder(emptyOrder));
+        Assert.ThrowsExactly<BadRequestException>(() => ordersController!.CreateOrder(emptyOrder));
     }
 
     [TestMethod]
@@ -97,7 +97,7 @@ public class OrdersControllerTest
     {
         orderServiceMock!.Setup(s => s.GetClientOrders(It.IsAny<int>(), null, null, null)).Throws(new NotFoundException("No orders found."));
 
-        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetClientOrders(null, null, null));
+        Assert.ThrowsExactly<NotFoundException>(() => ordersController!.GetClientOrders(null, null, null));
     }
 
     [TestMethod]
@@ -116,7 +116,7 @@ public class OrdersControllerTest
     {
         orderServiceMock!.Setup(s => s.GetOrdersByStatus(It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, null)).Throws(new NotFoundException("No orders found."));
 
-        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null));
+        Assert.ThrowsExactly<NotFoundException>(() => ordersController!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null));
     }
 
     [TestMethod]
@@ -135,7 +135,7 @@ public class OrdersControllerTest
     {
         orderServiceMock!.Setup(s => s.GetOrderById(1)).Throws(new NotFoundException("Order not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetOrderById(1));
+        Assert.ThrowsExactly<NotFoundException>(() => ordersController!.GetOrderById(1));
     }
 
     [TestMethod]
@@ -156,7 +156,7 @@ public class OrdersControllerTest
         var newStatus = new UpdateOrderStatusDto { Status = "InvalidStatus" };
         orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus)).Throws(new BadRequestException("Invalid order status."));
 
-        Assert.ThrowsException<BadRequestException>(() => ordersController!.UpdateOrderStatus(1, newStatus));
+        Assert.ThrowsExactly<BadRequestException>(() => ordersController!.UpdateOrderStatus(1, newStatus));
     }
 
     [TestMethod]
@@ -165,6 +165,6 @@ public class OrdersControllerTest
         var newStatus = new UpdateOrderStatusDto { Status = "Preparing" };
         orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus)).Throws(new NotFoundException("Order not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => ordersController!.UpdateOrderStatus(1, newStatus));
+        Assert.ThrowsExactly<NotFoundException>(() => ordersController!.UpdateOrderStatus(1, newStatus));
     }
 }

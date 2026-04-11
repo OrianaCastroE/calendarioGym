@@ -59,7 +59,7 @@ public class UserServiceTest
     {
         _validUser!.Name = string.Empty;
 
-        NameEmptyException ex = Assert.ThrowsException<NameEmptyException>(() =>
+        NameEmptyException ex = Assert.ThrowsExactly<NameEmptyException>(() =>
             _userService!.CreateUser(_validUser));
 
         Assert.AreEqual("Name cannot be empty or whitespace.", ex.Message);
@@ -69,7 +69,7 @@ public class UserServiceTest
     public void CreateUser_WhenInvalidSurname_ShouldThrowExceptionAndNotCreateUser()
     {
         _validUser!.Surname = null;
-        SurnameEmptyException ex = Assert.ThrowsException<SurnameEmptyException>(() =>
+        SurnameEmptyException ex = Assert.ThrowsExactly<SurnameEmptyException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Surname cannot be empty or whitespace.", ex.Message);
     }
@@ -78,7 +78,7 @@ public class UserServiceTest
     public void CreateUser_WhenInvalidEmail_ShouldThrowExceptionAndNotCreateUser()
     {
         _validUser!.Email = "invalidEmail";
-        InvalidEmailException ex = Assert.ThrowsException<InvalidEmailException>(() =>
+        InvalidEmailException ex = Assert.ThrowsExactly<InvalidEmailException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Email is not valid.", ex.Message);
     }
@@ -87,7 +87,7 @@ public class UserServiceTest
     public void CreateUser_WhenLongPassword_ShouldThrowExceptionAndNotCreateUser()
     {
         _validUser!.Password = "longPassworddddddddddddddddddd";
-        PasswordTooLongException ex = Assert.ThrowsException<PasswordTooLongException>(() =>
+        PasswordTooLongException ex = Assert.ThrowsExactly<PasswordTooLongException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password cannot be longer than 25 characters.", ex.Message);
     }
@@ -96,7 +96,7 @@ public class UserServiceTest
     public void CreateUser_WhenShortPassword_ShouldThrowExceptionAndNotCreateUser()
     {
         _validUser!.Password = "shortPassword";
-        PasswordTooShortException ex = Assert.ThrowsException<PasswordTooShortException>(() =>
+        PasswordTooShortException ex = Assert.ThrowsExactly<PasswordTooShortException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must be at least 15 characters long.", ex.Message);
     }
@@ -105,7 +105,7 @@ public class UserServiceTest
     public void CreateUser_PasswordDoesNotContainsUpperLetter_ShouldThrowExceptionAndNotCreateUser()
     {
         _validUser!.Password = "lowerpasswordddd";
-        PasswordMissingUppercaseException ex = Assert.ThrowsException<PasswordMissingUppercaseException>(() =>
+        PasswordMissingUppercaseException ex = Assert.ThrowsExactly<PasswordMissingUppercaseException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one uppercase letter.", ex.Message);
     }
@@ -114,7 +114,7 @@ public class UserServiceTest
     public void CreateUser_PasswordDoesNotContainsLowerLetter_ShouldThrowExceptionAndNotCreateUser()
     {
         _validUser!.Password = "UPPERPASSWORDDDD";
-        PasswordMissingLowercaseException ex = Assert.ThrowsException<PasswordMissingLowercaseException>(() =>
+        PasswordMissingLowercaseException ex = Assert.ThrowsExactly<PasswordMissingLowercaseException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one lowercase letter.", ex.Message);
     }
@@ -123,7 +123,7 @@ public class UserServiceTest
     public void CreateUser_WhenPasswordDoesNotContainSpecialCharacter_ShouldThrowExceptionAndNotCreateUser()
     {
         _validUser!.Password = "PassWithoutSpecialChar123";
-        PasswordMissingSpecialCharacterException ex = Assert.ThrowsException<PasswordMissingSpecialCharacterException>(() =>
+        PasswordMissingSpecialCharacterException ex = Assert.ThrowsExactly<PasswordMissingSpecialCharacterException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one special character.", ex.Message);
     }
@@ -132,7 +132,7 @@ public class UserServiceTest
     public void CreateUser_WhenPasswordDoesNotContainANumber_ShouldThrowExceptionAndNotCreateUser()
     {
         _validUser!.Password = "PasswordWithoutNumber!";
-        PasswordMissingNumberException ex = Assert.ThrowsException<PasswordMissingNumberException>(() =>
+        PasswordMissingNumberException ex = Assert.ThrowsExactly<PasswordMissingNumberException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one number.", ex.Message);
     }
@@ -143,7 +143,7 @@ public class UserServiceTest
         _userRepositoryMock!
             .Setup(repository => repository.GetByEmail(It.IsAny<string>()))
             .Returns((User)null);
-        UserNotFoundException ex = Assert.ThrowsException<UserNotFoundException>(() =>
+        UserNotFoundException ex = Assert.ThrowsExactly<UserNotFoundException>(() =>
             _userService!.UpdateUser(new UserDto { Email = "fakeUser@gmail.com" }));
         Assert.AreEqual("User not found.", ex.Message);
     }
@@ -151,7 +151,7 @@ public class UserServiceTest
     [TestMethod]
     public void UpdateUser_WhenEmailIsNull_ShouldThrowExceptionAndNotUpdateUser()
     {
-        EmailEmptyException ex = Assert.ThrowsException<EmailEmptyException>(() =>
+        EmailEmptyException ex = Assert.ThrowsExactly<EmailEmptyException>(() =>
             _userService!.UpdateUser(new UserDto { Email = null }));
         Assert.AreEqual("Email cannot be empty or whitespace.", ex.Message);
     }
@@ -272,7 +272,7 @@ public class UserServiceTest
             .Setup(repository => repository.GetByEmail("fakeUser@gmail.com"))
             .Returns((User?)null);
 
-        UserNotFoundException ex = Assert.ThrowsException<UserNotFoundException>(() =>
+        UserNotFoundException ex = Assert.ThrowsExactly<UserNotFoundException>(() =>
             _userService!.DeleteUser("fakeUser@gmail.com"));
 
         Assert.AreEqual("User not found.", ex.Message);
@@ -285,7 +285,7 @@ public class UserServiceTest
             .Setup(repository => repository.GetByEmail(It.IsAny<string>()))
             .Returns((User?)null);
 
-        EmailEmptyException ex = Assert.ThrowsException<EmailEmptyException>(() =>
+        EmailEmptyException ex = Assert.ThrowsExactly<EmailEmptyException>(() =>
             _userService!.DeleteUser(string.Empty));
 
         Assert.AreEqual("Email cannot be empty or whitespace.", ex.Message);

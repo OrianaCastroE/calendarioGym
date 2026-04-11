@@ -72,7 +72,7 @@ public class UsersControllerTest
     public void UserSignUp_UserAlreadyExists_ThrowsBadRequestException()
     {
         userServiceMock.Setup(s => s.CreateUser(validUser!)).Throws(new BadRequestException("User already exists."));
-        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(validUser!));
+        Assert.ThrowsExactly<BadRequestException>(() => userController.SignUp(validUser!));
     }
 
     [TestMethod]
@@ -87,7 +87,7 @@ public class UsersControllerTest
             Password = password
         };
         userServiceMock.Setup(s => s.CreateUser(invalidEmailUser)).Throws(new BadRequestException("Invalid email address."));
-        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(invalidEmailUser));
+        Assert.ThrowsExactly<BadRequestException>(() => userController.SignUp(invalidEmailUser));
     }
 
     [TestMethod]
@@ -102,7 +102,7 @@ public class UsersControllerTest
             Password = password
         };
         userServiceMock.Setup(s => s.CreateUser(invalidPhoneUser)).Throws(new BadRequestException("Invalid phone number."));
-        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(invalidPhoneUser));
+        Assert.ThrowsExactly<BadRequestException>(() => userController.SignUp(invalidPhoneUser));
     }
 
     [TestMethod]
@@ -117,7 +117,7 @@ public class UsersControllerTest
             Password = "short"
         };
         userServiceMock.Setup(s => s.CreateUser(invalidPasswordUser)).Throws(new BadRequestException("Password does not meet complexity requirements."));
-        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(invalidPasswordUser));
+        Assert.ThrowsExactly<BadRequestException>(() => userController.SignUp(invalidPasswordUser));
     }
 
     [TestMethod]
@@ -135,7 +135,7 @@ public class UsersControllerTest
     public void CreateUserWithRole_UserAlreadyExists_ThrowsBadRequestException()
     {
         userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser!)).Throws(new BadRequestException("User already exists."));
-        Assert.ThrowsException<BadRequestException>(() => userController.CreateUserWithRole(validAdminUser!));
+        Assert.ThrowsExactly<BadRequestException>(() => userController.CreateUserWithRole(validAdminUser!));
     }
 
     [TestMethod]
@@ -153,7 +153,7 @@ public class UsersControllerTest
     public void UpdateUser_UserNotFound_ThrowsNotFoundException()
     {
         userServiceMock.Setup(s => s.UpdateUser(validUser!)).Throws(new NotFoundException("User not found."));
-        Assert.ThrowsException<NotFoundException>(() => userController.UpdateUser(validUser!));
+        Assert.ThrowsExactly<NotFoundException>(() => userController.UpdateUser(validUser!));
     }
 
     [TestMethod]
@@ -171,7 +171,7 @@ public class UsersControllerTest
     public void GetUsers_NoUsersFound_ThrowsNotFoundException()
     {
         userServiceMock.Setup(s => s.GetUsers("Name", "Surname")).Throws(new NotFoundException("No users found."));
-        Assert.ThrowsException<NotFoundException>(() => userController.GetUsers("Name", "Surname"));
+        Assert.ThrowsExactly<NotFoundException>(() => userController.GetUsers("Name", "Surname"));
     }
 
     [TestMethod]
@@ -189,13 +189,13 @@ public class UsersControllerTest
     public void DeleteUser_UserNotFound_ThrowsNotFoundException()
     {
         userServiceMock.Setup(s => s.DeleteUser(validEmail)).Throws(new NotFoundException("User not found."));
-        Assert.ThrowsException<NotFoundException>(() => userController.DeleteUser(validEmail));
+        Assert.ThrowsExactly<NotFoundException>(() => userController.DeleteUser(validEmail));
     }
 
     [TestMethod]
     public void DeleteUser_EmptyEmail_ThrowsBadRequestException()
     {
         userServiceMock.Setup(s => s.DeleteUser(string.Empty)).Throws(new BadRequestException("Email can't be empty."));
-        Assert.ThrowsException<BadRequestException>(() => userController.DeleteUser(string.Empty));
+        Assert.ThrowsExactly<BadRequestException>(() => userController.DeleteUser(string.Empty));
     }
 }
