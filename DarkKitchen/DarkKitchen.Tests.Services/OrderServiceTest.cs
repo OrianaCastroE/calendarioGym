@@ -94,4 +94,12 @@ public class OrderServiceTest
 
         Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
     }
+
+    [TestMethod]
+    public void CreateOrder_EmptyStreet_ThrowsException()
+    {
+        validOrder!.Address.Street = string.Empty;
+
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
+    }
 }
