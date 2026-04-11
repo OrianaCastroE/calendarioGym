@@ -114,4 +114,16 @@ public class OrderServiceTest
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
     }
+
+    [TestMethod]
+    public void GetOrdersByStatus_ValidData_ReturnsOrders()
+    {
+        orderRepositoryMock!.Setup(r => r.GetOrdersByStatus(It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, null))
+            .Returns([orderEntity!]);
+
+        var result = orderService!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
+    }
 }
