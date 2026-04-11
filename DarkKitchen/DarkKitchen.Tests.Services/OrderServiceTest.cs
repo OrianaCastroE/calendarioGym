@@ -24,11 +24,7 @@ public class OrderServiceTest
         orderRepositoryMock = new Mock<IOrderRepository>();
         productRepositoryMock = new Mock<IProductRepository>();
         promotionRepositoryMock = new Mock<IPromotionRepository>();
-        orderService = new OrderService(
-            orderRepositoryMock.Object,
-            productRepositoryMock.Object,
-            promotionRepositoryMock.Object
-        );
+        orderService = new OrderService(orderRepositoryMock.Object);
 
         productEntity = new Product()
         {

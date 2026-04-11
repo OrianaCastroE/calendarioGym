@@ -1,18 +1,12 @@
-using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.OrderDTOs;
 
 namespace DarkKitchen.Services;
 
-public class OrderService(
-    IOrderRepository orderRepository,
-    IProductRepository productRepository,
-    IPromotionRepository promotionRepository) : IOrderService
+public class OrderService(IOrderRepository orderRepository) : IOrderService
 {
     private readonly IOrderRepository orderRepository = orderRepository;
-    private readonly IProductRepository productRepository = productRepository;
-    private readonly IPromotionRepository promotionRepository = promotionRepository;
 
     public OrderResponseDto CreateOrder(OrderDto newOrder)
     {
@@ -75,7 +69,18 @@ public class OrderService(
 
     public List<OrderResponseDto> GetOrdersByStatus(DateTime dateFrom, DateTime dateTo, string? address, string? status)
     {
-        throw new NotImplementedException();
+        var orders = orderRepository.GetOrdersByStatus(dateFrom, dateTo, address, status);
+
+        return orders.Select(o => new OrderResponseDto()
+        {
+            Id = o.Id,
+            ClientId = o.ClientId,
+            Status = o.Status,
+            CreatedAt = o.CreatedAt,
+            Subtotal = o.Subtotal,
+            ShippingCost = o.ShippingCost,
+            Total = o.Total
+        }).ToList();
     }
 
     public OrderResponseDto GetOrderById(int orderId)
