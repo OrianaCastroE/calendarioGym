@@ -71,7 +71,7 @@ public class ProductControllerTest
 
         productServiceMock.Setup(s => s.CreateProduct(nullProductName)).Throws(new BadRequestException("Invalid name."));
 
-        Assert.ThrowsExactly<BadRequestException>(() => productController.CreateProduct(nullProductName));
+        Assert.ThrowsException<BadRequestException>(() => productController.CreateProduct(nullProductName));
     }
 
     [TestMethod]
@@ -94,7 +94,7 @@ public class ProductControllerTest
         List<string> categories = [];
         productServiceMock.Setup(s => s.GetProducts(validProductLine, categories, validProductName)).Throws(new NotFoundException("No products found."));
 
-        Assert.ThrowsExactly<NotFoundException>(() => productController.GetProducts(validProductLine, categories, validProductName));
+        Assert.ThrowsException<NotFoundException>(() => productController.GetProducts(validProductLine, categories, validProductName));
     }
 
     [TestMethod]
@@ -119,7 +119,7 @@ public class ProductControllerTest
         var dateTo = DateTime.Now;
         productServiceMock.Setup(s => s.GetMostRequestedProducts(It.IsAny<DateRangeDto>())).Throws(new NotFoundException("No products found."));
 
-        Assert.ThrowsExactly<NotFoundException>(() => productController.GetMostRequestedProducts(dateFrom, dateTo));
+        Assert.ThrowsException<NotFoundException>(() => productController.GetMostRequestedProducts(dateFrom, dateTo));
     }
 
     [TestMethod]
@@ -137,7 +137,7 @@ public class ProductControllerTest
     {
         productServiceMock.Setup(s => s.UpdateProduct(validProduct!)).Throws(new NotFoundException("Product not found."));
 
-        Assert.ThrowsExactly<NotFoundException>(() => productController.UpdateProduct(validProduct!));
+        Assert.ThrowsException<NotFoundException>(() => productController.UpdateProduct(validProduct!));
     }
 
     [TestMethod]
@@ -165,6 +165,6 @@ public class ProductControllerTest
         };
         productServiceMock.Setup(s => s.UpdateStatus(id, status)).Throws(new NotFoundException("Product not found."));
 
-        Assert.ThrowsExactly<NotFoundException>(() => productController.UpdateStatus(id, status));
+        Assert.ThrowsException<NotFoundException>(() => productController.UpdateStatus(id, status));
     }
 }

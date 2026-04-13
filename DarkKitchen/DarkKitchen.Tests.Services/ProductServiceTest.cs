@@ -72,7 +72,7 @@ public class ProductServiceTest
     public void CreateProduct_WhenNameIsNull_ThrowsBadRequestException()
     {
         var dto = new CreateProductDto { Name = null };
-        Assert.ThrowsExactly<BadRequestException>(() => productService!.CreateProduct(dto));
+        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
     }
 
     [TestMethod]
@@ -82,7 +82,7 @@ public class ProductServiceTest
         {
             Name = string.Empty
         };
-        Assert.ThrowsExactly<BadRequestException>(() => productService!.CreateProduct(dto));
+        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
     }
 
     [TestMethod]
@@ -97,7 +97,7 @@ public class ProductServiceTest
     public void UpdateProduct_WhenProductNotFound_ThrowsNotFoundException()
     {
         productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
-        Assert.ThrowsExactly<NotFoundException>(() => productService!.UpdateProduct(validUpdateProductDto!));
+        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateProduct(validUpdateProductDto!));
     }
 
     [TestMethod]
@@ -112,7 +112,7 @@ public class ProductServiceTest
     public void GetProducts_WhenNoProductsFound_ThrowsNotFoundException()
     {
         productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilter>())).Returns([]);
-        Assert.ThrowsExactly<NotFoundException>(() => productService!.GetProducts(null, null, null));
+        Assert.ThrowsException<NotFoundException>(() => productService!.GetProducts(null, null, null));
     }
 
     [TestMethod]
@@ -129,7 +129,7 @@ public class ProductServiceTest
     {
         var dates = new DateRangeDto { DateFrom = DateTime.Now.AddDays(-7), DateTo = DateTime.Now };
         productRepositoryMock!.Setup(r => r.GetMostRequestedProducts(dates)).Returns([]);
-        Assert.ThrowsExactly<NotFoundException>(() => productService!.GetMostRequestedProducts(dates));
+        Assert.ThrowsException<NotFoundException>(() => productService!.GetMostRequestedProducts(dates));
     }
 
     [TestMethod]
@@ -146,7 +146,7 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
         var status = new ProductStatusDto { IsActive = false };
-        Assert.ThrowsExactly<NotFoundException>(() => productService!.UpdateStatus(1, status));
+        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateStatus(1, status));
     }
 
     [TestMethod]

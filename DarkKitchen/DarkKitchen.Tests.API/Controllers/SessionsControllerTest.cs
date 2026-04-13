@@ -42,7 +42,7 @@ public class SessionsControllerTest
 
         var loginDto = new LoginDto { Email = validEmail, Password = "wrongpassword" };
 
-        Assert.ThrowsExactly<BadRequestException>(() => sessionController.Login(loginDto));
+        Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
 
     [TestMethod]
@@ -52,7 +52,7 @@ public class SessionsControllerTest
 
         var loginDto = new LoginDto { Email = null, Password = password };
 
-        Assert.ThrowsExactly<BadRequestException>(() => sessionController.Login(loginDto));
+        Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
 
     [TestMethod]
@@ -62,7 +62,7 @@ public class SessionsControllerTest
 
         var loginDto = new LoginDto { Email = validEmail, Password = null };
 
-        Assert.ThrowsExactly<BadRequestException>(() => sessionController.Login(loginDto));
+        Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
 
     [TestMethod]
@@ -72,6 +72,6 @@ public class SessionsControllerTest
 
         var loginDto = new LoginDto { Email = "notanemail", Password = password };
 
-        Assert.ThrowsExactly<BadRequestException>(() => sessionController.Login(loginDto));
+        Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
 }

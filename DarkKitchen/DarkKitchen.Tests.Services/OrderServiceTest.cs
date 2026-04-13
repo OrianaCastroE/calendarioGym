@@ -80,7 +80,7 @@ public class OrderServiceTest
     {
         validOrder!.Products = [];
 
-        Assert.ThrowsExactly<Exception>(() => orderService!.CreateOrder(validOrder!));
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public class OrderServiceTest
     {
         validOrder!.DeliveryType = "invalid";
 
-        Assert.ThrowsExactly<Exception>(() => orderService!.CreateOrder(validOrder!));
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
     }
 
     [TestMethod]
@@ -96,7 +96,7 @@ public class OrderServiceTest
     {
         validOrder!.Address.Street = string.Empty;
 
-        Assert.ThrowsExactly<Exception>(() => orderService!.CreateOrder(validOrder!));
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
     }
 
     [TestMethod]
@@ -139,7 +139,7 @@ public class OrderServiceTest
     {
         orderRepositoryMock!.Setup(r => r.GetById(1)).Returns((Order?)null);
 
-        Assert.ThrowsExactly<Exception>(() => orderService!.GetOrderById(1));
+        Assert.ThrowsException<Exception>(() => orderService!.GetOrderById(1));
     }
 
     [TestMethod]
@@ -158,6 +158,6 @@ public class OrderServiceTest
     {
         orderRepositoryMock!.Setup(r => r.GetById(1)).Returns((Order?)null);
 
-        Assert.ThrowsExactly<Exception>(() => orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto() { Status = "Prepared" }));
+        Assert.ThrowsException<Exception>(() => orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto() { Status = "Prepared" }));
     }
 }
