@@ -1,7 +1,9 @@
+using System.Security.Claims;
 using DarkKitchen.API.Controllers;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.OrderDTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -21,6 +23,14 @@ public class OrdersControllerTest
     {
         orderServiceMock = new Mock<IOrderService>();
         ordersController = new OrdersController(orderServiceMock.Object);
+
+        var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, "1") };
+        var identity = new ClaimsIdentity(claims);
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        ordersController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+        };
 
         validOrder = new OrderDto()
         {

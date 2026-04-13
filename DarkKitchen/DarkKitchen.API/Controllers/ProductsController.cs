@@ -1,6 +1,7 @@
 using DarkKitchen.Domain.Interfaces;
 using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkKitchen.API.Controllers;
@@ -12,6 +13,7 @@ public class ProductsController(IProductService productService) : ControllerBase
 {
     private readonly IProductService _productService = productService;
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public IActionResult CreateProduct([FromBody] CreateProductDto newProduct)
     {
@@ -19,6 +21,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         return Created("Product created correctly.", null);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public IActionResult UpdateProduct([FromBody] UpdateProductDto product)
     {
@@ -26,6 +29,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         return Ok("Product updated correctly.");
     }
 
+    [Authorize(Roles = "Admin, Client")]
     [HttpGet]
     public IActionResult GetProducts([FromQuery] string? productLine, [FromQuery] List<string>? categories, [FromQuery] string? name)
     {
@@ -33,6 +37,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         return Ok(products);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("most-requested")]
     public IActionResult GetMostRequestedProducts([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
     {
