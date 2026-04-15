@@ -54,6 +54,8 @@ public class OrderServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(productEntity!);
         promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null)).Returns([]);
+        orderRepositoryMock!.Setup(r => r.Add(It.IsAny<Order>()));
+        orderRepositoryMock!.Setup(r => r.Save());
 
         var result = orderService!.CreateOrder(validOrder);
 
@@ -133,6 +135,8 @@ public class OrderServiceTest
     public void UpdateOrderStatus_ValidData_StatusUpdated()
     {
         orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+        orderRepositoryMock.Setup(r => r.Update(orderEntity!));
+        orderRepositoryMock.Setup(r => r.Save());
 
         orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto("Prepared"));
 
