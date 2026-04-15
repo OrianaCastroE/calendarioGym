@@ -14,9 +14,9 @@ public class UsersControllerTest
     private readonly string validEmail = "valid@email.com";
     private readonly string password = "ValidPassword123!";
     private readonly string validPhone = "+59899123123";
-    private UserDto? validUser;
-    private UserDto? updatedUser;
-    private CreateUserDto? validAdminUser;
+    private UserDto validUser;
+    private UserDto updatedUser;
+    private CreateUserDto validAdminUser;
     private List<UserResponseDto>? users;
     private Mock<IUserService>? userServiceMock;
     private UsersController? userController;
@@ -28,40 +28,18 @@ public class UsersControllerTest
         userController = new UsersController(userServiceMock.Object);
         users =
         [
-            new UserResponseDto { Id = 1, Name = "Name", Surname = "Surname", Email = validEmail, Phone = validPhone, Role = Role.Client.ToString() }
+            new UserResponseDto(1, "Name", "Surname", validEmail, validPhone, Role.Client.ToString())
         ];
-        validUser = new UserDto()
-        {
-            Name = "Name",
-            Surname = "Surname",
-            Email = validEmail,
-            Phone = validPhone,
-            Password = password
-        };
-        updatedUser = new UserDto()
-        {
-            Name = "UpdatedName",
-            Surname = "UpdatedSurname",
-            Email = validEmail,
-            Phone = validPhone,
-            Password = password
-        };
-        validAdminUser = new CreateUserDto()
-        {
-            Name = "Name",
-            Surname = "Surname",
-            Email = validEmail,
-            Phone = validPhone,
-            Password = password,
-            Role = Role.Admin.ToString()
-        };
+        validUser = new UserDto("Name", "Surname", validEmail, validPhone, password);
+        updatedUser = new UserDto("UpdatedName", "UpdatedSurname", validEmail, validPhone, password);
+        validAdminUser = new CreateUserDto("Name", "Surname", validEmail, validPhone, password, Role.Admin.ToString());
     }
 
     [TestMethod]
     public void UserSignUp_ValidUserWithoutRole_UserRegisteredAsClient()
     {
-        userServiceMock.Setup(s => s.CreateUser(validUser!));
-        var result = userController.SignUp(validUser!);
+        userServiceMock.Setup(s => s.CreateUser(validUser));
+        var result = userController.SignUp(validUser);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -71,21 +49,14 @@ public class UsersControllerTest
     [TestMethod]
     public void UserSignUp_UserAlreadyExists_ThrowsBadRequestException()
     {
-        userServiceMock.Setup(s => s.CreateUser(validUser!)).Throws(new BadRequestException("User already exists."));
-        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(validUser!));
+        userServiceMock.Setup(s => s.CreateUser(validUser)).Throws(new BadRequestException("User already exists."));
+        Assert.ThrowsException<BadRequestException>(() => userController.SignUp(validUser));
     }
 
     [TestMethod]
     public void UserSignUp_InvalidEmailFormat_ThrowsBadRequestException()
     {
-        var invalidEmailUser = new UserDto()
-        {
-            Name = "Name",
-            Surname = "Surname",
-            Email = "invalid-email",
-            Phone = validPhone,
-            Password = password
-        };
+        var invalidEmailUser = new UserDto("Name", "Surname", "invalid-email", validPhone, password);
         userServiceMock.Setup(s => s.CreateUser(invalidEmailUser)).Throws(new BadRequestException("Invalid email address."));
         Assert.ThrowsException<BadRequestException>(() => userController.SignUp(invalidEmailUser));
     }
@@ -93,14 +64,7 @@ public class UsersControllerTest
     [TestMethod]
     public void UserSignUp_InvalidPhoneFormat_ThrowsBadRequestException()
     {
-        var invalidPhoneUser = new UserDto()
-        {
-            Name = "Name",
-            Surname = "Surname",
-            Email = validEmail,
-            Phone = "invalid-phone",
-            Password = password
-        };
+        var invalidPhoneUser = new UserDto("Name", "Surname", validEmail, "invalid-phone", password);
         userServiceMock.Setup(s => s.CreateUser(invalidPhoneUser)).Throws(new BadRequestException("Invalid phone number."));
         Assert.ThrowsException<BadRequestException>(() => userController.SignUp(invalidPhoneUser));
     }
@@ -108,14 +72,7 @@ public class UsersControllerTest
     [TestMethod]
     public void UserSignUp_InvalidPassword_ThrowsBadRequestException()
     {
-        var invalidPasswordUser = new UserDto()
-        {
-            Name = "Name",
-            Surname = "Surname",
-            Email = validEmail,
-            Phone = validPhone,
-            Password = "short"
-        };
+        var invalidPasswordUser = new UserDto("Name", "Surname", validEmail, validPhone, "short");
         userServiceMock.Setup(s => s.CreateUser(invalidPasswordUser)).Throws(new BadRequestException("Password does not meet complexity requirements."));
         Assert.ThrowsException<BadRequestException>(() => userController.SignUp(invalidPasswordUser));
     }
@@ -123,8 +80,8 @@ public class UsersControllerTest
     [TestMethod]
     public void CreateUserWithRole_ValidData_ReturnsCreated()
     {
-        userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser!));
-        var result = userController.CreateUserWithRole(validAdminUser!);
+        userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser));
+        var result = userController.CreateUserWithRole(validAdminUser);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -134,15 +91,15 @@ public class UsersControllerTest
     [TestMethod]
     public void CreateUserWithRole_UserAlreadyExists_ThrowsBadRequestException()
     {
-        userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser!)).Throws(new BadRequestException("User already exists."));
-        Assert.ThrowsException<BadRequestException>(() => userController.CreateUserWithRole(validAdminUser!));
+        userServiceMock.Setup(s => s.CreateUserWithRole(validAdminUser)).Throws(new BadRequestException("User already exists."));
+        Assert.ThrowsException<BadRequestException>(() => userController.CreateUserWithRole(validAdminUser));
     }
 
     [TestMethod]
     public void UpdateUser_ExistingUser_ReturnsOk()
     {
-        userServiceMock.Setup(s => s.UpdateUser(validUser!));
-        var result = userController.UpdateUser(validUser!);
+        userServiceMock.Setup(s => s.UpdateUser(validUser));
+        var result = userController.UpdateUser(validUser);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -152,8 +109,8 @@ public class UsersControllerTest
     [TestMethod]
     public void UpdateUser_UserNotFound_ThrowsNotFoundException()
     {
-        userServiceMock.Setup(s => s.UpdateUser(validUser!)).Throws(new NotFoundException("User not found."));
-        Assert.ThrowsException<NotFoundException>(() => userController.UpdateUser(validUser!));
+        userServiceMock.Setup(s => s.UpdateUser(validUser)).Throws(new NotFoundException("User not found."));
+        Assert.ThrowsException<NotFoundException>(() => userController.UpdateUser(validUser));
     }
 
     [TestMethod]

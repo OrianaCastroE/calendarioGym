@@ -25,9 +25,9 @@ public class SessionsControllerTest
     [TestMethod]
     public void Login_ValidCredentials_ReturnsOkWithToken()
     {
-        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Returns(new LoginResponseDto { Token = "fake-jwt-token" });
+        sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Returns(new LoginResponseDto("fake-jwt-token"));
 
-        var loginDto = new LoginDto { Email = validEmail, Password = password };
+        var loginDto = new LoginDto(validEmail, password);
         var result = sessionController.Login(loginDto);
         var resultObj = result as ObjectResult;
 
@@ -40,7 +40,7 @@ public class SessionsControllerTest
     {
         sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new BadRequestException("Invalid credentials."));
 
-        var loginDto = new LoginDto { Email = validEmail, Password = "wrongpassword" };
+        var loginDto = new LoginDto(validEmail, "wrongpassword");
 
         Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
@@ -50,7 +50,7 @@ public class SessionsControllerTest
     {
         sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new BadRequestException("Email is required."));
 
-        var loginDto = new LoginDto { Email = null, Password = password };
+        var loginDto = new LoginDto(null, password);
 
         Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
@@ -60,7 +60,7 @@ public class SessionsControllerTest
     {
         sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new BadRequestException("Password is required."));
 
-        var loginDto = new LoginDto { Email = validEmail, Password = null };
+        var loginDto = new LoginDto(validEmail, null);
 
         Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }
@@ -70,7 +70,7 @@ public class SessionsControllerTest
     {
         sessionServiceMock.Setup(s => s.Login(It.IsAny<LoginDto>())).Throws(new BadRequestException("Invalid credentials."));
 
-        var loginDto = new LoginDto { Email = "notanemail", Password = password };
+        var loginDto = new LoginDto("notanemail", password);
 
         Assert.ThrowsException<BadRequestException>(() => sessionController.Login(loginDto));
     }

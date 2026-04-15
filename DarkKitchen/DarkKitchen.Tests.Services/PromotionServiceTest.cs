@@ -11,7 +11,7 @@ public class PromotionServiceTest
 {
     private Mock<IPromotionRepository>? promotionRepositoryMock;
     private PromotionService? promotionService;
-    private PromotionDto? validPromotion;
+    private PromotionDto validPromotion;
     private Promotion? promotionEntity;
 
     [TestInitialize]
@@ -20,13 +20,7 @@ public class PromotionServiceTest
         promotionRepositoryMock = new Mock<IPromotionRepository>();
         promotionService = new PromotionService(promotionRepositoryMock.Object);
 
-        validPromotion = new PromotionDto()
-        {
-            Name = "Black Friday",
-            DiscountPercentage = 10,
-            DateFrom = new DateTime(2026, 1, 25),
-            DateTo = new DateTime(2026, 1, 30)
-        };
+        validPromotion = new PromotionDto("Black Friday", 10, new DateTime(2026, 1, 25), new DateTime(2026, 1, 30));
 
         promotionEntity = new Promotion()
         {
@@ -41,7 +35,7 @@ public class PromotionServiceTest
     [TestMethod]
     public void CreatePromotion_ValidData_PromotionCreated()
     {
-        promotionService!.CreatePromotion(validPromotion!);
+        promotionService!.CreatePromotion(validPromotion);
 
         promotionRepositoryMock!.Verify(r => r.Add(It.IsAny<Promotion>()), Times.Once);
         promotionRepositoryMock!.Verify(r => r.Save(), Times.Once);
@@ -50,26 +44,25 @@ public class PromotionServiceTest
     [TestMethod]
     public void CreatePromotion_InvalidDiscountPercentage_ThrowsException()
     {
-        validPromotion!.DiscountPercentage = 0;
+        validPromotion = validPromotion with { discountPercentage = 0 };
 
-        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion!));
+        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion));
     }
 
     [TestMethod]
     public void CreatePromotion_InvalidDateRange_ThrowsException()
     {
-        validPromotion!.DateFrom = new DateTime(2026, 1, 30);
-        validPromotion!.DateTo = new DateTime(2026, 1, 25);
+        validPromotion = validPromotion with { dateFrom = new DateTime(2026, 1, 30), dateTo = new DateTime(2026, 1, 25) };
 
-        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion!));
+        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion));
     }
 
     [TestMethod]
     public void CreatePromotion_EmptyName_ThrowsException()
     {
-        validPromotion!.Name = string.Empty;
+        validPromotion = validPromotion with { name = string.Empty };
 
-        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion!));
+        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion));
     }
 
     [TestMethod]
@@ -77,7 +70,7 @@ public class PromotionServiceTest
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns(promotionEntity!);
 
-        promotionService!.UpdatePromotion(1, validPromotion!);
+        promotionService!.UpdatePromotion(1, validPromotion);
 
         promotionRepositoryMock!.Verify(r => r.Update(It.IsAny<Promotion>()), Times.Once);
         promotionRepositoryMock!.Verify(r => r.Save(), Times.Once);
@@ -88,7 +81,7 @@ public class PromotionServiceTest
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns((Promotion?)null);
 
-        Assert.ThrowsException<Exception>(() => promotionService!.UpdatePromotion(1, validPromotion!));
+        Assert.ThrowsException<Exception>(() => promotionService!.UpdatePromotion(1, validPromotion));
     }
 
     [TestMethod]

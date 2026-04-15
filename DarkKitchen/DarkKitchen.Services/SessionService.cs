@@ -15,13 +15,13 @@ public class SessionService(IUserRepository userRepository, IConfiguration confi
 {
     public LoginResponseDto Login(LoginDto loginDto)
     {
-        var user = userRepository.GetByEmail(loginDto.Email!);
-        if(user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+        var user = userRepository.GetByEmail(loginDto.email!);
+        if(user == null || !BCrypt.Net.BCrypt.Verify(loginDto.password, user.Password))
         {
             throw new UnauthorizedException("Invalid credentials.");
         }
 
-        return new LoginResponseDto { Token = GenerateToken(user) };
+        return new LoginResponseDto(GenerateToken(user));
     }
 
     private string GenerateToken(User user)

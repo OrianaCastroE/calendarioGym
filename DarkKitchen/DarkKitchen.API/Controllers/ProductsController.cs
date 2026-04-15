@@ -39,13 +39,8 @@ public class ProductsController(IProductService productService) : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpGet("most-requested")]
-    public IActionResult GetMostRequestedProducts([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
+    public IActionResult GetMostRequestedProducts([FromQuery] DateRangeDto dates)
     {
-        var dates = new DateRangeDto
-        {
-            DateFrom = dateFrom,
-            DateTo = dateTo
-        };
         var products = _productService.GetMostRequestedProducts(dates);
         return Ok(products);
     }

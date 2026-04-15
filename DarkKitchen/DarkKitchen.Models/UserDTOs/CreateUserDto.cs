@@ -1,11 +1,3 @@
-﻿namespace DarkKitchen.Models.UserDTOs;
+namespace DarkKitchen.Models.UserDTOs;
 
-public class CreateUserDto
-{
-    public string? Name { get; set; }
-    public string? Surname { get; set; }
-    public string? Email { get; set; }
-    public string? Phone { get; set; }
-    public string? Password { get; set; }
-    public string? Role { get; set; }
-}
+public readonly record struct CreateUserDto(string? name, string? surname, string? email, string? phone, string? password, string? role);

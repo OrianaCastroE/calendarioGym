@@ -17,7 +17,7 @@ public class SessionServiceTest
     private Mock<IConfiguration>? configurationMock;
     private SessionService? sessionService;
     private User? user;
-    private LoginDto? loginDto;
+    private LoginDto loginDto;
 
     [TestInitialize]
     public void Setup()
@@ -35,11 +35,7 @@ public class SessionServiceTest
             Password = BCrypt.Net.BCrypt.HashPassword(password),
             Role = Role.Client
         };
-        loginDto = new LoginDto
-        {
-            Email = email,
-            Password = password
-        };
+        loginDto = new LoginDto(email, password);
     }
 
     [TestMethod]
@@ -47,16 +43,16 @@ public class SessionServiceTest
     {
         userRepositoryMock!.Setup(r => r.GetByEmail(email)).Returns(user!);
 
-        var result = sessionService!.Login(loginDto!);
+        var result = sessionService!.Login(loginDto);
 
-        Assert.IsNotNull(result.Token);
+        Assert.IsNotNull(result.token);
     }
 
     [TestMethod]
     public void Login_WithWrongPassword_ThrowsUnauthorizedException()
     {
         userRepositoryMock!.Setup(r => r.GetByEmail(email)).Returns(user!);
-        var wrongPasswordDto = new LoginDto { Email = email, Password = "wrongPassword1!" };
+        var wrongPasswordDto = new LoginDto(email, "wrongPassword1!");
 
         Assert.ThrowsException<UnauthorizedException>(() => sessionService!.Login(wrongPasswordDto));
     }

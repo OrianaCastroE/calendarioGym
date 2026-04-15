@@ -13,8 +13,8 @@ public class PromotionsControllerTest
     private readonly int promotionId = 1;
     private Mock<IPromotionService>? promotionServiceMock;
     private PromotionsController? promotionsController;
-    private PromotionDto? validPromotion;
-    private PromotionResponseDto? promotionResponse;
+    private PromotionDto validPromotion;
+    private PromotionResponseDto promotionResponse;
     private List<PromotionResponseDto>? promotions;
 
     [TestInitialize]
@@ -23,22 +23,9 @@ public class PromotionsControllerTest
         promotionServiceMock = new Mock<IPromotionService>();
         promotionsController = new PromotionsController(promotionServiceMock.Object);
 
-        validPromotion = new PromotionDto()
-        {
-            Name = "Black Friday",
-            DiscountPercentage = 10,
-            DateFrom = new DateTime(2026, 1, 25),
-            DateTo = new DateTime(2026, 1, 30)
-        };
+        validPromotion = new PromotionDto("Black Friday", 10, new DateTime(2026, 1, 25), new DateTime(2026, 1, 30));
 
-        promotionResponse = new PromotionResponseDto()
-        {
-            Id = promotionId,
-            Name = "Black Friday",
-            DiscountPercentage = 10,
-            DateFrom = new DateTime(2026, 1, 25),
-            DateTo = new DateTime(2026, 1, 30)
-        };
+        promotionResponse = new PromotionResponseDto(promotionId, "Black Friday", 10, new DateTime(2026, 1, 25), new DateTime(2026, 1, 30));
 
         promotions = [promotionResponse];
     }
@@ -46,8 +33,8 @@ public class PromotionsControllerTest
     [TestMethod]
     public void CreatePromotion_ValidData_ReturnsCreated()
     {
-        promotionServiceMock!.Setup(s => s.CreatePromotion(validPromotion!));
-        var result = promotionsController!.CreatePromotion(validPromotion!);
+        promotionServiceMock!.Setup(s => s.CreatePromotion(validPromotion));
+        var result = promotionsController!.CreatePromotion(validPromotion);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -57,16 +44,16 @@ public class PromotionsControllerTest
     [TestMethod]
     public void CreatePromotion_AlreadyExists_ThrowsBadRequestException()
     {
-        promotionServiceMock!.Setup(s => s.CreatePromotion(validPromotion!)).Throws(new BadRequestException("Promotion already exists."));
+        promotionServiceMock!.Setup(s => s.CreatePromotion(validPromotion)).Throws(new BadRequestException("Promotion already exists."));
 
-        Assert.ThrowsException<BadRequestException>(() => promotionsController!.CreatePromotion(validPromotion!));
+        Assert.ThrowsException<BadRequestException>(() => promotionsController!.CreatePromotion(validPromotion));
     }
 
     [TestMethod]
     public void UpdatePromotion_ExistingPromotion_ReturnsOk()
     {
-        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion!));
-        var result = promotionsController!.UpdatePromotion(promotionId, validPromotion!);
+        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion));
+        var result = promotionsController!.UpdatePromotion(promotionId, validPromotion);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -76,16 +63,16 @@ public class PromotionsControllerTest
     [TestMethod]
     public void UpdatePromotion_PromotionNotFound_ThrowsNotFoundException()
     {
-        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion!)).Throws(new NotFoundException("Promotion not found."));
+        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion)).Throws(new NotFoundException("Promotion not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotion(promotionId, validPromotion!));
+        Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotion(promotionId, validPromotion));
     }
 
     [TestMethod]
     public void UpdatePromotionProducts_ValidData_ReturnsOk()
     {
-        var dto = new UpdatePromotionProductsDto { Products = [1, 2, 3] };
-        promotionServiceMock!.Setup(s => s.UpdatePromotionProducts(1, dto.Products));
+        var dto = new UpdatePromotionProductsDto([1, 2, 3]);
+        promotionServiceMock!.Setup(s => s.UpdatePromotionProducts(1, dto.products));
         var result = promotionsController!.UpdatePromotionProducts(1, dto);
         var resultObj = result as ObjectResult;
 
@@ -96,8 +83,8 @@ public class PromotionsControllerTest
     [TestMethod]
     public void UpdatePromotionProducts_PromotionNotFound_ThrowsNotFoundException()
     {
-        var dto = new UpdatePromotionProductsDto { Products = [1, 2, 3] };
-        promotionServiceMock!.Setup(s => s.UpdatePromotionProducts(1, dto.Products)).Throws(new NotFoundException("Promotion not found."));
+        var dto = new UpdatePromotionProductsDto([1, 2, 3]);
+        promotionServiceMock!.Setup(s => s.UpdatePromotionProducts(1, dto.products)).Throws(new NotFoundException("Promotion not found."));
 
         Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotionProducts(1, dto));
     }

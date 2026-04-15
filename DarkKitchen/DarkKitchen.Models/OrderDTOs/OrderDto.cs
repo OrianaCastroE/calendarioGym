@@ -1,8 +1,3 @@
 ﻿namespace DarkKitchen.Models.OrderDTOs;
 
-public class OrderDto
-{
-    public string DeliveryType { get; set; } = string.Empty;
-    public AddressDto Address { get; set; } = new();
-    public List<OrderProductDto> Products { get; set; } = [];
-}
+public readonly record struct OrderDto(string deliveryType, AddressDto address, List<OrderProductDto> products);

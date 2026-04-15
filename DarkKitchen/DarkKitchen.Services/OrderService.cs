@@ -10,32 +10,32 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
 
     public OrderResponseDto CreateOrder(OrderDto newOrder)
     {
-        if(newOrder.Products.Count == 0)
+        if(newOrder.products.Count == 0)
         {
             throw new Exception("Order must have at least one product.");
         }
 
-        if(newOrder.DeliveryType != "express" && newOrder.DeliveryType != "24hs")
+        if(newOrder.deliveryType != "express" && newOrder.deliveryType != "24hs")
         {
             throw new Exception("Invalid delivery type.");
         }
 
-        if(string.IsNullOrEmpty(newOrder.Address.Street))
+        if(string.IsNullOrEmpty(newOrder.address.street))
         {
             throw new Exception("Street cannot be empty.");
         }
 
-        if(string.IsNullOrEmpty(newOrder.Address.DoorNumber))
+        if(string.IsNullOrEmpty(newOrder.address.doorNumber))
         {
             throw new Exception("Door number cannot be empty.");
         }
 
         var order = new Order()
         {
-            DeliveryType = newOrder.DeliveryType,
-            Street = newOrder.Address.Street,
-            DoorNumber = newOrder.Address.DoorNumber,
-            Apartment = newOrder.Address.Apartment,
+            DeliveryType = newOrder.deliveryType,
+            Street = newOrder.address.street,
+            DoorNumber = newOrder.address.doorNumber,
+            Apartment = newOrder.address.apartment,
             Status = "Pending",
             CreatedAt = DateTime.Now
         };
@@ -43,44 +43,21 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         orderRepository.Add(order);
         orderRepository.Save();
 
-        return new OrderResponseDto()
-        {
-            Id = order.Id,
-            Status = order.Status,
-            CreatedAt = order.CreatedAt
-        };
+        return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.ShippingCost, order.Total, []);
     }
 
     public List<OrderResponseDto> GetClientOrders(int clientId, DateTime? dateFrom, DateTime? dateTo, string? status)
     {
         var orders = orderRepository.GetClientOrders(clientId, dateFrom, dateTo, status);
 
-        return orders.Select(o => new OrderResponseDto()
-        {
-            Id = o.Id,
-            ClientId = o.ClientId,
-            Status = o.Status,
-            CreatedAt = o.CreatedAt,
-            Subtotal = o.Subtotal,
-            ShippingCost = o.ShippingCost,
-            Total = o.Total
-        }).ToList();
+        return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.ShippingCost, o.Total, [])).ToList();
     }
 
     public List<OrderResponseDto> GetOrdersByStatus(DateTime dateFrom, DateTime dateTo, string? address, string? status)
     {
         var orders = orderRepository.GetOrdersByStatus(dateFrom, dateTo, address, status);
 
-        return orders.Select(o => new OrderResponseDto()
-        {
-            Id = o.Id,
-            ClientId = o.ClientId,
-            Status = o.Status,
-            CreatedAt = o.CreatedAt,
-            Subtotal = o.Subtotal,
-            ShippingCost = o.ShippingCost,
-            Total = o.Total
-        }).ToList();
+        return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.ShippingCost, o.Total, [])).ToList();
     }
 
     public OrderResponseDto GetOrderById(int orderId)
@@ -88,16 +65,7 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         var order = orderRepository.GetById(orderId)
             ?? throw new Exception("Order not found.");
 
-        return new OrderResponseDto()
-        {
-            Id = order.Id,
-            ClientId = order.ClientId,
-            Status = order.Status,
-            CreatedAt = order.CreatedAt,
-            Subtotal = order.Subtotal,
-            ShippingCost = order.ShippingCost,
-            Total = order.Total
-        };
+        return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.ShippingCost, order.Total, []);
     }
 
     public void UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus)
@@ -105,7 +73,7 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         var order = orderRepository.GetById(orderId)
             ?? throw new Exception("Order not found.");
 
-        order.Status = newStatus.Status!;
+        order.Status = newStatus.status!;
 
         orderRepository.Update(order);
         orderRepository.Save();

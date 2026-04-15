@@ -1,4 +1,4 @@
-﻿using DarkKitchen.Domain.DataAccess.Interfaces;
+using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces;
@@ -14,59 +14,59 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void CreateUser(UserDto newUser)
     {
-        if(string.IsNullOrEmpty(newUser.Name))
+        if(string.IsNullOrEmpty(newUser.name))
         {
             throw new NameEmptyException();
         }
 
-        if(string.IsNullOrEmpty(newUser.Surname))
+        if(string.IsNullOrEmpty(newUser.surname))
         {
             throw new SurnameEmptyException();
         }
 
-        if(!newUser.Email.Contains('@'))
+        if(!newUser.email.Contains('@'))
         {
             throw new InvalidEmailException();
         }
 
-        if(newUser.Password.Length > 25)
+        if(newUser.password.Length > 25)
         {
             throw new PasswordTooLongException();
         }
 
-        if(newUser.Password.Length < 15)
+        if(newUser.password.Length < 15)
         {
             throw new PasswordTooShortException();
         }
 
-        if(!newUser.Password.Any(char.IsUpper))
+        if(!newUser.password.Any(char.IsUpper))
         {
             throw new PasswordMissingUppercaseException();
         }
 
-        if(!newUser.Password.Any(char.IsLower))
+        if(!newUser.password.Any(char.IsLower))
         {
             throw new PasswordMissingLowercaseException();
         }
 
         var specialChars = "!@#$%^&*()_+-=[]{};:,.<>?/~";
-        if(!newUser.Password.Any(specialChars.Contains))
+        if(!newUser.password.Any(specialChars.Contains))
         {
             throw new PasswordMissingSpecialCharacterException();
         }
 
-        if(!newUser.Password.Any(char.IsDigit))
+        if(!newUser.password.Any(char.IsDigit))
         {
             throw new PasswordMissingNumberException();
         }
 
         var user = new User
         {
-            Name = newUser.Name,
-            Surname = newUser.Surname,
-            Email = newUser.Email,
-            Phone = newUser.Phone,
-            Password = newUser.Password,
+            Name = newUser.name,
+            Surname = newUser.surname,
+            Email = newUser.email,
+            Phone = newUser.phone,
+            Password = newUser.password,
             Role = Role.Client,
         };
 
@@ -75,32 +75,32 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void UpdateUser(UserDto updatedUser)
     {
-        if(string.IsNullOrWhiteSpace(updatedUser.Email))
+        if(string.IsNullOrWhiteSpace(updatedUser.email))
         {
             throw new EmailEmptyException();
         }
 
-        User user = _userRepository.GetByEmail(updatedUser.Email!)
+        User user = _userRepository.GetByEmail(updatedUser.email!)
             ?? throw new UserNotFoundException();
 
-        if(updatedUser.Name != null)
+        if(updatedUser.name != null)
         {
-            user.Name = updatedUser.Name;
+            user.Name = updatedUser.name;
         }
 
-        if(updatedUser.Surname != null)
+        if(updatedUser.surname != null)
         {
-            user.Surname = updatedUser.Surname;
+            user.Surname = updatedUser.surname;
         }
 
-        if(updatedUser.Phone != null)
+        if(updatedUser.phone != null)
         {
-            user.Phone = updatedUser.Phone;
+            user.Phone = updatedUser.phone;
         }
 
-        if(updatedUser.Password != null)
+        if(updatedUser.password != null)
         {
-            user.Password = updatedUser.Password;
+            user.Password = updatedUser.password;
         }
 
         _userRepository.Update(user);
@@ -110,14 +110,7 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         List<User> users = _userRepository.GetUsers(name, surname);
 
-        var result = users.Select(user => new UserResponseDto
-        {
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            Phone = user.Phone,
-            Role = user.Role.ToString(),
-        }).ToList();
+        var result = users.Select(user => new UserResponseDto(user.Id, user.Name, user.Surname, user.Email, user.Phone, user.Role.ToString())).ToList();
 
         return result;
     }

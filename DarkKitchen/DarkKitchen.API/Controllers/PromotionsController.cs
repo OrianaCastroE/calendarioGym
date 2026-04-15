@@ -31,7 +31,7 @@ public class PromotionsController(IPromotionService promotionService) : Controll
     [HttpPut("{id}/products")]
     public IActionResult UpdatePromotionProducts(int id, [FromBody] UpdatePromotionProductsDto dto)
     {
-        _promotionService.UpdatePromotionProducts(id, dto.Products);
+        _promotionService.UpdatePromotionProducts(id, dto.products);
         return Ok("Promotion products updated correctly.");
     }
 
