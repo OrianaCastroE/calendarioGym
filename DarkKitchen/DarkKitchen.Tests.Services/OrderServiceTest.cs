@@ -14,7 +14,7 @@ public class OrderServiceTest
     private Mock<IProductRepository>? productRepositoryMock;
     private Mock<IPromotionRepository>? promotionRepositoryMock;
     private OrderService? orderService;
-    private OrderDto? validOrder;
+    private OrderDto validOrder;
     private Order? orderEntity;
     private Product? productEntity;
 
@@ -35,20 +35,7 @@ public class OrderServiceTest
             IsActive = true
         };
 
-        validOrder = new OrderDto()
-        {
-            DeliveryType = "express",
-            Address = new AddressDto()
-            {
-                Street = "18 de Julio",
-                DoorNumber = "1234",
-                Apartment = "101"
-            },
-            Products =
-            [
-                new OrderProductDto() { ProductCode = "PROD01", Quantity = 2 }
-            ]
-        };
+        validOrder = new OrderDto("express", new AddressDto("18 de Julio", "1234", "101"), [new OrderProductDto("PROD01", 2)]);
 
         orderEntity = new Order()
         {
@@ -68,7 +55,7 @@ public class OrderServiceTest
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(productEntity!);
         promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null)).Returns([]);
 
-        var result = orderService!.CreateOrder(validOrder!);
+        var result = orderService!.CreateOrder(validOrder);
 
         orderRepositoryMock!.Verify(r => r.Add(It.IsAny<Order>()), Times.Once);
         orderRepositoryMock!.Verify(r => r.Save(), Times.Once);
@@ -78,25 +65,25 @@ public class OrderServiceTest
     [TestMethod]
     public void CreateOrder_NoProducts_ThrowsException()
     {
-        validOrder!.Products = [];
+        validOrder = validOrder with { products = [] };
 
-        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder));
     }
 
     [TestMethod]
     public void CreateOrder_InvalidDeliveryType_ThrowsException()
     {
-        validOrder!.DeliveryType = "invalid";
+        validOrder = validOrder with { deliveryType = "invalid" };
 
-        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder));
     }
 
     [TestMethod]
     public void CreateOrder_EmptyStreet_ThrowsException()
     {
-        validOrder!.Address.Street = string.Empty;
+        validOrder = validOrder with { address = validOrder.address with { street = string.Empty } };
 
-        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder!));
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder));
     }
 
     [TestMethod]
@@ -105,7 +92,7 @@ public class OrderServiceTest
         orderRepositoryMock!.Setup(r => r.GetClientOrders(1, null, null, null))
             .Returns([orderEntity!]);
 
-        var result = orderService!.GetClientOrders(1, null, null, null);
+        var result = orderService!.GetClientOrders(1, new OrderFiltersDto(null, null, null));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
@@ -117,7 +104,7 @@ public class OrderServiceTest
         orderRepositoryMock!.Setup(r => r.GetOrdersByStatus(It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, null))
             .Returns([orderEntity!]);
 
-        var result = orderService!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null);
+        var result = orderService!.GetOrdersByStatus(new OrderFilterByStatusDto(DateTime.Now.AddDays(-7), DateTime.Now, null, null));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
@@ -131,7 +118,7 @@ public class OrderServiceTest
         var result = orderService!.GetOrderById(1);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(1, result.Id);
+        Assert.AreEqual(1, result.id);
     }
 
     [TestMethod]
@@ -147,7 +134,7 @@ public class OrderServiceTest
     {
         orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
 
-        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto() { Status = "Prepared" });
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto("Prepared"));
 
         orderRepositoryMock!.Verify(r => r.Update(It.IsAny<Order>()), Times.Once);
         orderRepositoryMock!.Verify(r => r.Save(), Times.Once);
@@ -158,6 +145,6 @@ public class OrderServiceTest
     {
         orderRepositoryMock!.Setup(r => r.GetById(1)).Returns((Order?)null);
 
-        Assert.ThrowsException<Exception>(() => orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto() { Status = "Prepared" }));
+        Assert.ThrowsException<Exception>(() => orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto("Prepared")));
     }
 }

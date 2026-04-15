@@ -9,7 +9,7 @@ public interface IProductRepository
     void Add(Product product);
     void Update(Product product);
     Product? GetById(int id);
-    IEnumerable<Product> GetProducts(ProductFilter filter);
+    IEnumerable<Product> GetProducts(ProductFilterDto filter);
     IEnumerable<Product> GetMostRequestedProducts(DateRangeDto dates);
     void UpdateStatus(int id, ProductStatusDto status);
     void Save();

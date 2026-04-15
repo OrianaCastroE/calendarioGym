@@ -1,7 +1,3 @@
-﻿namespace DarkKitchen.Models.ResponseDTOs;
+namespace DarkKitchen.Models.ResponseDTOs;
 
-public class ResponseDto
-{
-    public bool ExecutionSuccessful { get; set; }
-    public string Message { get; set; } = string.Empty;
-}
+public readonly record struct ResponseDto(bool executionSuccessful, string message);

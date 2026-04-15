@@ -31,15 +31,15 @@ public class PromotionsController(IPromotionService promotionService) : Controll
     [HttpPut("{id}/products")]
     public IActionResult UpdatePromotionProducts(int id, [FromBody] UpdatePromotionProductsDto dto)
     {
-        _promotionService.UpdatePromotionProducts(id, dto.Products);
+        _promotionService.UpdatePromotionProducts(id, dto.products);
         return Ok("Promotion products updated correctly.");
     }
 
     [Authorize(Roles = "Admin, Client")]
     [HttpGet]
-    public IActionResult GetPromotions([FromQuery] DateTime? date, [FromQuery] string? productLine, [FromQuery] string? productName)
+    public IActionResult GetPromotions([FromQuery] PromotionFiltersDto filter)
     {
-        var promotions = _promotionService.GetPromotions(date, productLine, productName);
+        var promotions = _promotionService.GetPromotions(filter);
         return Ok(promotions);
     }
 }

@@ -31,21 +31,16 @@ public class ProductsController(IProductService productService) : ControllerBase
 
     [Authorize(Roles = "Admin, Client")]
     [HttpGet]
-    public IActionResult GetProducts([FromQuery] string? productLine, [FromQuery] List<string>? categories, [FromQuery] string? name)
+    public IActionResult GetProducts([FromQuery] ProductFilterDto filter)
     {
-        var products = _productService.GetProducts(productLine, categories, name);
+        var products = _productService.GetProducts(filter);
         return Ok(products);
     }
 
     [Authorize(Roles = "Admin")]
     [HttpGet("most-requested")]
-    public IActionResult GetMostRequestedProducts([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
+    public IActionResult GetMostRequestedProducts([FromQuery] DateRangeDto dates)
     {
-        var dates = new DateRangeDto
-        {
-            DateFrom = dateFrom,
-            DateTo = dateTo
-        };
         var products = _productService.GetMostRequestedProducts(dates);
         return Ok(products);
     }

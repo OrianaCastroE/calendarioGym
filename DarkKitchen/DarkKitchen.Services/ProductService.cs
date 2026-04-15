@@ -13,78 +13,71 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public void CreateProduct(CreateProductDto newProduct)
     {
-        if(newProduct.Name == null || newProduct.Name == string.Empty)
+        if(newProduct.name == null || newProduct.name == string.Empty)
         {
             throw new BadRequestException("Name is required.");
         }
 
         var product = new Product
         {
-            Code = newProduct.Code!,
-            Name = newProduct.Name!,
-            Description = newProduct.Description,
-            ProductLine = newProduct.ProductLine,
-            Category = newProduct.Category,
-            Price = newProduct.Price!.Value,
+            Code = newProduct.code!,
+            Name = newProduct.name!,
+            Description = newProduct.description,
+            ProductLine = newProduct.productLine,
+            Category = newProduct.category,
+            Price = newProduct.price!.Value,
             IsActive = true,
-            Images = newProduct.ImageUrl!.Select(url => new ProductImage { Url = url }).ToList()
+            Images = newProduct.imageUrl!.Select(url => new ProductImage { Url = url }).ToList()
         };
         _repository.Add(product);
     }
 
     public void UpdateProduct(UpdateProductDto updatedProduct)
     {
-        Product product = _repository.GetById(updatedProduct.Id ?? 0)
+        Product product = _repository.GetById(updatedProduct.id ?? 0)
         ?? throw new NotFoundException("Product not found.");
 
-        if(updatedProduct.Name != null)
+        if(updatedProduct.name != null)
         {
-            product.Name = updatedProduct.Name;
+            product.Name = updatedProduct.name;
         }
 
-        if(updatedProduct.Description != null)
+        if(updatedProduct.description != null)
         {
-            product.Description = updatedProduct.Description;
+            product.Description = updatedProduct.description;
         }
 
-        if(updatedProduct.ProductLine != null)
+        if(updatedProduct.productLine != null)
         {
-            product.ProductLine = updatedProduct.ProductLine;
+            product.ProductLine = updatedProduct.productLine;
         }
 
-        if(updatedProduct.Category != null)
+        if(updatedProduct.category != null)
         {
-            product.Category = updatedProduct.Category;
+            product.Category = updatedProduct.category;
         }
 
-        if(updatedProduct.Price.HasValue)
+        if(updatedProduct.price.HasValue)
         {
-            product.Price = updatedProduct.Price.Value;
+            product.Price = updatedProduct.price.Value;
         }
 
-        if(updatedProduct.IsActive.HasValue)
+        if(updatedProduct.isActive.HasValue)
         {
-            product.IsActive = updatedProduct.IsActive.Value;
+            product.IsActive = updatedProduct.isActive.Value;
         }
 
-        if(updatedProduct.ImageUrl != null)
+        if(updatedProduct.imageUrl != null)
         {
-            product.Images = updatedProduct.ImageUrl.Select(url => new ProductImage { Url = url, ProductId = product.Id }).ToList();
+            product.Images = updatedProduct.imageUrl.Select(url => new ProductImage { Url = url, ProductId = product.Id }).ToList();
         }
 
         _repository.Update(product);
         _repository.Save();
     }
 
-    public IEnumerable<UpdateProductDto> GetProducts(string? productLine, List<string>? categories, string? name)
+    public IEnumerable<UpdateProductDto> GetProducts(ProductFilterDto filter)
     {
-        var filter = new ProductFilter
-        {
-            ProductLine = productLine,
-            Categories = categories,
-            Name = name
-        };
-
         IEnumerable<Product> products = _repository.GetProducts(filter);
 
         if(!products.Any())
@@ -92,18 +85,7 @@ public class ProductService(IProductRepository repository) : IProductService
             throw new NotFoundException("No products found.");
         }
 
-        return _repository.GetProducts(filter).Select(p => new UpdateProductDto
-        {
-            Id = p.Id,
-            Code = p.Code,
-            Name = p.Name,
-            Description = p.Description,
-            ProductLine = p.ProductLine,
-            Category = p.Category,
-            Price = p.Price,
-            IsActive = p.IsActive,
-            ImageUrl = p.Images?.Select(i => i.Url).ToArray()
-        });
+        return _repository.GetProducts(filter).Select(p => new UpdateProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive));
     }
 
     public IEnumerable<UpdateProductDto> GetMostRequestedProducts(DateRangeDto dates)
@@ -115,18 +97,7 @@ public class ProductService(IProductRepository repository) : IProductService
             throw new NotFoundException("No products found.");
         }
 
-        return products.Select(p => new UpdateProductDto
-        {
-            Id = p.Id,
-            Code = p.Code,
-            Name = p.Name,
-            Description = p.Description,
-            ProductLine = p.ProductLine,
-            Category = p.Category,
-            Price = p.Price,
-            IsActive = p.IsActive,
-            ImageUrl = p.Images?.Select(i => i.Url).ToArray()
-        });
+        return products.Select(p => new UpdateProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive));
     }
 
     public void UpdateStatus(int id, ProductStatusDto status)
@@ -134,7 +105,7 @@ public class ProductService(IProductRepository repository) : IProductService
         Product product = _repository.GetById(id)
             ?? throw new NotFoundException("Product not found.");
 
-        product.IsActive = status.IsActive;
+        product.IsActive = status.isActive;
         _repository.Update(product);
         _repository.Save();
     }

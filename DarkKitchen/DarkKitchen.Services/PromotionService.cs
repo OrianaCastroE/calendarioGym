@@ -11,27 +11,27 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
 
     public void CreatePromotion(PromotionDto newPromotion)
     {
-        if(string.IsNullOrEmpty(newPromotion.Name))
+        if(string.IsNullOrEmpty(newPromotion.name))
         {
             throw new Exception("Name cannot be empty.");
         }
 
-        if(newPromotion.DiscountPercentage <= 0 || newPromotion.DiscountPercentage > 100)
+        if(newPromotion.discountPercentage <= 0 || newPromotion.discountPercentage > 100)
         {
             throw new Exception("Discount percentage must be between 1 and 100.");
         }
 
-        if(newPromotion.DateFrom >= newPromotion.DateTo)
+        if(newPromotion.dateFrom >= newPromotion.dateTo)
         {
             throw new Exception("DateFrom must be before DateTo.");
         }
 
         var promotion = new Promotion()
         {
-            Name = newPromotion.Name,
-            DiscountPercentage = newPromotion.DiscountPercentage,
-            DateFrom = newPromotion.DateFrom,
-            DateTo = newPromotion.DateTo
+            Name = newPromotion.name,
+            DiscountPercentage = newPromotion.discountPercentage,
+            DateFrom = newPromotion.dateFrom,
+            DateTo = newPromotion.dateTo
         };
 
         _promotionRepository.Add(promotion);
@@ -43,10 +43,10 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
         var promotion = _promotionRepository.GetById(id)
             ?? throw new Exception("Promotion not found.");
 
-        promotion.Name = updatedPromotion.Name;
-        promotion.DiscountPercentage = updatedPromotion.DiscountPercentage;
-        promotion.DateFrom = updatedPromotion.DateFrom;
-        promotion.DateTo = updatedPromotion.DateTo;
+        promotion.Name = updatedPromotion.name;
+        promotion.DiscountPercentage = updatedPromotion.discountPercentage;
+        promotion.DateFrom = updatedPromotion.dateFrom;
+        promotion.DateTo = updatedPromotion.dateTo;
 
         _promotionRepository.Update(promotion);
         _promotionRepository.Save();
@@ -65,17 +65,10 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
         _promotionRepository.Save();
     }
 
-    public List<PromotionResponseDto> GetPromotions(DateTime? date, string? productLine, string? productName)
+    public List<PromotionResponseDto> GetPromotions(PromotionFiltersDto filter)
     {
-        var promotions = _promotionRepository.GetPromotions(date, productLine, productName);
+        var promotions = _promotionRepository.GetPromotions(filter.date, filter.productLine, filter.productName);
 
-        return promotions.Select(p => new PromotionResponseDto()
-        {
-            Id = p.Id,
-            Name = p.Name,
-            DiscountPercentage = p.DiscountPercentage,
-            DateFrom = p.DateFrom,
-            DateTo = p.DateTo
-        }).ToList();
+        return promotions.Select(p => new PromotionResponseDto(p.Id, p.Name, p.DiscountPercentage, p.DateFrom, p.DateTo)).ToList();
     }
 }

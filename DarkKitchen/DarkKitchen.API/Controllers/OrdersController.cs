@@ -22,18 +22,18 @@ public class OrdersController(IOrderService orderService) : ControllerBase
 
     [Authorize(Roles = "Client")]
     [HttpGet("client")]
-    public IActionResult GetClientOrders([FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo, [FromQuery] string? status)
+    public IActionResult GetClientOrders([FromQuery] OrderFiltersDto filter)
     {
         var clientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        var orders = _orderService.GetClientOrders(clientId, dateFrom, dateTo, status);
+        var orders = _orderService.GetClientOrders(clientId, filter);
         return Ok(orders);
     }
 
     [Authorize(Roles = "Dispatcher")]
     [HttpGet]
-    public IActionResult GetOrdersByStatus([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo, [FromQuery] string? address, [FromQuery] string? status)
+    public IActionResult GetOrdersByStatus([FromQuery] OrderFilterByStatusDto filter)
     {
-        var orders = _orderService.GetOrdersByStatus(dateFrom, dateTo, address, status);
+        var orders = _orderService.GetOrdersByStatus(filter);
         return Ok(orders);
     }
 

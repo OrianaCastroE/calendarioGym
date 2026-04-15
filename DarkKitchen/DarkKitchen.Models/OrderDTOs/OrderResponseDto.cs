@@ -1,13 +1,3 @@
 ﻿namespace DarkKitchen.Models.OrderDTOs;
 
-public class OrderResponseDto
-{
-    public int Id { get; set; }
-    public int ClientId { get; set; }
-    public string Status { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-    public decimal Subtotal { get; set; }
-    public decimal ShippingCost { get; set; }
-    public decimal Total { get; set; }
-    public List<OrderProductDto> Products { get; set; } = [];
-}
+public readonly record struct OrderResponseDto(int id, int clientId, string status, DateTime createdAt, decimal subtotal, decimal shippingCost, decimal total, List<OrderProductDto> products);

@@ -1,6 +1,3 @@
-﻿namespace DarkKitchen.Models.ProductDTOs;
+namespace DarkKitchen.Models.ProductDTOs;
 
-public class ProductStatusDto
-{
-    public bool IsActive { get; set; }
-}
+public readonly record struct ProductStatusDto(bool isActive);

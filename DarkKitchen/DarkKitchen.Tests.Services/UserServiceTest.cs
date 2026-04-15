@@ -1,4 +1,4 @@
-﻿using DarkKitchen.Domain.DataAccess.Interfaces;
+using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Models.UserDTOs;
@@ -12,7 +12,7 @@ public class UserServiceTest
 {
     private Mock<IUserRepository>? _userRepositoryMock;
     private UserService? _userService;
-    private UserDto? _validUser;
+    private UserDto _validUser;
     private User? _user;
 
     [TestInitialize]
@@ -21,22 +21,15 @@ public class UserServiceTest
         _userRepositoryMock = new Mock<IUserRepository>();
         _userService = new UserService(_userRepositoryMock.Object);
 
-        _validUser = new UserDto
-        {
-            Name = "validName",
-            Surname = "validSurname",
-            Email = "validEmail@gmail.com",
-            Phone = "099123456",
-            Password = "validPassword123!",
-        };
+        _validUser = new UserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!");
 
         _user = new User
         {
-            Name = _validUser.Name!,
-            Surname = _validUser.Surname!,
-            Email = _validUser.Email!,
-            Phone = _validUser.Phone!,
-            Password = _validUser.Password!,
+            Name = _validUser.name!,
+            Surname = _validUser.surname!,
+            Email = _validUser.email!,
+            Phone = _validUser.phone!,
+            Password = _validUser.password!,
             Role = Role.Client,
         };
     }
@@ -48,7 +41,7 @@ public class UserServiceTest
             .Setup(repository => repository.Add(It.IsAny<User>()))
             .Returns((User user) => user);
 
-        _userService!.CreateUser(_validUser!);
+        _userService!.CreateUser(_validUser);
 
         _userRepositoryMock!
             .Verify(repository => repository.Add(It.IsAny<User>()), Times.Once);
@@ -57,7 +50,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_WhenInvalidName_ShouldThrowExceptionAndNotCreateUser()
     {
-        _validUser!.Name = string.Empty;
+        _validUser = _validUser with { name = string.Empty };
 
         NameEmptyException ex = Assert.ThrowsException<NameEmptyException>(() =>
             _userService!.CreateUser(_validUser));
@@ -68,7 +61,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_WhenInvalidSurname_ShouldThrowExceptionAndNotCreateUser()
     {
-        _validUser!.Surname = null;
+        _validUser = _validUser with { surname = null };
         SurnameEmptyException ex = Assert.ThrowsException<SurnameEmptyException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Surname cannot be empty or whitespace.", ex.Message);
@@ -77,7 +70,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_WhenInvalidEmail_ShouldThrowExceptionAndNotCreateUser()
     {
-        _validUser!.Email = "invalidEmail";
+        _validUser = _validUser with { email = "invalidEmail" };
         InvalidEmailException ex = Assert.ThrowsException<InvalidEmailException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Email is not valid.", ex.Message);
@@ -86,7 +79,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_WhenLongPassword_ShouldThrowExceptionAndNotCreateUser()
     {
-        _validUser!.Password = "longPassworddddddddddddddddddd";
+        _validUser = _validUser with { password = "longPassworddddddddddddddddddd" };
         PasswordTooLongException ex = Assert.ThrowsException<PasswordTooLongException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password cannot be longer than 25 characters.", ex.Message);
@@ -95,7 +88,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_WhenShortPassword_ShouldThrowExceptionAndNotCreateUser()
     {
-        _validUser!.Password = "shortPassword";
+        _validUser = _validUser with { password = "shortPassword" };
         PasswordTooShortException ex = Assert.ThrowsException<PasswordTooShortException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must be at least 15 characters long.", ex.Message);
@@ -104,7 +97,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_PasswordDoesNotContainsUpperLetter_ShouldThrowExceptionAndNotCreateUser()
     {
-        _validUser!.Password = "lowerpasswordddd";
+        _validUser = _validUser with { password = "lowerpasswordddd" };
         PasswordMissingUppercaseException ex = Assert.ThrowsException<PasswordMissingUppercaseException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one uppercase letter.", ex.Message);
@@ -113,7 +106,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_PasswordDoesNotContainsLowerLetter_ShouldThrowExceptionAndNotCreateUser()
     {
-        _validUser!.Password = "UPPERPASSWORDDDD";
+        _validUser = _validUser with { password = "UPPERPASSWORDDDD" };
         PasswordMissingLowercaseException ex = Assert.ThrowsException<PasswordMissingLowercaseException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one lowercase letter.", ex.Message);
@@ -122,7 +115,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_WhenPasswordDoesNotContainSpecialCharacter_ShouldThrowExceptionAndNotCreateUser()
     {
-        _validUser!.Password = "PassWithoutSpecialChar123";
+        _validUser = _validUser with { password = "PassWithoutSpecialChar123" };
         PasswordMissingSpecialCharacterException ex = Assert.ThrowsException<PasswordMissingSpecialCharacterException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one special character.", ex.Message);
@@ -131,7 +124,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_WhenPasswordDoesNotContainANumber_ShouldThrowExceptionAndNotCreateUser()
     {
-        _validUser!.Password = "PasswordWithoutNumber!";
+        _validUser = _validUser with { password = "PasswordWithoutNumber!" };
         PasswordMissingNumberException ex = Assert.ThrowsException<PasswordMissingNumberException>(() =>
             _userService!.CreateUser(_validUser));
         Assert.AreEqual("Password must contain at least one number.", ex.Message);
@@ -144,7 +137,7 @@ public class UserServiceTest
             .Setup(repository => repository.GetByEmail(It.IsAny<string>()))
             .Returns((User)null);
         UserNotFoundException ex = Assert.ThrowsException<UserNotFoundException>(() =>
-            _userService!.UpdateUser(new UserDto { Email = "fakeUser@gmail.com" }));
+            _userService!.UpdateUser(new UserDto(null, null, "fakeUser@gmail.com", null, null)));
         Assert.AreEqual("User not found.", ex.Message);
     }
 
@@ -152,21 +145,14 @@ public class UserServiceTest
     public void UpdateUser_WhenEmailIsNull_ShouldThrowExceptionAndNotUpdateUser()
     {
         EmailEmptyException ex = Assert.ThrowsException<EmailEmptyException>(() =>
-            _userService!.UpdateUser(new UserDto { Email = null }));
+            _userService!.UpdateUser(new UserDto(null, null, null, null, null)));
         Assert.AreEqual("Email cannot be empty or whitespace.", ex.Message);
     }
 
     [TestMethod]
     public void UpdateUser_WhenValidUser_ShouldUpdateUser()
     {
-        var dto = new UserDto
-        {
-            Name = "UpdatedName",
-            Surname = "UpdatedSurname",
-            Email = _user.Email,
-            Phone = "099999999",
-            Password = "UpdatedPassword1!"
-        };
+        var dto = new UserDto("UpdatedName", "UpdatedSurname", _user!.Email, "099999999", "UpdatedPassword1!");
 
         _userRepositoryMock!
             .Setup(repository => repository.GetByEmail(_user.Email))
@@ -176,7 +162,7 @@ public class UserServiceTest
             .Setup(repository => repository.Update(It.IsAny<User>()))
             .Returns((User user) => user);
 
-        _userService.UpdateUser(dto);
+        _userService!.UpdateUser(dto);
 
         User result = _userRepositoryMock.Object.GetByEmail(_user.Email)!;
         Assert.AreEqual("UpdatedName", result.Name);
@@ -190,7 +176,7 @@ public class UserServiceTest
             .Setup(repository => repository.GetUsers("validName", "validSurname"))
             .Returns([]);
 
-        List<UserResponseDto> result = _userService!.GetUsers("validName", "validSurname");
+        List<UserResponseDto> result = _userService!.GetUsers(new UserFiltersDto("validName", "validSurname"));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
@@ -215,12 +201,12 @@ public class UserServiceTest
             .Setup(repository => repository.GetUsers("validName", "validSurname"))
             .Returns(users);
 
-        List<UserResponseDto> result = _userService!.GetUsers("validName", "validSurname");
+        List<UserResponseDto> result = _userService!.GetUsers(new UserFiltersDto("validName", "validSurname"));
 
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual("validName", result[0].Name);
-        Assert.AreEqual("validSurname", result[0].Surname);
-        Assert.AreEqual("validEmail@gmail.com", result[0].Email);
+        Assert.AreEqual("validName", result[0].name);
+        Assert.AreEqual("validSurname", result[0].surname);
+        Assert.AreEqual("validEmail@gmail.com", result[0].email);
     }
 
     [TestMethod]
@@ -241,11 +227,11 @@ public class UserServiceTest
             .Setup(repository => repository.GetUsers("validName", "validSurname"))
             .Returns(users);
 
-        var result = _userService!.GetUsers("validName", "validSurname");
+        var result = _userService!.GetUsers(new UserFiltersDto("validName", "validSurname"));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual("validName", result[0].Name);
+        Assert.AreEqual("validName", result[0].name);
     }
 
     [TestMethod]
