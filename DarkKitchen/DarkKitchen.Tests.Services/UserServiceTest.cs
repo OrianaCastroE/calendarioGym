@@ -240,15 +240,13 @@ public class UserServiceTest
         _userRepositoryMock!
             .Setup(repository => repository.GetByEmail("validEmail@gmail.com"))
             .Returns(_user!);
+        _userRepositoryMock!
+            .Setup(repository => repository.Delete(It.IsAny<User>()));
 
         _userService!.DeleteUser("validEmail@gmail.com");
 
         _userRepositoryMock!
             .Verify(repository => repository.Delete(_user!), Times.Once);
-
-        _userRepositoryMock!
-            .Setup(repository => repository.GetByEmail("validEmail@gmail.com"))
-            .Returns((User?)null);
     }
 
     [TestMethod]
