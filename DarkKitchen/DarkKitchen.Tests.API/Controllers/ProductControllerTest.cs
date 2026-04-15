@@ -37,6 +37,7 @@ public class ProductControllerTest
     [TestMethod]
     public void CreateProduct_WhenValidParams_ReturnsCreated()
     {
+        productServiceMock.Setup(s => s.CreateProduct(validCreateProduct));
         var result = productController.CreateProduct(validCreateProduct);
         var resultObj = result as ObjectResult;
 
@@ -104,6 +105,7 @@ public class ProductControllerTest
     [TestMethod]
     public void UpdateProduct_WhenValidParams_ReturnsOk()
     {
+        productServiceMock.Setup(s => s.UpdateProduct(validProduct));
         var result = productController.UpdateProduct(validProduct);
         var resultObj = result as ObjectResult;
 
@@ -124,6 +126,7 @@ public class ProductControllerTest
     {
         var id = 1;
         var status = new ProductStatusDto(true);
+        productServiceMock.Setup(s => s.UpdateStatus(id, status));
         var result = productController.UpdateStatus(id, status);
         var resultObj = result as ObjectResult;
 
