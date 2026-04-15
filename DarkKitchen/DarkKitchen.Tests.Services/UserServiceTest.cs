@@ -18,7 +18,7 @@ public class UserServiceTest
     [TestInitialize]
     public void SetUp()
     {
-        _userRepositoryMock = new Mock<IUserRepository>();
+        _userRepositoryMock = new Mock<IUserRepository>(MockBehavior.Strict);
         _userService = new UserService(_userRepositoryMock.Object);
 
         _validUser = new UserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!");

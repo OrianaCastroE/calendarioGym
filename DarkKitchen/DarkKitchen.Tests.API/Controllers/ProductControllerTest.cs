@@ -26,7 +26,7 @@ public class ProductControllerTest
     [TestInitialize]
     public void Setup()
     {
-        productServiceMock = new Mock<IProductService>();
+        productServiceMock = new Mock<IProductService>(MockBehavior.Strict);
         productController = new ProductsController(productServiceMock.Object);
 
         validProduct = new UpdateProductDto(validProductId, null, validProductName, validProductDescription, null, validCategory, null, validImageUrl, isActive);

@@ -20,7 +20,7 @@ public class PromotionsControllerTest
     [TestInitialize]
     public void Setup()
     {
-        promotionServiceMock = new Mock<IPromotionService>();
+        promotionServiceMock = new Mock<IPromotionService>(MockBehavior.Strict);
         promotionsController = new PromotionsController(promotionServiceMock.Object);
 
         validPromotion = new PromotionDto("Black Friday", 10, new DateTime(2026, 1, 25), new DateTime(2026, 1, 30));

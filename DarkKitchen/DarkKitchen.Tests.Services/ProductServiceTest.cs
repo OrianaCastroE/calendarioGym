@@ -20,7 +20,7 @@ public class ProductServiceTest
     [TestInitialize]
     public void Setup()
     {
-        productRepositoryMock = new Mock<IProductRepository>();
+        productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
         productService = new ProductService(productRepositoryMock.Object);
 
         validProduct = new Product

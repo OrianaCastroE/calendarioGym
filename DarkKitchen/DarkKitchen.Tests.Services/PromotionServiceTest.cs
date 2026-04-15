@@ -17,7 +17,7 @@ public class PromotionServiceTest
     [TestInitialize]
     public void Setup()
     {
-        promotionRepositoryMock = new Mock<IPromotionRepository>();
+        promotionRepositoryMock = new Mock<IPromotionRepository>(MockBehavior.Strict);
         promotionService = new PromotionService(promotionRepositoryMock.Object);
 
         validPromotion = new PromotionDto("Black Friday", 10, new DateTime(2026, 1, 25), new DateTime(2026, 1, 30));

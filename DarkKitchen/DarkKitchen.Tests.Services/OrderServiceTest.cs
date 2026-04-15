@@ -21,9 +21,9 @@ public class OrderServiceTest
     [TestInitialize]
     public void Setup()
     {
-        orderRepositoryMock = new Mock<IOrderRepository>();
-        productRepositoryMock = new Mock<IProductRepository>();
-        promotionRepositoryMock = new Mock<IPromotionRepository>();
+        orderRepositoryMock = new Mock<IOrderRepository>(MockBehavior.Strict);
+        productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
+        promotionRepositoryMock = new Mock<IPromotionRepository>(MockBehavior.Strict);
         orderService = new OrderService(orderRepositoryMock.Object);
 
         productEntity = new Product()
