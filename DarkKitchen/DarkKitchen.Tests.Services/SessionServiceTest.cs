@@ -22,8 +22,8 @@ public class SessionServiceTest
     [TestInitialize]
     public void Setup()
     {
-        userRepositoryMock = new Mock<IUserRepository>();
-        configurationMock = new Mock<IConfiguration>();
+        userRepositoryMock = new Mock<IUserRepository>(MockBehavior.Strict);
+        configurationMock = new Mock<IConfiguration>(MockBehavior.Strict);
         configurationMock.Setup(c => c["Jwt:Key"]).Returns("test-secret-key-minimum-32-chars!!");
         sessionService = new SessionService(userRepositoryMock.Object, configurationMock.Object);
         user = new User

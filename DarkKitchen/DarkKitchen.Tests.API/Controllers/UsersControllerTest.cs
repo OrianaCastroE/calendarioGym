@@ -24,7 +24,7 @@ public class UsersControllerTest
     [TestInitialize]
     public void Setup()
     {
-        userServiceMock = new Mock<IUserService>();
+        userServiceMock = new Mock<IUserService>(MockBehavior.Strict);
         userController = new UsersController(userServiceMock.Object);
         users =
         [

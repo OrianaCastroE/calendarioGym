@@ -17,7 +17,7 @@ public class PromotionServiceTest
     [TestInitialize]
     public void Setup()
     {
-        promotionRepositoryMock = new Mock<IPromotionRepository>();
+        promotionRepositoryMock = new Mock<IPromotionRepository>(MockBehavior.Strict);
         promotionService = new PromotionService(promotionRepositoryMock.Object);
 
         validPromotion = new PromotionDto("Black Friday", 10, new DateTime(2026, 1, 25), new DateTime(2026, 1, 30));
@@ -35,6 +35,9 @@ public class PromotionServiceTest
     [TestMethod]
     public void CreatePromotion_ValidData_PromotionCreated()
     {
+        promotionRepositoryMock!.Setup(r => r.Add(It.IsAny<Promotion>()));
+        promotionRepositoryMock!.Setup(r => r.Save());
+
         promotionService!.CreatePromotion(validPromotion);
 
         promotionRepositoryMock!.Verify(r => r.Add(It.IsAny<Promotion>()), Times.Once);
@@ -69,6 +72,8 @@ public class PromotionServiceTest
     public void UpdatePromotion_ValidData_PromotionUpdated()
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns(promotionEntity!);
+        promotionRepositoryMock!.Setup(r => r.Update(It.IsAny<Promotion>()));
+        promotionRepositoryMock!.Setup(r => r.Save());
 
         promotionService!.UpdatePromotion(1, validPromotion);
 
@@ -88,6 +93,8 @@ public class PromotionServiceTest
     public void UpdatePromotionProducts_ValidData_ProductsUpdated()
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns(promotionEntity!);
+        promotionRepositoryMock!.Setup(r => r.Update(It.IsAny<Promotion>()));
+        promotionRepositoryMock!.Setup(r => r.Save());
 
         promotionService!.UpdatePromotionProducts(1, [1, 2, 3]);
 

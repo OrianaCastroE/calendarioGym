@@ -20,7 +20,7 @@ public class ProductServiceTest
     [TestInitialize]
     public void Setup()
     {
-        productRepositoryMock = new Mock<IProductRepository>();
+        productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
         productService = new ProductService(productRepositoryMock.Object);
 
         validProduct = new Product
@@ -44,7 +44,10 @@ public class ProductServiceTest
     [TestMethod]
     public void CreateProduct_WhenValidParams_CallsRepository()
     {
+        productRepositoryMock!.Setup(r => r.Add(It.IsAny<Product>()));
+
         productService!.CreateProduct(validCreateProductDto);
+
         productRepositoryMock!.Verify(r => r.Add(It.IsAny<Product>()), Times.Once);
     }
 
@@ -52,6 +55,7 @@ public class ProductServiceTest
     public void CreateProduct_WhenNameIsNull_ThrowsBadRequestException()
     {
         var dto = new CreateProductDto(null, null, null, null, null, null, null);
+
         Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
     }
 
@@ -59,6 +63,7 @@ public class ProductServiceTest
     public void CreateProduct_WhenNameIsEmpty_ThrowsBadRequestException()
     {
         var dto = new CreateProductDto(null, string.Empty, null, null, null, null, null);
+
         Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
     }
 
@@ -66,7 +71,11 @@ public class ProductServiceTest
     public void UpdateProduct_WhenProductExists_CallsRepository()
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+        productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+        productRepositoryMock!.Setup(r => r.Save());
+
         productService!.UpdateProduct(validUpdateProductDto);
+
         productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
     }
 
@@ -74,6 +83,7 @@ public class ProductServiceTest
     public void UpdateProduct_WhenProductNotFound_ThrowsNotFoundException()
     {
         productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
+
         Assert.ThrowsException<NotFoundException>(() => productService!.UpdateProduct(validUpdateProductDto));
     }
 
@@ -81,7 +91,9 @@ public class ProductServiceTest
     public void GetProducts_WhenProductsExist_ReturnsMappedDtos()
     {
         productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilterDto>())).Returns([validProduct!]);
+
         var result = productService!.GetProducts(new ProductFilterDto("Valid Line", null, null));
+
         Assert.AreEqual(1, result.Count());
     }
 
@@ -89,6 +101,7 @@ public class ProductServiceTest
     public void GetProducts_WhenNoProductsFound_ThrowsNotFoundException()
     {
         productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilterDto>())).Returns([]);
+
         Assert.ThrowsException<NotFoundException>(() => productService!.GetProducts(new ProductFilterDto(null, null, null)));
     }
 
@@ -97,7 +110,9 @@ public class ProductServiceTest
     {
         var dates = new DateRangeDto(DateTime.Now.AddDays(-7), DateTime.Now);
         productRepositoryMock!.Setup(r => r.GetMostRequestedProducts(dates)).Returns([validProduct!]);
+
         var result = productService!.GetMostRequestedProducts(dates);
+
         Assert.AreEqual(1, result.Count());
     }
 
@@ -106,6 +121,7 @@ public class ProductServiceTest
     {
         var dates = new DateRangeDto(DateTime.Now.AddDays(-7), DateTime.Now);
         productRepositoryMock!.Setup(r => r.GetMostRequestedProducts(dates)).Returns([]);
+
         Assert.ThrowsException<NotFoundException>(() => productService!.GetMostRequestedProducts(dates));
     }
 
@@ -113,8 +129,12 @@ public class ProductServiceTest
     public void UpdateStatus_WhenProductExists_CallsRepository()
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+        productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+        productRepositoryMock!.Setup(r => r.Save());
         var status = new ProductStatusDto(false);
+
         productService!.UpdateStatus(1, status);
+
         productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
     }
 
@@ -123,6 +143,7 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
         var status = new ProductStatusDto(false);
+
         Assert.ThrowsException<NotFoundException>(() => productService!.UpdateStatus(1, status));
     }
 
@@ -130,6 +151,8 @@ public class ProductServiceTest
     public void UpdateProduct_WhenFieldsAreNull_DoesNotUpdate()
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+        productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+        productRepositoryMock!.Setup(r => r.Save());
 
         var dtoWithNulls = new UpdateProductDto(1, null, null, null, null, null, null, null, null);
 
@@ -148,6 +171,8 @@ public class ProductServiceTest
     public void UpdateProduct_WhenOnlyNameIsProvided_UpdatesOnlyName()
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+        productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+        productRepositoryMock!.Setup(r => r.Save());
 
         var dtoOnlyName = new UpdateProductDto(1, null, "New Name", null, null, null, null, null, null);
 

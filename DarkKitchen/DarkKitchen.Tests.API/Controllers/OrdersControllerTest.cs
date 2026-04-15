@@ -21,7 +21,7 @@ public class OrdersControllerTest
     [TestInitialize]
     public void Setup()
     {
-        orderServiceMock = new Mock<IOrderService>();
+        orderServiceMock = new Mock<IOrderService>(MockBehavior.Strict);
         ordersController = new OrdersController(orderServiceMock.Object);
 
         var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, "1") };

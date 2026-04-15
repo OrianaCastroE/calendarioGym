@@ -18,7 +18,7 @@ public class UserServiceTest
     [TestInitialize]
     public void SetUp()
     {
-        _userRepositoryMock = new Mock<IUserRepository>();
+        _userRepositoryMock = new Mock<IUserRepository>(MockBehavior.Strict);
         _userService = new UserService(_userRepositoryMock.Object);
 
         _validUser = new UserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!");
@@ -240,15 +240,13 @@ public class UserServiceTest
         _userRepositoryMock!
             .Setup(repository => repository.GetByEmail("validEmail@gmail.com"))
             .Returns(_user!);
+        _userRepositoryMock!
+            .Setup(repository => repository.Delete(It.IsAny<User>()));
 
         _userService!.DeleteUser("validEmail@gmail.com");
 
         _userRepositoryMock!
             .Verify(repository => repository.Delete(_user!), Times.Once);
-
-        _userRepositoryMock!
-            .Setup(repository => repository.GetByEmail("validEmail@gmail.com"))
-            .Returns((User?)null);
     }
 
     [TestMethod]

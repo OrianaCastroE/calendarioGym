@@ -18,7 +18,7 @@ public class SessionsControllerTest
     [TestInitialize]
     public void Setup()
     {
-        sessionServiceMock = new Mock<ISessionService>();
+        sessionServiceMock = new Mock<ISessionService>(MockBehavior.Strict);
         sessionController = new SessionsController(sessionServiceMock.Object);
     }
 
