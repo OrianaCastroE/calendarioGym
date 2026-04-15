@@ -36,9 +36,9 @@ public class UsersController(IUserService userService) : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpGet]
-    public IActionResult GetUsers([FromQuery] string? name, [FromQuery] string? surname)
+    public IActionResult GetUsers([FromQuery] UserFiltersDto filter)
     {
-        var users = _userService.GetUsers(name!, surname!);
+        var users = _userService.GetUsers(filter);
         return Ok(users);
     }
 

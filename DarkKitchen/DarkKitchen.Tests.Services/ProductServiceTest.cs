@@ -80,16 +80,16 @@ public class ProductServiceTest
     [TestMethod]
     public void GetProducts_WhenProductsExist_ReturnsMappedDtos()
     {
-        productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilter>())).Returns([validProduct!]);
-        var result = productService!.GetProducts("Valid Line", null, null);
+        productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilterDto>())).Returns([validProduct!]);
+        var result = productService!.GetProducts(new ProductFilterDto("Valid Line", null, null));
         Assert.AreEqual(1, result.Count());
     }
 
     [TestMethod]
     public void GetProducts_WhenNoProductsFound_ThrowsNotFoundException()
     {
-        productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilter>())).Returns([]);
-        Assert.ThrowsException<NotFoundException>(() => productService!.GetProducts(null, null, null));
+        productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilterDto>())).Returns([]);
+        Assert.ThrowsException<NotFoundException>(() => productService!.GetProducts(new ProductFilterDto(null, null, null)));
     }
 
     [TestMethod]

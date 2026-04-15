@@ -76,10 +76,8 @@ public class ProductService(IProductRepository repository) : IProductService
         _repository.Save();
     }
 
-    public IEnumerable<UpdateProductDto> GetProducts(string? productLine, List<string>? categories, string? name)
+    public IEnumerable<UpdateProductDto> GetProducts(ProductFilterDto filter)
     {
-        var filter = new ProductFilter(productLine, categories, name);
-
         IEnumerable<Product> products = _repository.GetProducts(filter);
 
         if(!products.Any())

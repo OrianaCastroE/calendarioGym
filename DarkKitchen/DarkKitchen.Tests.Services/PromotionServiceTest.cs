@@ -109,7 +109,7 @@ public class PromotionServiceTest
         promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null))
             .Returns([promotionEntity!]);
 
-        var result = promotionService!.GetPromotions(null, null, null);
+        var result = promotionService!.GetPromotions(new PromotionFiltersDto(null, null, null));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
@@ -121,7 +121,7 @@ public class PromotionServiceTest
         promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null))
             .Returns([]);
 
-        var result = promotionService!.GetPromotions(null, null, null);
+        var result = promotionService!.GetPromotions(new PromotionFiltersDto(null, null, null));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);

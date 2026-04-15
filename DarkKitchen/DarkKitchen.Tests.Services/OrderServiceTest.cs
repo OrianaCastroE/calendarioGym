@@ -92,7 +92,7 @@ public class OrderServiceTest
         orderRepositoryMock!.Setup(r => r.GetClientOrders(1, null, null, null))
             .Returns([orderEntity!]);
 
-        var result = orderService!.GetClientOrders(1, null, null, null);
+        var result = orderService!.GetClientOrders(1, new OrderFiltersDto(null, null, null));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
@@ -104,7 +104,7 @@ public class OrderServiceTest
         orderRepositoryMock!.Setup(r => r.GetOrdersByStatus(It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, null))
             .Returns([orderEntity!]);
 
-        var result = orderService!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null);
+        var result = orderService!.GetOrdersByStatus(new OrderFilterByStatusDto(DateTime.Now.AddDays(-7), DateTime.Now, null, null));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);

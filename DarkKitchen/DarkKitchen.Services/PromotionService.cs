@@ -65,9 +65,9 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
         _promotionRepository.Save();
     }
 
-    public List<PromotionResponseDto> GetPromotions(DateTime? date, string? productLine, string? productName)
+    public List<PromotionResponseDto> GetPromotions(PromotionFiltersDto filter)
     {
-        var promotions = _promotionRepository.GetPromotions(date, productLine, productName);
+        var promotions = _promotionRepository.GetPromotions(filter.date, filter.productLine, filter.productName);
 
         return promotions.Select(p => new PromotionResponseDto(p.Id, p.Name, p.DiscountPercentage, p.DateFrom, p.DateTo)).ToList();
     }

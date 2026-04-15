@@ -37,9 +37,9 @@ public class PromotionsController(IPromotionService promotionService) : Controll
 
     [Authorize(Roles = "Admin, Client")]
     [HttpGet]
-    public IActionResult GetPromotions([FromQuery] DateTime? date, [FromQuery] string? productLine, [FromQuery] string? productName)
+    public IActionResult GetPromotions([FromQuery] PromotionFiltersDto filter)
     {
-        var promotions = _promotionService.GetPromotions(date, productLine, productName);
+        var promotions = _promotionService.GetPromotions(filter);
         return Ok(promotions);
     }
 }

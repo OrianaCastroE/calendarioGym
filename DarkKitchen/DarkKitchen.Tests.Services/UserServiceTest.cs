@@ -176,7 +176,7 @@ public class UserServiceTest
             .Setup(repository => repository.GetUsers("validName", "validSurname"))
             .Returns([]);
 
-        List<UserResponseDto> result = _userService!.GetUsers("validName", "validSurname");
+        List<UserResponseDto> result = _userService!.GetUsers(new UserFiltersDto("validName", "validSurname"));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
@@ -201,7 +201,7 @@ public class UserServiceTest
             .Setup(repository => repository.GetUsers("validName", "validSurname"))
             .Returns(users);
 
-        List<UserResponseDto> result = _userService!.GetUsers("validName", "validSurname");
+        List<UserResponseDto> result = _userService!.GetUsers(new UserFiltersDto("validName", "validSurname"));
 
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual("validName", result[0].name);
@@ -227,7 +227,7 @@ public class UserServiceTest
             .Setup(repository => repository.GetUsers("validName", "validSurname"))
             .Returns(users);
 
-        var result = _userService!.GetUsers("validName", "validSurname");
+        var result = _userService!.GetUsers(new UserFiltersDto("validName", "validSurname"));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);

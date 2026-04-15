@@ -92,8 +92,8 @@ public class PromotionsControllerTest
     [TestMethod]
     public void GetPromotions_ValidFilter_ReturnsOk()
     {
-        promotionServiceMock!.Setup(s => s.GetPromotions(null, null, null)).Returns(promotions!);
-        var result = promotionsController!.GetPromotions(null, null, null);
+        promotionServiceMock!.Setup(s => s.GetPromotions(It.IsAny<PromotionFiltersDto>())).Returns(promotions!);
+        var result = promotionsController!.GetPromotions(new PromotionFiltersDto(null, null, null));
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -103,8 +103,8 @@ public class PromotionsControllerTest
     [TestMethod]
     public void GetPromotions_NoPromotionsFound_ReturnsNotFound()
     {
-        promotionServiceMock!.Setup(s => s.GetPromotions(null, null, null)).Throws(new NotFoundException("No promotions found."));
+        promotionServiceMock!.Setup(s => s.GetPromotions(It.IsAny<PromotionFiltersDto>())).Throws(new NotFoundException("No promotions found."));
 
-        Assert.ThrowsException<NotFoundException>(() => promotionsController!.GetPromotions(null, null, null));
+        Assert.ThrowsException<NotFoundException>(() => promotionsController!.GetPromotions(new PromotionFiltersDto(null, null, null)));
     }
 }

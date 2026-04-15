@@ -46,16 +46,16 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.ShippingCost, order.Total, []);
     }
 
-    public List<OrderResponseDto> GetClientOrders(int clientId, DateTime? dateFrom, DateTime? dateTo, string? status)
+    public List<OrderResponseDto> GetClientOrders(int clientId, OrderFiltersDto filter)
     {
-        var orders = orderRepository.GetClientOrders(clientId, dateFrom, dateTo, status);
+        var orders = orderRepository.GetClientOrders(clientId, filter.dateFrom, filter.dateTo, filter.status);
 
         return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.ShippingCost, o.Total, [])).ToList();
     }
 
-    public List<OrderResponseDto> GetOrdersByStatus(DateTime dateFrom, DateTime dateTo, string? address, string? status)
+    public List<OrderResponseDto> GetOrdersByStatus(OrderFilterByStatusDto filter)
     {
-        var orders = orderRepository.GetOrdersByStatus(dateFrom, dateTo, address, status);
+        var orders = orderRepository.GetOrdersByStatus(filter.dateFrom, filter.dateTo, filter.address, filter.status);
 
         return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.ShippingCost, o.Total, [])).ToList();
     }

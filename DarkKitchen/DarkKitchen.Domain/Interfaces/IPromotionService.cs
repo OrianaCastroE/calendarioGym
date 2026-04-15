@@ -7,5 +7,5 @@ public interface IPromotionService
     public void CreatePromotion(PromotionDto newPromotion);
     public void UpdatePromotion(int id, PromotionDto updatedPromotion);
     public void UpdatePromotionProducts(int promotionId, List<int> productIds);
-    public List<PromotionResponseDto> GetPromotions(DateTime? date, string? productLine, string? productName);
+    public List<PromotionResponseDto> GetPromotions(PromotionFiltersDto filter);
 }

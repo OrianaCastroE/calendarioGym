@@ -59,8 +59,8 @@ public class ProductControllerTest
     {
         List<string> categories = ["Fútbol", "Baloncesto", "Tenis"];
         var products = new List<UpdateProductDto>();
-        productServiceMock.Setup(s => s.GetProducts(validProductLine, categories, validProductName)).Returns(products!);
-        var result = productController.GetProducts(validProductLine, categories, validProductName);
+        productServiceMock.Setup(s => s.GetProducts(It.IsAny<ProductFilterDto>())).Returns(products!);
+        var result = productController.GetProducts(new ProductFilterDto(validProductLine, categories, validProductName));
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -71,10 +71,9 @@ public class ProductControllerTest
     [TestMethod]
     public void GetProducts_WhenNoProducts_ThrowsNotFoundException()
     {
-        List<string> categories = [];
-        productServiceMock.Setup(s => s.GetProducts(validProductLine, categories, validProductName)).Throws(new NotFoundException("No products found."));
+        productServiceMock.Setup(s => s.GetProducts(It.IsAny<ProductFilterDto>())).Throws(new NotFoundException("No products found."));
 
-        Assert.ThrowsException<NotFoundException>(() => productController.GetProducts(validProductLine, categories, validProductName));
+        Assert.ThrowsException<NotFoundException>(() => productController.GetProducts(new ProductFilterDto(validProductLine, null, validProductName)));
     }
 
     [TestMethod]
@@ -84,7 +83,7 @@ public class ProductControllerTest
         var dateFrom = DateTime.Now.AddDays(-7);
         var dateTo = DateTime.Now;
         productServiceMock.Setup(s => s.GetMostRequestedProducts(It.IsAny<DateRangeDto>())).Returns(products);
-        var result = productController.GetMostRequestedProducts(dateFrom, dateTo);
+        var result = productController.GetMostRequestedProducts(new DateRangeDto(dateFrom, dateTo));
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -99,7 +98,7 @@ public class ProductControllerTest
         var dateTo = DateTime.Now;
         productServiceMock.Setup(s => s.GetMostRequestedProducts(It.IsAny<DateRangeDto>())).Throws(new NotFoundException("No products found."));
 
-        Assert.ThrowsException<NotFoundException>(() => productController.GetMostRequestedProducts(dateFrom, dateTo));
+        Assert.ThrowsException<NotFoundException>(() => productController.GetMostRequestedProducts(new DateRangeDto(dateFrom, dateTo)));
     }
 
     [TestMethod]
