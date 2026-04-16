@@ -1,6 +1,6 @@
 ﻿using DarkKitchen.Domain.Entities;
 
-namespace DarkKitchen.Domain.DataAccess.Interfaces;
+namespace DarkKitchen.Domain.Interfaces.Repository;
 
 public interface IUserRepository
 {

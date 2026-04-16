@@ -1,7 +1,7 @@
 ﻿using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 
-namespace DarkKitchen.Domain.Interfaces;
+namespace DarkKitchen.Domain.Interfaces.Service;
 
 public interface IProductService
 {

@@ -1,4 +1,4 @@
-using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Domain.Interfaces.Services;
 using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 using Microsoft.AspNetCore.Authorization;
