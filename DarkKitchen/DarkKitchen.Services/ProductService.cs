@@ -1,7 +1,7 @@
-using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
-using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 
@@ -73,7 +73,6 @@ public class ProductService(IProductRepository repository) : IProductService
         }
 
         _repository.Update(product);
-        _repository.Save();
     }
 
     public IEnumerable<UpdateProductDto> GetProducts(ProductFilterDto filter)
@@ -107,6 +106,5 @@ public class ProductService(IProductRepository repository) : IProductService
 
         product.IsActive = status.isActive;
         _repository.Update(product);
-        _repository.Save();
     }
 }

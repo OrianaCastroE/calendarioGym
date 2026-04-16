@@ -1,5 +1,6 @@
 using DarkKitchen.Domain.Entities;
-using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.OrderDTOs;
 
 namespace DarkKitchen.Services;
@@ -41,7 +42,6 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         };
 
         orderRepository.Add(order);
-        orderRepository.Save();
 
         return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.ShippingCost, order.Total, []);
     }
@@ -76,6 +76,5 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         order.Status = newStatus.status!;
 
         orderRepository.Update(order);
-        orderRepository.Save();
     }
 }

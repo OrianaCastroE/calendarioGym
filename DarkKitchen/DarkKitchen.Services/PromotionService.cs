@@ -1,6 +1,6 @@
-using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
-using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.PromotionDTOs;
 
 namespace DarkKitchen.Services;
@@ -35,7 +35,6 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
         };
 
         _promotionRepository.Add(promotion);
-        _promotionRepository.Save();
     }
 
     public void UpdatePromotion(int id, PromotionDto updatedPromotion)
@@ -49,7 +48,6 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
         promotion.DateTo = updatedPromotion.dateTo;
 
         _promotionRepository.Update(promotion);
-        _promotionRepository.Save();
     }
 
     public void UpdatePromotionProducts(int promotionId, List<int> productIds)
@@ -62,7 +60,6 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
             .ToList();
 
         _promotionRepository.Update(promotion);
-        _promotionRepository.Save();
     }
 
     public List<PromotionResponseDto> GetPromotions(PromotionFiltersDto filter)

@@ -1,6 +1,6 @@
-using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
+using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 using DarkKitchen.Services;
@@ -72,7 +72,6 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
-        productRepositoryMock!.Setup(r => r.Save());
 
         productService!.UpdateProduct(validUpdateProductDto);
 
@@ -130,7 +129,6 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
-        productRepositoryMock!.Setup(r => r.Save());
         var status = new ProductStatusDto(false);
 
         productService!.UpdateStatus(1, status);
@@ -152,7 +150,6 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
-        productRepositoryMock!.Setup(r => r.Save());
 
         var dtoWithNulls = new UpdateProductDto(1, null, null, null, null, null, null, null, null);
 
@@ -172,7 +169,6 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
-        productRepositoryMock!.Setup(r => r.Save());
 
         var dtoOnlyName = new UpdateProductDto(1, null, "New Name", null, null, null, null, null, null);
 

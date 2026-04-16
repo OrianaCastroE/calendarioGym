@@ -1,5 +1,5 @@
-using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Models.PromotionDTOs;
 using DarkKitchen.Services;
 using Moq;
@@ -36,12 +36,10 @@ public class PromotionServiceTest
     public void CreatePromotion_ValidData_PromotionCreated()
     {
         promotionRepositoryMock!.Setup(r => r.Add(It.IsAny<Promotion>()));
-        promotionRepositoryMock!.Setup(r => r.Save());
 
         promotionService!.CreatePromotion(validPromotion);
 
         promotionRepositoryMock!.Verify(r => r.Add(It.IsAny<Promotion>()), Times.Once);
-        promotionRepositoryMock!.Verify(r => r.Save(), Times.Once);
     }
 
     [TestMethod]
@@ -73,12 +71,10 @@ public class PromotionServiceTest
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns(promotionEntity!);
         promotionRepositoryMock!.Setup(r => r.Update(It.IsAny<Promotion>()));
-        promotionRepositoryMock!.Setup(r => r.Save());
 
         promotionService!.UpdatePromotion(1, validPromotion);
 
         promotionRepositoryMock!.Verify(r => r.Update(It.IsAny<Promotion>()), Times.Once);
-        promotionRepositoryMock!.Verify(r => r.Save(), Times.Once);
     }
 
     [TestMethod]
@@ -94,12 +90,10 @@ public class PromotionServiceTest
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns(promotionEntity!);
         promotionRepositoryMock!.Setup(r => r.Update(It.IsAny<Promotion>()));
-        promotionRepositoryMock!.Setup(r => r.Save());
 
         promotionService!.UpdatePromotionProducts(1, [1, 2, 3]);
 
         promotionRepositoryMock!.Verify(r => r.Update(It.IsAny<Promotion>()), Times.Once);
-        promotionRepositoryMock!.Verify(r => r.Save(), Times.Once);
     }
 
     [TestMethod]
