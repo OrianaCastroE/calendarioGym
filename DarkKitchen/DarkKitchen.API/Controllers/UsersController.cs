@@ -1,4 +1,4 @@
-﻿using DarkKitchen.Domain.Interfaces.Services;
+﻿using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.UserDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
