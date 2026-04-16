@@ -1,6 +1,6 @@
 using DarkKitchen.Domain.Entities;
 
-namespace DarkKitchen.Domain.DataAccess.Interfaces;
+namespace DarkKitchen.Domain.Interfaces.Repository;
 
 public interface IPromotionRepository
 {
@@ -8,5 +8,4 @@ public interface IPromotionRepository
     void Update(Promotion promotion);
     Promotion? GetById(int id);
     IEnumerable<Promotion> GetPromotions(DateTime? date, string? productLine, string? productName);
-    void Save();
 }

@@ -1,6 +1,6 @@
 ﻿using DarkKitchen.Models.OrderDTOs;
 
-namespace DarkKitchen.Domain.Interfaces;
+namespace DarkKitchen.Domain.Interfaces.Service;
 
 public interface IOrderService
 {

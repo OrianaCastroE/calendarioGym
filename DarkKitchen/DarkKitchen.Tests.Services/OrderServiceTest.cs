@@ -1,6 +1,5 @@
-using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
-using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Models.OrderDTOs;
 using DarkKitchen.Services;
 using Moq;
@@ -55,12 +54,10 @@ public class OrderServiceTest
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(productEntity!);
         promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null)).Returns([]);
         orderRepositoryMock!.Setup(r => r.Add(It.IsAny<Order>()));
-        orderRepositoryMock!.Setup(r => r.Save());
 
         var result = orderService!.CreateOrder(validOrder);
 
         orderRepositoryMock!.Verify(r => r.Add(It.IsAny<Order>()), Times.Once);
-        orderRepositoryMock!.Verify(r => r.Save(), Times.Once);
         Assert.IsNotNull(result);
     }
 
@@ -136,12 +133,10 @@ public class OrderServiceTest
     {
         orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
         orderRepositoryMock.Setup(r => r.Update(orderEntity!));
-        orderRepositoryMock.Setup(r => r.Save());
 
         orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto("Prepared"));
 
         orderRepositoryMock!.Verify(r => r.Update(It.IsAny<Order>()), Times.Once);
-        orderRepositoryMock!.Verify(r => r.Save(), Times.Once);
     }
 
     [TestMethod]

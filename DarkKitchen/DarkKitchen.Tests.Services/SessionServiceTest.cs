@@ -1,6 +1,6 @@
-using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
+using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Models.SessionDTOs;
 using DarkKitchen.Services;
 using Microsoft.Extensions.Configuration;

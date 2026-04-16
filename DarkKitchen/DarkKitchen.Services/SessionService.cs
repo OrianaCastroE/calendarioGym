@@ -1,10 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
-using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.SessionDTOs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

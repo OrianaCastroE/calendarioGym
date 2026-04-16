@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.OrderDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

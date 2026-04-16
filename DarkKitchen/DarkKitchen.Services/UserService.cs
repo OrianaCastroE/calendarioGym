@@ -1,7 +1,7 @@
-using DarkKitchen.Domain.DataAccess.Interfaces;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
-using DarkKitchen.Domain.Interfaces;
+using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.UserDTOs;
 
 namespace DarkKitchen.Services;
