@@ -4,9 +4,9 @@ namespace DarkKitchen.Domain.Interfaces.Repository;
 
 public interface IUserRepository
 {
-    public User GetByEmail(string email);
-    User Add(User user);
-    User Update(User user);
-    List<User> GetUsers(string? name, string? surname);
-    void Delete(User user);
+    public User? GetByEmail(string email);
+    public void Add(User user);
+    public void Update(User user);
+    public List<User> GetUsers(string? name, string? surname);
+    public void Delete(User user);
 }

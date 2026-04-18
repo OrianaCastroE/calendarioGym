@@ -5,7 +5,7 @@ namespace DarkKitchen.DataAccess.Repositories;
 
 public class UserRepository(AppDbContext context) : IUserRepository
 {
-    public User Add(User user)
+    public void Add(User user)
     {
         throw new NotImplementedException();
     }
@@ -25,7 +25,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
         throw new NotImplementedException();
     }
 
-    public User Update(User user)
+    public void Update(User user)
     {
         throw new NotImplementedException();
     }
