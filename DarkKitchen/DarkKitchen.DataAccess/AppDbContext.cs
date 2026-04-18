@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DarkKitchen.DataAccess;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
