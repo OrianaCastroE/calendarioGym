@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="MSTest" Version="4.0.2" />
   </ItemGroup>
 
@@ -15,11 +16,6 @@
     <ProjectReference Include="..\DarkKitchen.Domain\DarkKitchen.Domain.csproj" />
     <ProjectReference Include="..\DarkKitchen.Repositories\DarkKitchen.DataAccess.csproj" />
   </ItemGroup>
-
-  <PackageReference Include="coverlet.collector" Version="6.0.2">
-	<PrivateAssets>all</PrivateAssets>
-	<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-  </PackageReference>
 
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
