@@ -38,8 +38,7 @@ public class UserServiceTest
     public void CreateUser_WhenValidUser_ShouldCreateUser()
     {
         _userRepositoryMock!
-            .Setup(repository => repository.Add(It.IsAny<User>()))
-            .Returns((User user) => user);
+            .Setup(repository => repository.Add(It.IsAny<User>()));
 
         _userService!.CreateUser(_validUser);
 
@@ -159,8 +158,7 @@ public class UserServiceTest
             .Returns(_user);
 
         _userRepositoryMock!
-            .Setup(repository => repository.Update(It.IsAny<User>()))
-            .Returns((User user) => user);
+            .Setup(repository => repository.Update(It.IsAny<User>()));
 
         _userService!.UpdateUser(dto);
 
