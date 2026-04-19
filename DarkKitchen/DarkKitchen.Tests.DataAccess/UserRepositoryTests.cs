@@ -77,9 +77,33 @@ public class UserRepositoryTests
     {
         _context.Users.Add(user!);
         _context.SaveChanges();
+
         Assert.ThrowsException<ArgumentException>(() =>
         {
             _userRepository.Add(user!);
+            _context.SaveChanges();
+        });
+    }
+
+    [TestMethod]
+    public void DeleteUser_WhenUserExists_DeletesUserFromDatabase()
+    {
+        _context.Users.Add(user!);
+        _context.SaveChanges();
+
+        _userRepository.Delete(user!);
+        _context.SaveChanges();
+        var result = _context.Users.FirstOrDefault(u => u.Email == validEmail);
+
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void DeleteUser_WhenUserDoesNotExist_ThrowsException()
+    {
+        Assert.ThrowsException<ArgumentException>(() =>
+        {
+            _userRepository.Delete(user!);
             _context.SaveChanges();
         });
     }
