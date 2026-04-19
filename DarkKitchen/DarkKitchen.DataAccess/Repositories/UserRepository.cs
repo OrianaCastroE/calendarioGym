@@ -13,7 +13,8 @@ public class UserRepository(AppDbContext context) : IUserRepository
 
     public void Delete(User user)
     {
-        throw new NotImplementedException();
+        context.Users.Remove(user);
+        context.SaveChanges();
     }
 
     public User? GetByEmail(string email)

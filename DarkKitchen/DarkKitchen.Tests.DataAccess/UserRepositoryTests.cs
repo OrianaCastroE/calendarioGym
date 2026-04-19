@@ -101,7 +101,7 @@ public class UserRepositoryTests
     [TestMethod]
     public void DeleteUser_WhenUserDoesNotExist_ThrowsException()
     {
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.ThrowsException<DbUpdateConcurrencyException>(() =>
         {
             _userRepository.Delete(user!);
             _context.SaveChanges();
