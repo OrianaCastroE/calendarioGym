@@ -149,4 +149,28 @@ public class UserRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
     }
+
+    [TestMethod]
+    public void UpdateUser_WhenUserExists_UpdatesUserInDatabase()
+    {
+        _context.Users.Add(user!);
+        _context.SaveChanges();
+        user.Name = "UpdatedName";
+
+        _userRepository.Update(user!);
+        _context.SaveChanges();
+        var result = _context.Users.FirstOrDefault(u => u.Email == validEmail);
+
+        Assert.AreEqual("UpdatedName", result.Name);
+    }
+
+     [TestMethod]
+     public void UpdateUser_WhenUserDoesNotExist_ThrowsException()
+     {
+         Assert.ThrowsException<DbUpdateConcurrencyException>(() =>
+         {
+             _userRepository.Update(user!);
+             _context.SaveChanges();
+         });
+    }
 }
