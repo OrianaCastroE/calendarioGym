@@ -51,4 +51,36 @@ public class UserRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual(validEmail, result.Email);
     }
+
+    [TestMethod]
+    public void GetUserByEmail_WhenUserDoesNotExist_ReturnsNull()
+    {
+        var result = _userRepository.GetByEmail(validEmail);
+
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void AddUser_WhenUserIsValid_AddsUserToDatabase()
+    {
+        _userRepository.Add(user!);
+        _context.SaveChanges();
+
+        var result = _context.Users.FirstOrDefault(u => u.Email == validEmail);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(validEmail, result.Email);
+    }
+
+    [TestMethod]
+    public void AddUser_WhenUserAlreadyExists_ThrowsException()
+    {
+        _context.Users.Add(user!);
+        _context.SaveChanges();
+        Assert.ThrowsException<ArgumentException>(() =>
+        {
+            _userRepository.Add(user!);
+            _context.SaveChanges();
+        });
+    }
 }
