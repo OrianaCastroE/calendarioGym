@@ -7,6 +7,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
 {
     public void Add(User user)
     {
+        // Code change to trigger actions
         throw new NotImplementedException();
     }
 
