@@ -164,13 +164,13 @@ public class UserRepositoryTests
         Assert.AreEqual("UpdatedName", result.Name);
     }
 
-     [TestMethod]
-     public void UpdateUser_WhenUserDoesNotExist_ThrowsException()
-     {
-         Assert.ThrowsException<Exception>(() =>
-         {
-             _userRepository.Update(user!);
-             _context.SaveChanges();
-         });
+    [TestMethod]
+    public void UpdateUser_WhenUserDoesNotExist_ThrowsException()
+    {
+        Assert.ThrowsException<Exception>(() =>
+        {
+            _userRepository.Update(user!);
+            _context.SaveChanges();
+        });
     }
 }
