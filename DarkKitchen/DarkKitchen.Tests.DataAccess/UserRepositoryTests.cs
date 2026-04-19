@@ -107,4 +107,23 @@ public class UserRepositoryTests
             _context.SaveChanges();
         });
     }
+
+    [TestMethod]
+    public void GetUsers_WhenUsersExist_ReturnsListOfUsers()
+    {
+        _context.Users.Add(user!);
+        _context.SaveChanges();
+        var result = _userRepository.GetUsers(null, null);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(validEmail, result[0].Email);
+    }
+
+    [TestMethod]
+    public void GetUsers_WhenNoUsersExist_ReturnsEmptyList()
+    {
+        var result = _userRepository.GetUsers(null, null);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count);
+    }
 }
