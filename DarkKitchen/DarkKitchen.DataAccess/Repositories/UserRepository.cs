@@ -24,7 +24,8 @@ public class UserRepository(AppDbContext context) : IUserRepository
 
     public List<User> GetUsers(string? name, string? surname)
     {
-        throw new NotImplementedException();
+        return context.Users.Where(u =>
+            (string.IsNullOrEmpty(name) || u.Name == name) && (string.IsNullOrEmpty(name) || u.Surname == surname)).ToList();
     }
 
     public void Update(User user)

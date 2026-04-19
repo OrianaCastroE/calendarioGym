@@ -9,7 +9,9 @@ namespace DarkKitchen.Tests.DataAccess;
 public class UserRepositoryTests
 {
     private readonly string validEmail = "valid@email.com";
+    private readonly string validEmail2 = "valid@email2.com";
     private User? user;
+    private User? user2;
     private AppDbContext? _context;
     private UserRepository? _userRepository;
 
@@ -23,11 +25,20 @@ public class UserRepositoryTests
             Email = validEmail,
             Phone = "+598099123456",
             Password = "Password1!",
-            Role = Role.Client,
+            Role = Role.Client
+        };
+        user2 = new User
+        {
+            Name = "Name2",
+            Surname = "Surname2",
+            Email = validEmail2,
+            Phone = "+598099123456",
+            Password = "Password1!",
+            Role = Role.Client
         };
         var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-            .Options;
+           .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+           .Options;
 
         _context = new AppDbContext(options);
         _userRepository = new UserRepository(_context);
@@ -48,7 +59,6 @@ public class UserRepositoryTests
 
         var result = _userRepository.GetByEmail(validEmail);
 
-        Assert.IsNotNull(result);
         Assert.AreEqual(validEmail, result.Email);
     }
 
@@ -68,7 +78,6 @@ public class UserRepositoryTests
 
         var result = _context.Users.FirstOrDefault(u => u.Email == validEmail);
 
-        Assert.IsNotNull(result);
         Assert.AreEqual(validEmail, result.Email);
     }
 
@@ -113,16 +122,30 @@ public class UserRepositoryTests
     {
         _context.Users.Add(user!);
         _context.SaveChanges();
-        var result = _userRepository.GetUsers(null, null);
-        Assert.IsNotNull(result);
+
+        var result = _userRepository.GetUsers(user.Name, user.Surname);
+
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual(validEmail, result[0].Email);
+    }
+
+    [TestMethod]
+    public void GetUsers_WhenNullParameters_ReturnsAllUsers()
+    {
+        _context.Users.Add(user!);
+        _context.Users.Add(user2!);
+        _context.SaveChanges();
+
+        var result = _userRepository.GetUsers(null, null);
+
+        Assert.AreEqual(2, result.Count);
     }
 
     [TestMethod]
     public void GetUsers_WhenNoUsersExist_ReturnsEmptyList()
     {
         var result = _userRepository.GetUsers(null, null);
+
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
     }
