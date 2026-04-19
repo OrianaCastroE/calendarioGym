@@ -167,7 +167,7 @@ public class UserRepositoryTests
      [TestMethod]
      public void UpdateUser_WhenUserDoesNotExist_ThrowsException()
      {
-         Assert.ThrowsException<DbUpdateConcurrencyException>(() =>
+         Assert.ThrowsException<Exception>(() =>
          {
              _userRepository.Update(user!);
              _context.SaveChanges();

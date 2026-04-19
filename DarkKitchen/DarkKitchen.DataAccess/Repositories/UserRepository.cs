@@ -30,6 +30,13 @@ public class UserRepository(AppDbContext context) : IUserRepository
 
     public void Update(User user)
     {
-        throw new NotImplementedException();
+        var existingUser = context.Users.Find(user.Id);
+        if(existingUser == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        context.Entry(existingUser).CurrentValues.SetValues(user);
+        context.SaveChanges();
     }
 }
