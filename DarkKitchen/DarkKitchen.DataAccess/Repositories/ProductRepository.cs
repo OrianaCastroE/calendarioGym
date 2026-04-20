@@ -67,6 +67,13 @@ public class ProductRepository(AppDbContext context) : IProductRepository
 
     public void UpdateStatus(int id, ProductStatusDto status)
     {
-        return;
+        var product = context.Products.FirstOrDefault(p => p.Id == id);
+        if (product == null)
+        {
+            return;
+        }
+
+        product.IsActive = status.isActive;
+        context.Products.Update(product);
     }
 }
