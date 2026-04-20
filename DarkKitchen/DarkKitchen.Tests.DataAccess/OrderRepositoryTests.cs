@@ -116,4 +116,15 @@ public class OrderRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
     }
+
+    [TestMethod]
+    public void GetOrdersByStatus_WhenOrdersExist_ReturnsOrders()
+    {
+        context!.Orders.Add(order!);
+        context.SaveChanges();
+
+        var result = orderRepository!.GetOrdersByStatus(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1), null, null);
+
+        Assert.AreEqual(1, result.Count());
+    }
 }
