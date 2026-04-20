@@ -158,4 +158,15 @@ public class OrderRepositoryTests
 
         Assert.AreEqual(1, result.Count());
     }
+
+    [TestMethod]
+    public void GetClientOrders_WithStatusFilter_ReturnsFilteredOrders()
+    {
+        context!.Orders.Add(order!);
+        context.SaveChanges();
+
+        var result = orderRepository!.GetClientOrders(1, null, null, "Pending");
+
+        Assert.AreEqual(1, result.Count());
+    }
 }
