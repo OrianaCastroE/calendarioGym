@@ -65,4 +65,12 @@ public class OrderRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual("Pending", result.Status);
     }
+
+    [TestMethod]
+    public void GetById_WhenOrderDoesNotExist_ReturnsNull()
+    {
+        var result = orderRepository!.GetById(999);
+
+        Assert.IsNull(result);
+    }
 }
