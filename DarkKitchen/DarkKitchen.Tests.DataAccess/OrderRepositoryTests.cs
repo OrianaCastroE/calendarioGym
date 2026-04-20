@@ -180,4 +180,15 @@ public class OrderRepositoryTests
 
         Assert.AreEqual(1, result.Count());
     }
+
+    [TestMethod]
+    public void GetOrdersByStatus_WithStatusFilter_ReturnsFilteredOrders()
+    {
+        context!.Orders.Add(order!);
+        context.SaveChanges();
+
+        var result = orderRepository!.GetOrdersByStatus(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1), null, "Pending");
+
+        Assert.AreEqual(1, result.Count());
+    }
 }
