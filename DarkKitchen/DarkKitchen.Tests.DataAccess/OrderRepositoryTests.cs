@@ -169,4 +169,15 @@ public class OrderRepositoryTests
 
         Assert.AreEqual(1, result.Count());
     }
+
+    [TestMethod]
+    public void GetOrdersByStatus_WithAddressFilter_ReturnsFilteredOrders()
+    {
+        context!.Orders.Add(order!);
+        context.SaveChanges();
+
+        var result = orderRepository!.GetOrdersByStatus(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1), "18 de Julio", null);
+
+        Assert.AreEqual(1, result.Count());
+    }
 }
