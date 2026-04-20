@@ -62,7 +62,18 @@ public class ProductRepository(AppDbContext context) : IProductRepository
 
     public IEnumerable<Product> GetMostRequestedProducts(DateRangeDto dates)
     {
-        return null;
+        var productIds = context.Orders
+            .Where(o => o.CreatedAt >= dates.dateFrom && o.CreatedAt <= dates.dateTo)
+            .SelectMany(o => o.Products)
+            .GroupBy(op => op.ProductId)
+            .OrderByDescending(g => g.Sum(op => op.Quantity))
+            .Select(g => g.Key)
+            .ToList();
+
+        return context.Products
+            .Where(p => productIds.Contains(p.Id))
+            .ToList()
+            .OrderBy(p => productIds.IndexOf(p.Id));
     }
 
     public void UpdateStatus(int id, ProductStatusDto status)
