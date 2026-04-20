@@ -107,4 +107,13 @@ public class OrderRepositoryTests
 
         Assert.AreEqual(1, result.Count());
     }
+
+    [TestMethod]
+    public void GetClientOrders_WhenNoOrdersExist_ReturnsEmptyList()
+    {
+        var result = orderRepository!.GetClientOrders(1, null, null, null);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count());
+    }
 }
