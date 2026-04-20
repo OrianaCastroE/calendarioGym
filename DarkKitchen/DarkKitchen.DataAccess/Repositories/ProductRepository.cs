@@ -35,7 +35,29 @@ public class ProductRepository(AppDbContext context) : IProductRepository
 
     public IEnumerable<Product> GetProducts(ProductFilterDto? filter)
     {
-        return null;
+        var query = context.Products.AsQueryable();
+
+        if (filter.HasValue)
+        {
+            var f = filter.Value;
+
+            if (!string.IsNullOrEmpty(f.productLine))
+            {
+                query = query.Where(p => p.ProductLine == f.productLine);
+            }
+
+            if (f.categories != null && f.categories.Count > 0)
+            {
+                query = query.Where(p => p.Category != null && f.categories.Contains(p.Category));
+            }
+
+            if (!string.IsNullOrEmpty(f.name))
+            {
+                query = query.Where(p => p.Name.Contains(f.name));
+            }
+        }
+
+        return query.ToList();
     }
 
     public IEnumerable<Product> GetMostRequestedProducts(DateRangeDto dates)
