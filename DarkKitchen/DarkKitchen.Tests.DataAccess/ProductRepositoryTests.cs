@@ -95,4 +95,18 @@ public class ProductRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual("Updated Product", result.Name);
     }
+
+    [TestMethod]
+    public void UpdaProduct_WhenProductIsNull_ShouldNotUpdateProductInDatabase()
+    {
+        context!.Products.Add(product!);
+        context!.SaveChanges();
+        productRepository!.Update(null!);
+        context.SaveChanges();
+
+        var result = context.Products.FirstOrDefault(p => p.Id == product.Id);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Test Product", result.Name);
+    }
 }
