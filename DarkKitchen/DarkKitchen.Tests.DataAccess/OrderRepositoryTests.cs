@@ -147,4 +147,15 @@ public class OrderRepositoryTests
 
         Assert.IsNotNull(result);
     }
+
+    [TestMethod]
+    public void GetClientOrders_WithDateFilter_ReturnsFilteredOrders()
+    {
+        context!.Orders.Add(order!);
+        context.SaveChanges();
+
+        var result = orderRepository!.GetClientOrders(1, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1), null);
+
+        Assert.AreEqual(1, result.Count());
+    }
 }
