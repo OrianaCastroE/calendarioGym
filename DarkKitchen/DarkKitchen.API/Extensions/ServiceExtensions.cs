@@ -8,6 +8,7 @@ public static class ServiceExtensions
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<IPromotionService, PromotionService>();
+        services.AddScoped<IOrderService, OrderService>();
         return services;
     }
 }
