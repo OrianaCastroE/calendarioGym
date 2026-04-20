@@ -1,12 +1,7 @@
 using System.Text;
+using DarkKitchen.API.Extensions;
 using DarkKitchen.API.Filters;
-using DarkKitchen.DataAccess;
-using DarkKitchen.DataAccess.Repositories;
-using DarkKitchen.Domain.Interfaces.Repository;
-using DarkKitchen.Domain.Interfaces.Service;
-using DarkKitchen.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,15 +26,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// DbContext
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Repositories
-builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
-
-// Services
-builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddRepositories();
+builder.Services.AddServices();
 
 var app = builder.Build();
 
