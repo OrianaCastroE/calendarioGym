@@ -188,4 +188,33 @@ public class ProductRepositoryTests
         Assert.IsNotNull(result);
         Assert.IsTrue(result.IsActive);
     }
+
+    [TestMethod]
+    public void GetMostRequestedProducts_WhenProductsExistInRange_ReturnsOrderedByQuantity()
+    {
+        context!.Products.Add(product!);
+        var product2 = new Product { Id = 2, Code = "TEST002", Name = "Product 2", Price = 5.00m, IsActive = true };
+        context.Products.Add(product2);
+
+        var order = new Order
+        {
+            Id = 1,
+            ClientId = 1,
+            CreatedAt = new DateTime(2024, 6, 15),
+            Products =
+            [
+                new OrderProduct { ProductId = 1, Quantity = 1, UnitPrice = 9.99m },
+                new OrderProduct { ProductId = 2, Quantity = 5, UnitPrice = 5.00m }
+            ]
+        };
+        context.Orders.Add(order);
+        context.SaveChanges();
+
+        var dates = new DateRangeDto(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31));
+        var result = productRepository!.GetMostRequestedProducts(dates).ToList();
+
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual(2, result[0].Id);
+        Assert.AreEqual(1, result[1].Id);
+    }
 }
