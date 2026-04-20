@@ -1,6 +1,7 @@
 ﻿using DarkKitchen.DataAccess;
 using DarkKitchen.DataAccess.Repositories;
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Models.ProductDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace DarkKitchen.Tests.DataAccess;
@@ -9,6 +10,7 @@ namespace DarkKitchen.Tests.DataAccess;
 public class ProductRepositoryTests
 {
     private Product? product;
+    private ProductFilterDto? filter;
     private AppDbContext? context;
     private ProductRepository? productRepository;
 
@@ -41,6 +43,8 @@ public class ProductRepositoryTests
 
             ]
         };
+
+        filter = new ProductFilterDto("productLine", ["cat1", "cat2"], "Product");
 
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
@@ -126,5 +130,16 @@ public class ProductRepositoryTests
     {
         var result = productRepository!.GetById(999);
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetProducts_WhenProductsExist_ReturnsProducts()
+    {
+        context!.Products.Add(product!);
+        context.SaveChanges();
+        filter = new ProductFilterDto(null, null, "Test");
+        var result = productRepository!.GetProducts(filter);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count());
     }
 }

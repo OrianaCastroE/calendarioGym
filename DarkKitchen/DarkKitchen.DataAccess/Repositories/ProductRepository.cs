@@ -33,7 +33,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         return context.Products.FirstOrDefault(p => p.Id == id);
     }
 
-    public IEnumerable<Product> GetProducts(ProductFilterDto filter)
+    public IEnumerable<Product> GetProducts(ProductFilterDto? filter)
     {
         return null;
     }
