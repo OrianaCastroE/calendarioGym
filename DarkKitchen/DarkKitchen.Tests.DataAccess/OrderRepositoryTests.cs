@@ -73,4 +73,18 @@ public class OrderRepositoryTests
 
         Assert.IsNull(result);
     }
+
+    [TestMethod]
+    public void UpdateOrder_WhenOrderExists_UpdatesOrderInDatabase()
+    {
+        context!.Orders.Add(order!);
+        context.SaveChanges();
+        order!.Status = "Prepared";
+
+        orderRepository!.Update(order!);
+        context.SaveChanges();
+        var result = context.Orders.FirstOrDefault(o => o.Id == order.Id);
+
+        Assert.AreEqual("Prepared", result!.Status);
+    }
 }
