@@ -176,4 +176,16 @@ public class ProductRepositoryTests
         Assert.IsNotNull(result);
         Assert.IsFalse(result.IsActive);
     }
+
+    [TestMethod]
+    public void UpdateStatus_WhenProductDoesNotExist_ShouldNotUpdateProductStatusInDatabase()
+    {
+        context!.Products.Add(product!);
+        context.SaveChanges();
+        productRepository!.UpdateStatus(999, new ProductStatusDto(false));
+        context.SaveChanges();
+        var result = context.Products.FirstOrDefault(p => p.Id == product.Id);
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result.IsActive);
+    }
 }
