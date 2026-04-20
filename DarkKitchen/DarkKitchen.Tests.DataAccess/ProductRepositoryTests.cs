@@ -120,4 +120,11 @@ public class ProductRepositoryTests
 
         Assert.IsNotNull(result);
     }
+
+    [TestMethod]
+    public void GetById_WhenProductDoesNotExist_ReturnsNull()
+    {
+        var result = productRepository!.GetById(999);
+        Assert.IsNull(result);
+    }
 }
