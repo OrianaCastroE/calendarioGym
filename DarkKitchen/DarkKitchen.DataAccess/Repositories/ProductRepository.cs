@@ -20,7 +20,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
 
     public void Update(Product product)
     {
-        if (product == null)
+        if(product == null)
         {
             return;
         }
@@ -37,21 +37,21 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     {
         var query = context.Products.AsQueryable();
 
-        if (filter.HasValue)
+        if(filter.HasValue)
         {
             var f = filter.Value;
 
-            if (!string.IsNullOrEmpty(f.productLine))
+            if(!string.IsNullOrEmpty(f.productLine))
             {
                 query = query.Where(p => p.ProductLine == f.productLine);
             }
 
-            if (f.categories != null && f.categories.Count > 0)
+            if(f.categories != null && f.categories.Count > 0)
             {
                 query = query.Where(p => p.Category != null && f.categories.Contains(p.Category));
             }
 
-            if (!string.IsNullOrEmpty(f.name))
+            if(!string.IsNullOrEmpty(f.name))
             {
                 query = query.Where(p => p.Name.Contains(f.name));
             }
@@ -79,7 +79,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     public void UpdateStatus(int id, ProductStatusDto status)
     {
         var product = context.Products.FirstOrDefault(p => p.Id == id);
-        if (product == null)
+        if(product == null)
         {
             return;
         }
