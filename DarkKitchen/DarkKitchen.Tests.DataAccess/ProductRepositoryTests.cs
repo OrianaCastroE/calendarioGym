@@ -151,4 +151,14 @@ public class ProductRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
     }
+
+    [TestMethod]
+    public void GetProducts_WhenFilterIsNull_ReturnsAllProducts()
+    {
+        context!.Products.Add(product!);
+        context.SaveChanges();
+        var result = productRepository!.GetProducts(null);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count());
+    }
 }
