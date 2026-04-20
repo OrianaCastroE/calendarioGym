@@ -109,4 +109,15 @@ public class ProductRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual("Test Product", result.Name);
     }
+
+    [TestMethod]
+    public void GetById_WhenProductExists_ReturnsProduct()
+    {
+        context!.Products.Add(product!);
+        context.SaveChanges();
+
+        var result = productRepository!.GetById(product!.Id);
+
+        Assert.IsNotNull(result);
+    }
 }
