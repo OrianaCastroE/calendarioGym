@@ -87,4 +87,13 @@ public class OrderRepositoryTests
 
         Assert.AreEqual("Prepared", result!.Status);
     }
+
+    [TestMethod]
+    public void UpdateOrder_WhenOrderDoesNotExist_ThrowsException()
+    {
+        Assert.ThrowsException<Exception>(() =>
+        {
+            orderRepository!.Update(order!);
+        });
+    }
 }
