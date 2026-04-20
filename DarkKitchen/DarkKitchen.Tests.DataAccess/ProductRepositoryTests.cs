@@ -69,4 +69,15 @@ public class ProductRepositoryTests
         Assert.AreEqual("Test Product", result.Name);
         Assert.AreEqual(2, result.Images.Count);
     }
+
+    [TestMethod]
+    public void AddProduct_WhenProductIsNull_DoesNotAddProductToDatabase()
+    {
+        productRepository!.Add(null!);
+        context!.SaveChanges();
+
+        var result = context.Products.FirstOrDefault(p => p.Id == 1);
+
+        Assert.IsNull(result);
+    }
 }
