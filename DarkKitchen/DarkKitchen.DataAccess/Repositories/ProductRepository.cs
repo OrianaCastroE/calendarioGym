@@ -30,7 +30,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
 
     public Product? GetById(int id)
     {
-        return context.Products.Find(id);
+        return context.Products.FirstOrDefault(p => p.Id == id);
     }
 
     public IEnumerable<Product> GetProducts(ProductFilterDto filter)
