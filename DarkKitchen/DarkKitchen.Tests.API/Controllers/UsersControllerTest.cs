@@ -1,5 +1,5 @@
 using DarkKitchen.API.Controllers;
-using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Enums;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.UserDTOs;

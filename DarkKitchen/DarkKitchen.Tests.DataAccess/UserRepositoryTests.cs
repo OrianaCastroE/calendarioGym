@@ -1,6 +1,7 @@
 using DarkKitchen.DataAccess;
 using DarkKitchen.DataAccess.Repositories;
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace DarkKitchen.Tests.DataAccess;

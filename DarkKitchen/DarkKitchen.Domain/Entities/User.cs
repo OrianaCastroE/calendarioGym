@@ -1,4 +1,6 @@
-﻿namespace DarkKitchen.Domain.Entities;
+﻿using DarkKitchen.Domain.Enums;
+
+namespace DarkKitchen.Domain.Entities;
 
 public class User
 {
