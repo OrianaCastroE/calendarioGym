@@ -1,6 +1,7 @@
 ﻿using DarkKitchen.DataAccess;
 using DarkKitchen.DataAccess.Repositories;
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -160,5 +161,19 @@ public class ProductRepositoryTests
         var result = productRepository!.GetProducts(null);
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
+    }
+
+    [TestMethod]
+    public void UpdateStatus_WhenProductIsValid_ShouldUpdateProductStatusInDatabase()
+    {
+        context!.Products.Add(product!);
+        context.SaveChanges();
+
+        productRepository!.UpdateStatus(product!.Id, new ProductStatusDto(false));
+        context.SaveChanges();
+
+        var result = context.Products.FirstOrDefault(p => p.Id == product.Id);
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result.IsActive);
     }
 }
