@@ -33,7 +33,9 @@ public class PromotionRepository(AppDbContext context) : IPromotionRepository
         var query = context.Promotion.AsQueryable();
 
         if(date.HasValue)
+        {
             query = query.Where(p => p.DateFrom <= date && p.DateTo >= date);
+        }
 
         return query.ToList();
     }
