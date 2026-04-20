@@ -10,7 +10,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
 
     public void Add(Product product)
     {
-        return;
+        context.Products.Add(product);
     }
 
     public void Update(Product product)
