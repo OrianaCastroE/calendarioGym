@@ -15,13 +15,13 @@ public class RolePermissionsTest
         rolePermissions = new RolePermissions()
         {
             Role = role,
-            Permissions = new List<Permission>()
-            {
+            Permissions =
+            [
                 Permission.CreateUser,
                 Permission.UpdateUser,
                 Permission.DeleteUser,
                 Permission.GetUsers
-            }
+            ]
         };
     }
 
