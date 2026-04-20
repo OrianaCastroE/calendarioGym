@@ -136,4 +136,15 @@ public class OrderRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
     }
+
+    [TestMethod]
+    public void Save_WhenCalled_SavesChangesToDatabase()
+    {
+        context!.Orders.Add(order!);
+        orderRepository!.Save();
+
+        var result = context.Orders.FirstOrDefault(o => o.ClientId == 1);
+
+        Assert.IsNotNull(result);
+    }
 }
