@@ -20,7 +20,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
 
     public void Update(Product product)
     {
-        return;
+        context.Products.Update(product);
     }
 
     public Product? GetById(int id)
