@@ -127,4 +127,13 @@ public class OrderRepositoryTests
 
         Assert.AreEqual(1, result.Count());
     }
+
+    [TestMethod]
+    public void GetOrdersByStatus_WhenNoOrdersExist_ReturnsEmptyList()
+    {
+        var result = orderRepository!.GetOrdersByStatus(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1), null, null);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count());
+    }
 }
