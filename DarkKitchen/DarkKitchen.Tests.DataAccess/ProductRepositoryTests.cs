@@ -217,4 +217,12 @@ public class ProductRepositoryTests
         Assert.AreEqual(2, result[0].Id);
         Assert.AreEqual(1, result[1].Id);
     }
+
+    [TestMethod]
+    public void GetMostRequestedProducts_WhenNoProductsInRange_ReturnsEmptyList()
+    {
+        var dates = new DateRangeDto(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31));
+        var result = productRepository!.GetMostRequestedProducts(dates).ToList();
+        Assert.AreEqual(0, result.Count);
+    }
 }
