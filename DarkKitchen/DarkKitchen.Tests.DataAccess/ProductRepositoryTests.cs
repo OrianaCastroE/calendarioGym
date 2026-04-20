@@ -11,7 +11,7 @@ namespace DarkKitchen.Tests.DataAccess;
 public class ProductRepositoryTests
 {
     private Product? product;
-    private ProductFilterDto? filter;
+    private ProductFilterDto filter;
     private AppDbContext? context;
     private ProductRepository? productRepository;
 
@@ -154,11 +154,33 @@ public class ProductRepositoryTests
     }
 
     [TestMethod]
-    public void GetProducts_WhenFilterIsNull_ReturnsAllProducts()
+    public void GetProducts_WhenFilterIsEmpty_ReturnsAllProducts()
     {
         context!.Products.Add(product!);
         context.SaveChanges();
-        var result = productRepository!.GetProducts(null);
+        var result = productRepository!.GetProducts(new ProductFilterDto(null, null, null));
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count());
+    }
+
+    [TestMethod]
+    public void GetProducts_WhenFilterHasProductLine_ReturnsMatchingProducts()
+    {
+        context!.Products.Add(product!);
+        context.SaveChanges();
+        filter = new ProductFilterDto("SomeLine", null, null);
+        var result = productRepository!.GetProducts(filter);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count());
+    }
+
+    [TestMethod]
+    public void GetProducts_WhenFilterHasCategories_ReturnsMatchingProducts()
+    {
+        context!.Products.Add(product!);
+        context.SaveChanges();
+        filter = new ProductFilterDto(null, ["Test Category"], null);
+        var result = productRepository!.GetProducts(filter);
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
     }

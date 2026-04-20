@@ -33,28 +33,23 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         return context.Products.FirstOrDefault(p => p.Id == id);
     }
 
-    public IEnumerable<Product> GetProducts(ProductFilterDto? filter)
+    public IEnumerable<Product> GetProducts(ProductFilterDto filter)
     {
         var query = context.Products.AsQueryable();
 
-        if(filter.HasValue)
+        if(!string.IsNullOrEmpty(filter.productLine))
         {
-            var f = filter.Value;
+            query = query.Where(p => p.ProductLine == filter.productLine);
+        }
 
-            if(!string.IsNullOrEmpty(f.productLine))
-            {
-                query = query.Where(p => p.ProductLine == f.productLine);
-            }
+        if(filter.categories != null && filter.categories.Count > 0)
+        {
+            query = query.Where(p => p.Category != null && filter.categories.Contains(p.Category));
+        }
 
-            if(f.categories != null && f.categories.Count > 0)
-            {
-                query = query.Where(p => p.Category != null && f.categories.Contains(p.Category));
-            }
-
-            if(!string.IsNullOrEmpty(f.name))
-            {
-                query = query.Where(p => p.Name.Contains(f.name));
-            }
+        if(!string.IsNullOrEmpty(filter.name))
+        {
+            query = query.Where(p => p.Name.Contains(filter.name));
         }
 
         return query.ToList();
