@@ -10,6 +10,11 @@ public class ProductRepository(AppDbContext context) : IProductRepository
 
     public void Add(Product product)
     {
+        if(product == null)
+        {
+            return;
+        }
+
         context.Products.Add(product);
     }
 
