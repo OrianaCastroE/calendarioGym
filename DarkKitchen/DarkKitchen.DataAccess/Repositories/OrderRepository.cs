@@ -19,7 +19,24 @@ public class OrderRepository(AppDbContext context) : IOrderRepository
 
     public IEnumerable<Order> GetClientOrders(int clientId, DateTime? dateFrom, DateTime? dateTo, string? status)
     {
-        throw new NotImplementedException();
+        var query = context.Orders.Where(o => o.ClientId == clientId);
+
+        if(dateFrom.HasValue)
+        {
+            query = query.Where(o => o.CreatedAt >= dateFrom);
+        }
+
+        if(dateTo.HasValue)
+        {
+            query = query.Where(o => o.CreatedAt <= dateTo);
+        }
+
+        if(!string.IsNullOrEmpty(status))
+        {
+            query = query.Where(o => o.Status == status);
+        }
+
+        return query.ToList();
     }
 
     public IEnumerable<Order> GetOrdersByStatus(DateTime dateFrom, DateTime dateTo, string? address, string? status)
