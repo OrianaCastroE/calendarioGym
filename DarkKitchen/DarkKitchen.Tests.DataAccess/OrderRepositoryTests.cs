@@ -96,4 +96,15 @@ public class OrderRepositoryTests
             orderRepository!.Update(order!);
         });
     }
+
+    [TestMethod]
+    public void GetClientOrders_WhenOrdersExist_ReturnsOrders()
+    {
+        context!.Orders.Add(order!);
+        context.SaveChanges();
+
+        var result = orderRepository!.GetClientOrders(1, null, null, null);
+
+        Assert.AreEqual(1, result.Count());
+    }
 }
