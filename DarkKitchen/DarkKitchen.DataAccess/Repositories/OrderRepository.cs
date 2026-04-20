@@ -5,9 +5,11 @@ namespace DarkKitchen.DataAccess.Repositories;
 
 public class OrderRepository(AppDbContext context) : IOrderRepository
 {
+    private readonly AppDbContext context = context;
+
     public void Add(Order order)
     {
-        throw new NotImplementedException();
+        context.Orders.Add(order);
     }
 
     public Order? GetById(int id)
