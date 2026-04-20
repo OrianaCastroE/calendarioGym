@@ -70,6 +70,6 @@ public class OrderRepository(AppDbContext context) : IOrderRepository
 
     public void Save()
     {
-        throw new NotImplementedException();
+        context.SaveChanges();
     }
 }
