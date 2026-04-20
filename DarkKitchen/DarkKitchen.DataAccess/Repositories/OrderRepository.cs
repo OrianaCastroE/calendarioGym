@@ -14,7 +14,7 @@ public class OrderRepository(AppDbContext context) : IOrderRepository
 
     public Order? GetById(int id)
     {
-        throw new NotImplementedException();
+        return context.Orders.Find(id);
     }
 
     public IEnumerable<Order> GetClientOrders(int clientId, DateTime? dateFrom, DateTime? dateTo, string? status)
