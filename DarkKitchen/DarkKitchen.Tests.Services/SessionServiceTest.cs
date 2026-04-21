@@ -57,4 +57,12 @@ public class SessionServiceTest
 
         Assert.ThrowsException<UnauthorizedException>(() => sessionService!.Login(wrongPasswordDto));
     }
+
+    [TestMethod]
+    public void Login_WhenUserNotFound_ThrowsUnauthorizedException()
+    {
+        userRepositoryMock!.Setup(r => r.GetByEmail(email)).Returns((User?)null);
+
+        Assert.ThrowsException<UnauthorizedException>(() => sessionService!.Login(loginDto));
+    }
 }

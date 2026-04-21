@@ -146,4 +146,12 @@ public class OrderServiceTest
 
         Assert.ThrowsException<Exception>(() => orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto("Prepared")));
     }
+
+    [TestMethod]
+    public void CreateOrder_EmptyDoorNumber_ThrowsException()
+    {
+        validOrder = validOrder with { address = validOrder.address with { doorNumber = string.Empty } };
+
+        Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder));
+    }
 }
