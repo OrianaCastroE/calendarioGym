@@ -1,5 +1,4 @@
 using DarkKitchen.Domain.Exceptions;
-using DarkKitchen.Models.ResponseDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -7,38 +6,69 @@ namespace DarkKitchen.API.Filters;
 
 public class ExceptionFilter : IExceptionFilter
 {
+    private readonly Dictionary<Type, IActionResult> errors = new()
+    {
+        {
+            typeof(BadRequestException),
+            new ObjectResult(new
+            {
+                Message = "An error occurred."
+            })
+            {
+                StatusCode = 400
+            }
+        },
+        {
+            typeof(UnauthorizedException),
+            new ObjectResult(new
+            {
+                Message = "Unauthorized access."
+            })
+            {
+                StatusCode = 401
+            }
+        },
+        {
+            typeof(AccessDeniedException),
+            new ObjectResult(new
+            {
+                Message = "Not allowed to access this resource."
+            })
+            {
+                StatusCode = 403
+            }
+        },
+        {
+            typeof(NotFoundException),
+            new ObjectResult(new
+            {
+                Message = "Resource not found."
+            })
+            {
+                StatusCode = 404
+            }
+        }
+    };
+
     public void OnException(ExceptionContext context)
     {
-        var statusCode = 500;
-        var message = "Internal server error.";
+        var exception = context.Exception;
+        var exceptrionType = exception.GetType();
 
-        if(context.Exception is BadRequestException)
+        var error = errors.GetValueOrDefault(exceptrionType);
+        if(error == null)
         {
-            statusCode = 400;
-            message = "An error occurred.";
+            context.Result = new ObjectResult(new
+            {
+                Message = "Internal server error."
+            })
+            {
+                StatusCode = 500
+            };
         }
-
-        if(context.Exception is UnauthorizedException)
+        else
         {
-            statusCode = 401;
-            message = "Unauthorized access.";
+            context.Result = error;
         }
-
-        if(context.Exception is AccessDeniedException)
-        {
-            statusCode = 403;
-            message = "Not allowed to access this resource.";
-        }
-
-        if(context.Exception is NotFoundException)
-        {
-            statusCode = 404;
-            message = "Resource not found.";
-        }
-
-        context.Result = new ObjectResult(new ResponseDto(false, message))
-        {
-            StatusCode = statusCode
-        };
     }
 }
