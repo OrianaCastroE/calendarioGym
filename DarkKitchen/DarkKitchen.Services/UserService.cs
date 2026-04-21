@@ -15,51 +15,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void CreateUser(UserDto newUser)
     {
-        if(string.IsNullOrEmpty(newUser.name))
-        {
-            throw new NameEmptyException();
-        }
-
-        if(string.IsNullOrEmpty(newUser.surname))
-        {
-            throw new SurnameEmptyException();
-        }
-
-        if(!newUser.email.Contains('@'))
-        {
-            throw new InvalidEmailException();
-        }
-
-        if(newUser.password.Length > 25)
-        {
-            throw new PasswordTooLongException();
-        }
-
-        if(newUser.password.Length < 15)
-        {
-            throw new PasswordTooShortException();
-        }
-
-        if(!newUser.password.Any(char.IsUpper))
-        {
-            throw new PasswordMissingUppercaseException();
-        }
-
-        if(!newUser.password.Any(char.IsLower))
-        {
-            throw new PasswordMissingLowercaseException();
-        }
-
-        var specialChars = "!@#$%^&*()_+-=[]{};:,.<>?/~";
-        if(!newUser.password.Any(specialChars.Contains))
-        {
-            throw new PasswordMissingSpecialCharacterException();
-        }
-
-        if(!newUser.password.Any(char.IsDigit))
-        {
-            throw new PasswordMissingNumberException();
-        }
+        ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password);
 
         var user = new User
         {
@@ -135,6 +91,72 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void CreateUserWithRole(CreateUserDto newUser)
     {
-        throw new NotImplementedException();
+        ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password);
+
+        if(!Enum.TryParse<Role>(newUser.role, ignoreCase: true, out var role))
+        {
+            throw new BadRequestException("Invalid role.");
+        }
+
+        var user = new User
+        {
+            Name = newUser.name!,
+            Surname = newUser.surname!,
+            Email = newUser.email!,
+            Phone = newUser.phone!,
+            Password = newUser.password!,
+            Role = role,
+        };
+
+        _userRepository.Add(user);
+    }
+
+    private static void ValidateUserFields(string? name, string? surname, string? email, string? password)
+    {
+        if(string.IsNullOrEmpty(name))
+        {
+            throw new NameEmptyException();
+        }
+
+        if(string.IsNullOrEmpty(surname))
+        {
+            throw new SurnameEmptyException();
+        }
+
+        if(!email!.Contains('@'))
+        {
+            throw new InvalidEmailException();
+        }
+
+        if(password!.Length > 25)
+        {
+            throw new PasswordTooLongException();
+        }
+
+        if(password.Length < 15)
+        {
+            throw new PasswordTooShortException();
+        }
+
+        if(!password.Any(char.IsUpper))
+        {
+            throw new PasswordMissingUppercaseException();
+        }
+
+        if(!password.Any(char.IsLower))
+        {
+            throw new PasswordMissingLowercaseException();
+        }
+
+        var specialChars = "!@#$%^&*()_+-=[]{};:,.<>?/~";
+        if(!password.Any(specialChars.Contains))
+        {
+            throw new PasswordMissingSpecialCharacterException();
+        }
+
+        if(!password.Any(char.IsDigit))
+        {
+            throw new PasswordMissingNumberException();
+        }
     }
 }

@@ -66,4 +66,10 @@ public class OrderTest
     {
         Assert.AreEqual(createdAt, order!.CreatedAt);
     }
+
+    [TestMethod]
+    public void Order_UpdatedAtIsNullByDefault()
+    {
+        Assert.IsNull(order!.UpdatedAt);
+    }
 }

@@ -279,4 +279,28 @@ public class UserServiceTest
         _userRepositoryMock!
             .Verify(repository => repository.Delete(It.IsAny<User>()), Times.Never);
     }
+
+    [TestMethod]
+    public void CreateUserWithRole_WhenValidUser_ShouldCreateUser()
+    {
+        _userRepositoryMock!.Setup(repository => repository.Add(It.IsAny<User>()));
+
+        _userService!.CreateUserWithRole(new CreateUserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!", "Admin"));
+
+        _userRepositoryMock!.Verify(repository => repository.Add(It.IsAny<User>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void CreateUserWithRole_WhenInvalidRole_ShouldThrowBadRequestException()
+    {
+        Assert.ThrowsException<BadRequestException>(() =>
+            _userService!.CreateUserWithRole(new CreateUserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!", "InvalidRole")));
+    }
+
+    [TestMethod]
+    public void CreateUserWithRole_WhenInvalidName_ShouldThrowNameEmptyException()
+    {
+        Assert.ThrowsException<NameEmptyException>(() =>
+            _userService!.CreateUserWithRole(new CreateUserDto(string.Empty, "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!", "Admin")));
+    }
 }
