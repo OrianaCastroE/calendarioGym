@@ -75,7 +75,6 @@ public class UserRepositoryTests
     public void AddUser_WhenUserIsValid_AddsUserToDatabase()
     {
         _userRepository.Add(user!);
-        _context.SaveChanges();
 
         var result = _context.Users.FirstOrDefault(u => u.Email == validEmail);
 
@@ -91,7 +90,6 @@ public class UserRepositoryTests
         Assert.ThrowsException<ArgumentException>(() =>
         {
             _userRepository.Add(user!);
-            _context.SaveChanges();
         });
     }
 
@@ -102,7 +100,6 @@ public class UserRepositoryTests
         _context.SaveChanges();
 
         _userRepository.Delete(user!);
-        _context.SaveChanges();
         var result = _context.Users.FirstOrDefault(u => u.Email == validEmail);
 
         Assert.IsNull(result);
@@ -114,7 +111,6 @@ public class UserRepositoryTests
         Assert.ThrowsException<DbUpdateConcurrencyException>(() =>
         {
             _userRepository.Delete(user!);
-            _context.SaveChanges();
         });
     }
 
@@ -159,7 +155,6 @@ public class UserRepositoryTests
         user.Name = "UpdatedName";
 
         _userRepository.Update(user!);
-        _context.SaveChanges();
         var result = _context.Users.FirstOrDefault(u => u.Email == validEmail);
 
         Assert.AreEqual("UpdatedName", result.Name);
@@ -171,7 +166,6 @@ public class UserRepositoryTests
         Assert.ThrowsException<Exception>(() =>
         {
             _userRepository.Update(user!);
-            _context.SaveChanges();
         });
     }
 }
