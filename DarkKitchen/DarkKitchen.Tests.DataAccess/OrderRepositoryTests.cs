@@ -45,9 +45,8 @@ public class OrderRepositoryTests
     public void AddOrder_WhenOrderIsValid_AddsOrderToDatabase()
     {
         orderRepository!.Add(order!);
-        context!.SaveChanges();
 
-        var result = context.Orders.FirstOrDefault(o => o.ClientId == 1);
+        var result = context!.Orders.FirstOrDefault(o => o.ClientId == 1);
 
         Assert.IsNotNull(result);
         Assert.AreEqual("Pending", result.Status);
