@@ -5,9 +5,12 @@ namespace DarkKitchen.DataAccess.Repositories;
 
 public class OrderRepository(AppDbContext context) : IOrderRepository
 {
+    private readonly AppDbContext context = context;
+
     public void Add(Order order)
     {
         context.Orders.Add(order);
+        context.SaveChanges();
     }
 
     public Order? GetById(int id)
