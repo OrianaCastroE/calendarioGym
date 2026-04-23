@@ -42,9 +42,8 @@ public class PromotionRepositoryTests
     public void AddPromotion_WhenPromotionIsValid_AddsPromotionToDatabase()
     {
         promotionRepository!.Add(promotion!);
-        context!.SaveChanges();
 
-        var result = context.Promotion.FirstOrDefault(p => p.Name == "Black Friday");
+        var result = context!.Promotion.FirstOrDefault(p => p.Name == "Black Friday");
 
         Assert.IsNotNull(result);
         Assert.AreEqual("Black Friday", result.Name);
@@ -78,7 +77,6 @@ public class PromotionRepositoryTests
         promotion!.Name = "Updated Promotion";
 
         promotionRepository!.Update(promotion!);
-        context.SaveChanges();
         var result = context.Promotion.FirstOrDefault(p => p.Id == promotion.Id);
 
         Assert.AreEqual("Updated Promotion", result!.Name);
