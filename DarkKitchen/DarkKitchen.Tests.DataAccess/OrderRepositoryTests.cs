@@ -81,7 +81,6 @@ public class OrderRepositoryTests
         order!.Status = "Prepared";
 
         orderRepository!.Update(order!);
-        context.SaveChanges();
         var result = context.Orders.FirstOrDefault(o => o.Id == order.Id);
 
         Assert.AreEqual("Prepared", result!.Status);
