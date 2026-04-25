@@ -10,6 +10,6 @@ public class RolePermissionsService(IRolePermissionsRepository repository) : IRo
 
     public List<Permission> GetPermissions(Role role)
     {
-        throw new NotImplementedException();
+        return _repository.GetPermissions(role);
     }
 }
