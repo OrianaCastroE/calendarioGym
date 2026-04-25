@@ -7,6 +7,9 @@ public class RolePermissionsRepository(AppDbContext context) : IRolePermissionsR
 {
     public List<Permission> GetPermissions(Role role)
     {
-        throw new NotImplementedException();
+        return context.RolePermissions
+            .Where(rp => rp.Role == role)
+            .SelectMany(rp => rp.Permissions)
+            .ToList();
     }
 }
