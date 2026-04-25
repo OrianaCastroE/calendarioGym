@@ -8,8 +8,6 @@ public class RolePermissionsRepository(AppDbContext context) : IRolePermissionsR
     public List<Permission> GetPermissions(Role role)
     {
         return context.RolePermissions
-            .Where(rp => rp.Role == role)
-            .SelectMany(rp => rp.Permissions)
-            .ToList();
+            .FirstOrDefault(rp => rp.Role == role)?.Permissions ?? [];
     }
 }
