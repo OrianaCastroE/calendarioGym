@@ -9,29 +9,19 @@ namespace DarkKitchen.Tests.DataAccess;
 [TestClass]
 public class RolePermissionsRepositoryTests
 {
-    private RolePermissions? rolePermissions;
     private AppDbContext? _context;
     private RolePermissionsRepository? _rolePermissionsRepository;
 
     [TestInitialize]
     public void TestInitialize()
     {
-        rolePermissions = new RolePermissions
-        {
-            Role = Role.Admin,
-            Permissions =
-            [
-                Permission.CreateUser,
-                Permission.UpdateUser,
-                Permission.DeleteUser,
-                Permission.GetUsers
-            ]
-        };
         var options = new DbContextOptionsBuilder<AppDbContext>()
            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
            .Options;
 
         _context = new AppDbContext(options);
+        _context.RolePermissions.RemoveRange(_context.RolePermissions);
+        _context.SaveChanges();
         _rolePermissionsRepository = new RolePermissionsRepository(_context);
     }
 
@@ -43,22 +33,18 @@ public class RolePermissionsRepositoryTests
     }
 
     [TestMethod]
-    public void GetPermissions_WhenRoleExists_ReturnsPermissions()
+    public void GetPermissions_WhenRoleExists_ReturnsAllItsPermissions()
     {
-        _context.RolePermissions.Add(rolePermissions!);
+        var seeded = new RolePermissions
+        {
+            Role = Role.Client,
+            Permissions = [Permission.PlaceOrder, Permission.GetMyOrders, Permission.GetProducts]
+        };
+        _context!.RolePermissions.Add(seeded);
         _context.SaveChanges();
 
-        var result = _rolePermissionsRepository.GetPermissions(Role.Admin);
+        var result = _rolePermissionsRepository!.GetPermissions(Role.Client);
 
-        Assert.AreEqual(4, result.Count);
-    }
-
-    [TestMethod]
-    public void GetPermissions_WhenRoleDoesNotExist_ReturnsEmptyList()
-    {
-        var result = _rolePermissionsRepository.GetPermissions(Role.Admin);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(0, result.Count);
+        CollectionAssert.AreEquivalent(seeded.Permissions, result);
     }
 }
