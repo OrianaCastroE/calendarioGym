@@ -11,7 +11,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DarkKitchen.Services;
 
-public class SessionService(IUserRepository userRepository, IConfiguration configuration) : ISessionService
+public class SessionService(
+    IUserRepository userRepository,
+    IRolePermissionsService rolePermissionsService,
+    IConfiguration configuration) : ISessionService
 {
     public LoginResponseDto Login(LoginDto loginDto)
     {
@@ -28,12 +31,17 @@ public class SessionService(IUserRepository userRepository, IConfiguration confi
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var claims = new[]
+
+        var permissions = rolePermissionsService.GetPermissions(user.Role);
+
+        var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email!),
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
+        claims.AddRange(permissions.Select(p => new Claim("permission", p.ToString())));
+
         var token = new JwtSecurityToken(
             claims: claims,
             expires: DateTime.UtcNow.AddHours(1),
