@@ -18,7 +18,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Created("User created correctly.", null);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "CreateUser")]
     [HttpPost("admin")]
     public IActionResult CreateUserWithRole([FromBody] CreateUserDto newUser)
     {
@@ -26,7 +26,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Created("User created correctly.", null);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "UpdateUser")]
     [HttpPut]
     public IActionResult UpdateUser([FromBody] UserDto user)
     {
@@ -34,7 +34,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Ok("User updated correctly.");
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "GetUsers")]
     [HttpGet]
     public IActionResult GetUsers([FromQuery] UserFiltersDto filter)
     {
@@ -42,7 +42,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Ok(users);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "DeleteUser")]
     [HttpDelete("{email}")]
     public IActionResult DeleteUser(string email)
     {
