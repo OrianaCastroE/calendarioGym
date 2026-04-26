@@ -6,16 +6,6 @@ namespace DarkKitchen.Domain.Enums;
 public enum Permission
 {
     /// <summary>
-    /// Permission to retrieve the catalog of available products.
-    /// </summary>
-    GetProducts,
-
-    /// <summary>
-    /// Permission to retrieve the promotions currently active.
-    /// </summary>
-    GetCurrentPromotions,
-
-    /// <summary>
     /// Permission to place a new order.
     /// </summary>
     PlaceOrder,
@@ -66,6 +56,11 @@ public enum Permission
     CreateUser,
 
     /// <summary>
+    /// Permission to retrieve the list of users.
+    /// </summary>
+    GetUsers,
+
+    /// <summary>
     /// Permission to update an existing user.
     /// </summary>
     UpdateUser,
@@ -76,14 +71,19 @@ public enum Permission
     DeleteUser,
 
     /// <summary>
-    /// Permission to retrieve the list of users.
-    /// </summary>
-    GetUsers,
-
-    /// <summary>
     /// Permission to create a new product.
     /// </summary>
     CreateProduct,
+
+    /// <summary>
+    /// Permission to retrieve the catalog of available products.
+    /// </summary>
+    GetProducts,
+
+    /// <summary>
+    /// Permission to retrieve a report of the most popular products.
+    /// </summary>
+    GetMostPopularProducts,
 
     /// <summary>
     /// Permission to update an existing product.
@@ -101,6 +101,11 @@ public enum Permission
     CreatePromotion,
 
     /// <summary>
+    /// Permission to retrieve the promotions currently active.
+    /// </summary>
+    GetCurrentPromotions,
+
+    /// <summary>
     /// Permission to update an existing promotion.
     /// </summary>
     UpdatePromotion,
@@ -109,11 +114,6 @@ public enum Permission
     /// Permission to update the products of an existing promotion.
     /// </summary>
     UpdatePromotionProducts,
-
-    /// <summary>
-    /// Permission to retrieve a report of the most popular products.
-    /// </summary>
-    GetMostPopularProducts,
 
     /// <summary>
     /// Permission to retrieve the sales report.
