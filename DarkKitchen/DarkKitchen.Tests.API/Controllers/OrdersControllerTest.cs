@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using DarkKitchen.API.Controllers;
+using DarkKitchen.Domain.Enums;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.OrderDTOs;
@@ -119,8 +120,8 @@ public class OrdersControllerTest
     [TestMethod]
     public void UpdateOrderStatus_ValidStatus_ReturnsOk()
     {
-        var newStatus = new UpdateOrderStatusDto("Preparing");
-        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus));
+        var newStatus = new UpdateOrderStatusDto(nameof(OrderStatus.Prepared));
+        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus, It.IsAny<List<Permission>>()));
         var result = ordersController!.UpdateOrderStatus(1, newStatus);
         var resultObj = result as ObjectResult;
 
@@ -132,7 +133,7 @@ public class OrdersControllerTest
     public void UpdateOrderStatus_InvalidStatus_ThrowsBadRequestException()
     {
         var newStatus = new UpdateOrderStatusDto("InvalidStatus");
-        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus)).Throws(new BadRequestException("Invalid order status."));
+        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus, It.IsAny<List<Permission>>())).Throws(new BadRequestException("Invalid order status."));
 
         Assert.ThrowsException<BadRequestException>(() => ordersController!.UpdateOrderStatus(1, newStatus));
     }
@@ -140,8 +141,8 @@ public class OrdersControllerTest
     [TestMethod]
     public void UpdateOrderStatus_OrderNotFound_ThrowsNotFoundException()
     {
-        var newStatus = new UpdateOrderStatusDto("Preparing");
-        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus)).Throws(new NotFoundException("Order not found."));
+        var newStatus = new UpdateOrderStatusDto(nameof(OrderStatus.Prepared));
+        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus, It.IsAny<List<Permission>>())).Throws(new NotFoundException("Order not found."));
 
         Assert.ThrowsException<NotFoundException>(() => ordersController!.UpdateOrderStatus(1, newStatus));
     }
