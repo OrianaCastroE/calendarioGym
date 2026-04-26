@@ -36,6 +36,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.GetProducts,
                         Permission.CreatePromotion,
                         Permission.UpdatePromotion,
+                        Permission.UpdatePromotionProducts,
                         Permission.GetCurrentPromotions,
                         Permission.GetOrderDetails,
                         Permission.GetMostPopularProducts,

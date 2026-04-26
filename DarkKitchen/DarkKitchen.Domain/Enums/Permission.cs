@@ -106,6 +106,11 @@ public enum Permission
     UpdatePromotion,
 
     /// <summary>
+    /// Permission to update the products of an existing promotion.
+    /// </summary>
+    UpdatePromotionProducts,
+
+    /// <summary>
     /// Permission to retrieve a report of the most popular products.
     /// </summary>
     GetMostPopularProducts,
