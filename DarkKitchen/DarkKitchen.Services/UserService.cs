@@ -11,8 +11,6 @@ public class UserService(IUserRepository userRepository) : IUserService
 {
     private readonly IUserRepository _userRepository = userRepository;
 
-    public IUserRepository UserRepository => _userRepository;
-
     public void CreateUser(UserDto newUser)
     {
         ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password);
