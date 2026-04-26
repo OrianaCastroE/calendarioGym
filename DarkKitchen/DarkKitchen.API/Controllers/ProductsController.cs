@@ -1,3 +1,4 @@
+using DarkKitchen.Domain.Enums;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
@@ -13,7 +14,7 @@ public class ProductsController(IProductService productService) : ControllerBase
 {
     private readonly IProductService _productService = productService;
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Permission.CreateProduct))]
     [HttpPost]
     public IActionResult CreateProduct([FromBody] CreateProductDto newProduct)
     {
@@ -21,7 +22,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         return Created("Product created correctly.", null);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Permission.UpdateProduct))]
     [HttpPut]
     public IActionResult UpdateProduct([FromBody] UpdateProductDto product)
     {
@@ -29,7 +30,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         return Ok("Product updated correctly.");
     }
 
-    [Authorize(Roles = "Admin, Client")]
+    [Authorize(Policy = nameof(Permission.GetProducts))]
     [HttpGet]
     public IActionResult GetProducts([FromQuery] ProductFilterDto filter)
     {
@@ -37,7 +38,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         return Ok(products);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Permission.GetMostPopularProducts))]
     [HttpGet("most-requested")]
     public IActionResult GetMostRequestedProducts([FromQuery] DateRangeDto dates)
     {
@@ -45,6 +46,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         return Ok(products);
     }
 
+    [Authorize(Policy = nameof(Permission.UpdateProductStatus))]
     [HttpPatch("{id}")]
     public IActionResult UpdateStatus(int id, [FromBody] ProductStatusDto status)
     {

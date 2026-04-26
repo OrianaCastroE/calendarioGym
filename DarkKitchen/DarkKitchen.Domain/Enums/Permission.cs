@@ -6,16 +6,6 @@ namespace DarkKitchen.Domain.Enums;
 public enum Permission
 {
     /// <summary>
-    /// Permission to retrieve the catalog of available products.
-    /// </summary>
-    GetProducts,
-
-    /// <summary>
-    /// Permission to retrieve the promotions currently active.
-    /// </summary>
-    GetCurrentPromotions,
-
-    /// <summary>
     /// Permission to place a new order.
     /// </summary>
     PlaceOrder,
@@ -66,6 +56,11 @@ public enum Permission
     CreateUser,
 
     /// <summary>
+    /// Permission to retrieve the list of users.
+    /// </summary>
+    GetUsers,
+
+    /// <summary>
     /// Permission to update an existing user.
     /// </summary>
     UpdateUser,
@@ -76,14 +71,19 @@ public enum Permission
     DeleteUser,
 
     /// <summary>
-    /// Permission to retrieve the list of users.
-    /// </summary>
-    GetUsers,
-
-    /// <summary>
     /// Permission to create a new product.
     /// </summary>
     CreateProduct,
+
+    /// <summary>
+    /// Permission to retrieve the catalog of available products.
+    /// </summary>
+    GetProducts,
+
+    /// <summary>
+    /// Permission to retrieve a report of the most popular products.
+    /// </summary>
+    GetMostPopularProducts,
 
     /// <summary>
     /// Permission to update an existing product.
@@ -91,9 +91,19 @@ public enum Permission
     UpdateProduct,
 
     /// <summary>
+    /// Permission to update the status of a product.
+    /// </summary>
+    UpdateProductStatus,
+
+    /// <summary>
     /// Permission to create a new promotion.
     /// </summary>
     CreatePromotion,
+
+    /// <summary>
+    /// Permission to retrieve the promotions currently active.
+    /// </summary>
+    GetCurrentPromotions,
 
     /// <summary>
     /// Permission to update an existing promotion.
@@ -101,9 +111,9 @@ public enum Permission
     UpdatePromotion,
 
     /// <summary>
-    /// Permission to retrieve a report of the most popular products.
+    /// Permission to update the products of an existing promotion.
     /// </summary>
-    GetMostPopularProducts,
+    UpdatePromotionProducts,
 
     /// <summary>
     /// Permission to retrieve the sales report.

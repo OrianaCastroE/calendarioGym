@@ -1,4 +1,6 @@
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Enums;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Models.OrderDTOs;
 using DarkKitchen.Services;
@@ -40,7 +42,6 @@ public class OrderServiceTest
         {
             Id = 1,
             ClientId = 1,
-            Status = "Pending",
             CreatedAt = DateTime.Now,
             Subtotal = 200,
             ShippingCost = 10,
@@ -129,22 +130,91 @@ public class OrderServiceTest
     }
 
     [TestMethod]
-    public void UpdateOrderStatus_ValidData_StatusUpdated()
+    public void UpdateOrderStatus_ToPrepared_StatusUpdated()
     {
         orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
         orderRepositoryMock.Setup(r => r.Update(orderEntity!));
 
-        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto("Prepared"));
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Prepared)), [Permission.SetOrderStatusToPrepared]);
 
         orderRepositoryMock!.Verify(r => r.Update(It.IsAny<Order>()), Times.Once);
     }
 
     [TestMethod]
-    public void UpdateOrderStatus_OrderNotFound_ThrowsException()
+    public void UpdateOrderStatus_ToCanceled_StatusUpdated()
+    {
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+        orderRepositoryMock.Setup(r => r.Update(orderEntity!));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Canceled)), [Permission.SetOrderStatusToCanceled]);
+
+        orderRepositoryMock!.Verify(r => r.Update(It.IsAny<Order>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_ToOnItsWay_StatusUpdated()
+    {
+        orderEntity!.Status = nameof(OrderStatus.Prepared);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+        orderRepositoryMock.Setup(r => r.Update(orderEntity!));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.OnItsWay)), [Permission.SetOrderStatusToOnItsWay]);
+
+        orderRepositoryMock!.Verify(r => r.Update(It.IsAny<Order>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_ToDelivered_StatusUpdated()
+    {
+        orderEntity!.Status = nameof(OrderStatus.OnItsWay);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+        orderRepositoryMock.Setup(r => r.Update(orderEntity!));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Delivered)), [Permission.SetOrderStatusToDelivered]);
+
+        orderRepositoryMock!.Verify(r => r.Update(It.IsAny<Order>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_ToNotDelivered_StatusUpdated()
+    {
+        orderEntity!.Status = nameof(OrderStatus.OnItsWay);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+        orderRepositoryMock.Setup(r => r.Update(orderEntity!));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.NotDelivered)), [Permission.SetOrderStatusToNotDelivered]);
+
+        orderRepositoryMock!.Verify(r => r.Update(It.IsAny<Order>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_InvalidStatus_ThrowsBadRequestException()
+    {
+        Assert.ThrowsException<BadRequestException>(() =>
+            orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto("NotAStatus"), [Permission.SetOrderStatusToPrepared]));
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_StatusWithoutMappedPermission_ThrowsBadRequestException()
+    {
+        Assert.ThrowsException<BadRequestException>(() =>
+            orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Pending)), [Permission.SetOrderStatusToPrepared]));
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_UserMissingRequiredPermission_ThrowsAccessDeniedException()
+    {
+        Assert.ThrowsException<AccessDeniedException>(() =>
+            orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Prepared)), [Permission.SetOrderStatusToCanceled]));
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_OrderNotFound_ThrowsNotFoundException()
     {
         orderRepositoryMock!.Setup(r => r.GetById(1)).Returns((Order?)null);
 
-        Assert.ThrowsException<Exception>(() => orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto("Prepared")));
+        Assert.ThrowsException<NotFoundException>(() =>
+            orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Prepared)), [Permission.SetOrderStatusToPrepared]));
     }
 
     [TestMethod]

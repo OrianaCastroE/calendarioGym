@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using DarkKitchen.Domain.Enums;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.OrderDTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +13,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
 {
     private readonly IOrderService _orderService = orderService;
 
-    [Authorize(Roles = "Client")]
+    [Authorize(Policy = nameof(Permission.PlaceOrder))]
     [HttpPost]
     public IActionResult CreateOrder([FromBody] OrderDto newOrder)
     {
@@ -20,7 +21,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Created(string.Empty, order);
     }
 
-    [Authorize(Roles = "Client")]
+    [Authorize(Policy = nameof(Permission.GetMyOrders))]
     [HttpGet("client")]
     public IActionResult GetClientOrders([FromQuery] OrderFiltersDto filter)
     {
@@ -29,7 +30,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(orders);
     }
 
-    [Authorize(Roles = "Dispatcher")]
+    [Authorize(Policy = nameof(Permission.GetOrdersByStatus))]
     [HttpGet]
     public IActionResult GetOrdersByStatus([FromQuery] OrderFilterByStatusDto filter)
     {
@@ -37,7 +38,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(orders);
     }
 
-    [Authorize(Roles = "Admin, Dispatcher")]
+    [Authorize(Policy = nameof(Permission.GetOrderDetails))]
     [HttpGet("{orderId}")]
     public IActionResult GetOrderById(int orderId)
     {
@@ -45,12 +46,14 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(order);
     }
 
-    [Authorize(Roles = "Admin, Dispatcher")]
+    [Authorize]
     [HttpPatch("{orderId}/status")]
     public IActionResult UpdateOrderStatus(int orderId, [FromBody] UpdateOrderStatusDto newStatus)
     {
-        // TODO: Add role validation in service layer to ensure only allowed roles can update to certain statuses
-        _orderService.UpdateOrderStatus(orderId, newStatus);
+        var permissions = User.FindAll("permission")
+            .Select(c => Enum.Parse<Permission>(c.Value))
+            .ToList();
+        _orderService.UpdateOrderStatus(orderId, newStatus, permissions);
         return Ok("Order status updated.");
     }
 }
