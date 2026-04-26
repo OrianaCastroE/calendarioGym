@@ -28,11 +28,11 @@ public class UsersControllerTest
         userController = new UsersController(userServiceMock.Object);
         users =
         [
-            new UserResponseDto(1, "Name", "Surname", validEmail, validPhone, Role.Client.ToString())
+            new UserResponseDto(1, "Name", "Surname", validEmail, validPhone, nameof(Role.Client))
         ];
         validUser = new UserDto("Name", "Surname", validEmail, validPhone, password);
         updatedUser = new UserDto("UpdatedName", "UpdatedSurname", validEmail, validPhone, password);
-        validAdminUser = new CreateUserDto("Name", "Surname", validEmail, validPhone, password, Role.Admin.ToString());
+        validAdminUser = new CreateUserDto("Name", "Surname", validEmail, validPhone, password, nameof(Role.Admin));
     }
 
     [TestMethod]

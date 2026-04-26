@@ -1,3 +1,5 @@
+using DarkKitchen.Domain.Enums;
+
 namespace DarkKitchen.Domain.Entities;
 
 public class Order
@@ -8,7 +10,7 @@ public class Order
     public string Street { get; set; } = string.Empty;
     public string DoorNumber { get; set; } = string.Empty;
     public string? Apartment { get; set; }
-    public string Status { get; set; } = "Pending";
+    public string Status { get; set; } = nameof(OrderStatus.Pending);
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public decimal Subtotal { get; set; }
