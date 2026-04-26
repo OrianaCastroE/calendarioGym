@@ -1,4 +1,5 @@
-﻿using DarkKitchen.Domain.Interfaces.Service;
+﻿using DarkKitchen.Domain.Enums;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.PromotionDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ public class PromotionsController(IPromotionService promotionService) : Controll
 {
     private readonly IPromotionService _promotionService = promotionService;
 
-    [Authorize(Policy = "CreatePromotion")]
+    [Authorize(Policy = nameof(Permission.CreatePromotion))]
     [HttpPost]
     public IActionResult CreatePromotion([FromBody] PromotionDto newPromotion)
     {
@@ -19,7 +20,7 @@ public class PromotionsController(IPromotionService promotionService) : Controll
         return Created(string.Empty, newPromotion);
     }
 
-    [Authorize(Policy = "UpdatePromotion")]
+    [Authorize(Policy = nameof(Permission.UpdatePromotion))]
     [HttpPut("{id}")]
     public IActionResult UpdatePromotion(int id, [FromBody] PromotionDto updatedPromotion)
     {
@@ -27,7 +28,7 @@ public class PromotionsController(IPromotionService promotionService) : Controll
         return Ok("Promotion updated correctly.");
     }
 
-    [Authorize(Policy = "UpdatePromotionProducts")]
+    [Authorize(Policy = nameof(Permission.UpdatePromotionProducts))]
     [HttpPut("{id}/products")]
     public IActionResult UpdatePromotionProducts(int id, [FromBody] UpdatePromotionProductsDto dto)
     {
@@ -35,7 +36,7 @@ public class PromotionsController(IPromotionService promotionService) : Controll
         return Ok("Promotion products updated correctly.");
     }
 
-    [Authorize(Policy = "GetCurrentPromotions")]
+    [Authorize(Policy = nameof(Permission.GetCurrentPromotions))]
     [HttpGet]
     public IActionResult GetPromotions([FromQuery] PromotionFiltersDto filter)
     {

@@ -13,7 +13,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
 {
     private readonly IOrderService _orderService = orderService;
 
-    [Authorize(Policy = "PlaceOrder")]
+    [Authorize(Policy = nameof(Permission.PlaceOrder))]
     [HttpPost]
     public IActionResult CreateOrder([FromBody] OrderDto newOrder)
     {
@@ -21,7 +21,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Created(string.Empty, order);
     }
 
-    [Authorize(Policy = "GetMyOrders")]
+    [Authorize(Policy = nameof(Permission.GetMyOrders))]
     [HttpGet("client")]
     public IActionResult GetClientOrders([FromQuery] OrderFiltersDto filter)
     {
@@ -30,7 +30,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(orders);
     }
 
-    [Authorize(Policy = "GetOrdersByStatus")]
+    [Authorize(Policy = nameof(Permission.GetOrdersByStatus))]
     [HttpGet]
     public IActionResult GetOrdersByStatus([FromQuery] OrderFilterByStatusDto filter)
     {
@@ -38,7 +38,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(orders);
     }
 
-    [Authorize(Policy = "GetOrderDetails")]
+    [Authorize(Policy = nameof(Permission.GetOrderDetails))]
     [HttpGet("{orderId}")]
     public IActionResult GetOrderById(int orderId)
     {

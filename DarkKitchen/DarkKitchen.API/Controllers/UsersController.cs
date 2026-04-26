@@ -1,4 +1,5 @@
-﻿using DarkKitchen.Domain.Interfaces.Service;
+﻿using DarkKitchen.Domain.Enums;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.UserDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Created("User created correctly.", null);
     }
 
-    [Authorize(Policy = "CreateUser")]
+    [Authorize(Policy = nameof(Permission.CreateUser))]
     [HttpPost("admin")]
     public IActionResult CreateUserWithRole([FromBody] CreateUserDto newUser)
     {
@@ -26,7 +27,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Created("User created correctly.", null);
     }
 
-    [Authorize(Policy = "UpdateUser")]
+    [Authorize(Policy = nameof(Permission.UpdateUser))]
     [HttpPut]
     public IActionResult UpdateUser([FromBody] UserDto user)
     {
@@ -34,7 +35,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Ok("User updated correctly.");
     }
 
-    [Authorize(Policy = "GetUsers")]
+    [Authorize(Policy = nameof(Permission.GetUsers))]
     [HttpGet]
     public IActionResult GetUsers([FromQuery] UserFiltersDto filter)
     {
@@ -42,7 +43,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Ok(users);
     }
 
-    [Authorize(Policy = "DeleteUser")]
+    [Authorize(Policy = nameof(Permission.DeleteUser))]
     [HttpDelete("{email}")]
     public IActionResult DeleteUser(string email)
     {
