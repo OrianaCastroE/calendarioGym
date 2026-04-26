@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using DarkKitchen.Domain.Enums;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.OrderDTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -45,12 +46,14 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         return Ok(order);
     }
 
-    [Authorize(Roles = "Admin, Dispatcher")]
+    [Authorize]
     [HttpPatch("{orderId}/status")]
     public IActionResult UpdateOrderStatus(int orderId, [FromBody] UpdateOrderStatusDto newStatus)
     {
-        // TODO: Add role validation in service layer to ensure only allowed roles can update to certain statuses
-        _orderService.UpdateOrderStatus(orderId, newStatus);
+        var permissions = User.FindAll("permission")
+            .Select(c => Enum.Parse<Permission>(c.Value))
+            .ToList();
+        _orderService.UpdateOrderStatus(orderId, newStatus, permissions);
         return Ok("Order status updated.");
     }
 }
