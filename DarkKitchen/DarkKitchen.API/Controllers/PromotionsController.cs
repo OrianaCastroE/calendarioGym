@@ -11,7 +11,7 @@ public class PromotionsController(IPromotionService promotionService) : Controll
 {
     private readonly IPromotionService _promotionService = promotionService;
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "CreatePromotion")]
     [HttpPost]
     public IActionResult CreatePromotion([FromBody] PromotionDto newPromotion)
     {
@@ -19,7 +19,7 @@ public class PromotionsController(IPromotionService promotionService) : Controll
         return Created(string.Empty, newPromotion);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "UpdatePromotion")]
     [HttpPut("{id}")]
     public IActionResult UpdatePromotion(int id, [FromBody] PromotionDto updatedPromotion)
     {
@@ -27,7 +27,7 @@ public class PromotionsController(IPromotionService promotionService) : Controll
         return Ok("Promotion updated correctly.");
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "UpdatePromotionProducts")]
     [HttpPut("{id}/products")]
     public IActionResult UpdatePromotionProducts(int id, [FromBody] UpdatePromotionProductsDto dto)
     {
@@ -35,7 +35,7 @@ public class PromotionsController(IPromotionService promotionService) : Controll
         return Ok("Promotion products updated correctly.");
     }
 
-    [Authorize(Roles = "Admin, Client")]
+    [Authorize(Policy = "GetCurrentPromotions")]
     [HttpGet]
     public IActionResult GetPromotions([FromQuery] PromotionFiltersDto filter)
     {
