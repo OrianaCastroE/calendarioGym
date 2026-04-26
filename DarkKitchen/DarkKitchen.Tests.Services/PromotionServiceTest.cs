@@ -88,6 +88,7 @@ public class PromotionServiceTest
     [TestMethod]
     public void UpdatePromotionProducts_ValidData_ProductsUpdated()
     {
+        promotionEntity!.Products = [new Product { Id = 1 }];
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns(promotionEntity!);
         promotionRepositoryMock!.Setup(r => r.Update(It.IsAny<Promotion>()));
 

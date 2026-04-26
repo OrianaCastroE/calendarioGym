@@ -47,4 +47,12 @@ public class RolePermissionsRepositoryTests
 
         CollectionAssert.AreEquivalent(seeded.Permissions, result);
     }
+
+    [TestMethod]
+    public void GetPermissions_WhenRoleHasNoPermissions_ReturnsEmpty()
+    {
+        var result = _rolePermissionsRepository!.GetPermissions(Role.Admin);
+
+        Assert.AreEqual(0, result.Count);
+    }
 }

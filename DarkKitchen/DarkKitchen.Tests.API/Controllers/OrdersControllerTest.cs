@@ -25,7 +25,11 @@ public class OrdersControllerTest
         orderServiceMock = new Mock<IOrderService>(MockBehavior.Strict);
         ordersController = new OrdersController(orderServiceMock.Object);
 
-        var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, "1") };
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, "1"),
+            new Claim("permission", nameof(Permission.SetOrderStatusToPrepared))
+        };
         var identity = new ClaimsIdentity(claims);
         var claimsPrincipal = new ClaimsPrincipal(identity);
         ordersController.ControllerContext = new ControllerContext
