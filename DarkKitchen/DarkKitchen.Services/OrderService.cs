@@ -1,4 +1,6 @@
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Enums;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.OrderDTOs;
@@ -68,12 +70,32 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.ShippingCost, order.Total, []);
     }
 
-    public void UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus)
+    public void UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus, List<Permission> userPermissions)
     {
-        var order = orderRepository.GetById(orderId)
-            ?? throw new Exception("Order not found.");
+        if(!Enum.TryParse<OrderStatus>(newStatus.status, out var status))
+        {
+            throw new BadRequestException("Invalid order status.");
+        }
 
-        order.Status = newStatus.status!;
+        var requiredPermission = status switch
+        {
+            OrderStatus.Prepared => Permission.SetOrderStatusToPrepared,
+            OrderStatus.Canceled => Permission.SetOrderStatusToCanceled,
+            OrderStatus.OnItsWay => Permission.SetOrderStatusToOnItsWay,
+            OrderStatus.Delivered => Permission.SetOrderStatusToDelivered,
+            OrderStatus.NotDelivered => Permission.SetOrderStatusToNotDelivered,
+            _ => throw new BadRequestException("Invalid order status.")
+        };
+
+        if(!userPermissions.Contains(requiredPermission))
+        {
+            throw new AccessDeniedException("User does not have permission to set this order status.");
+        }
+
+        var order = orderRepository.GetById(orderId)
+            ?? throw new NotFoundException("Order not found.");
+
+        order.Status = status.ToString();
 
         orderRepository.Update(order);
     }
