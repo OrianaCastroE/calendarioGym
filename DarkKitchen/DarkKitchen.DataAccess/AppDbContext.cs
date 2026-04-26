@@ -32,6 +32,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.GetUsers,
                         Permission.CreateProduct,
                         Permission.UpdateProduct,
+                        Permission.UpdateProductStatus,
                         Permission.GetProducts,
                         Permission.CreatePromotion,
                         Permission.UpdatePromotion,

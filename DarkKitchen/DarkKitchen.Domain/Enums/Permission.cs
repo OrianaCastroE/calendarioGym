@@ -91,6 +91,11 @@ public enum Permission
     UpdateProduct,
 
     /// <summary>
+    /// Permission to update the status of a product.
+    /// </summary>
+    UpdateProductStatus,
+
+    /// <summary>
     /// Permission to create a new promotion.
     /// </summary>
     CreatePromotion,
