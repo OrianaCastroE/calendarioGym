@@ -238,4 +238,17 @@ public class OrderServiceTest
         Assert.AreEqual(0, result.months.Count);
         Assert.AreEqual(0, result.total);
     }
+
+    [TestMethod]
+    public void GetSalesReport_ValidData_ReturnsReport()
+    {
+        var user = new User { Id = 1, Name = "validName", Surname = "validSurname", Email = "validEmail@gmail.com", Phone = "099123456", Password = "validPassword", Role = Role.Client };
+        orderRepositoryMock!.Setup(r => r.GetAll()).Returns([orderEntity!]);
+        userRepositoryMock!.Setup(r => r.GetUsers(null, null)).Returns([user]);
+
+        var result = orderService!.GetSalesReport();
+
+        Assert.AreEqual(1, result.months.Count);
+        Assert.AreEqual("validName validSurname", result.months[0].lines[0].clientName);
+    }
 }
