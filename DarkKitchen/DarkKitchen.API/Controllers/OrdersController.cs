@@ -56,4 +56,12 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         _orderService.UpdateOrderStatus(orderId, newStatus, permissions);
         return Ok("Order status updated.");
     }
+
+    [Authorize(Policy = nameof(Permission.GetSalesReport))]
+    [HttpGet("sales-report")]
+    public IActionResult GetSalesReport()
+    {
+        var report = _orderService.GetSalesReport();
+        return Ok(report);
+    }
 }
