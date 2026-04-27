@@ -118,5 +118,5 @@ public enum Permission
     /// <summary>
     /// Permission to retrieve the sales report.
     /// </summary>
-    GetSellsReport
+    GetSalesReport
 }
