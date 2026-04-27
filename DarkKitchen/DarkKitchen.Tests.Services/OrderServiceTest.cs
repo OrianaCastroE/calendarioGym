@@ -224,4 +224,13 @@ public class OrderServiceTest
 
         Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder));
     }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromPendingToOnItsWay_ThrowsBadRequestException()
+    {
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+
+        Assert.ThrowsException<BadRequestException>(() =>
+            orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.OnItsWay)), [Permission.SetOrderStatusToOnItsWay]));
+    }
 }
