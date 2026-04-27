@@ -188,4 +188,16 @@ public class OrderRepositoryTests
 
         Assert.AreEqual(1, result.Count());
     }
+
+    [TestMethod]
+    public void GetAll_WhenOrdersExist_ReturnsAllOrders()
+    {
+        context!.Orders.Add(order!);
+        context.SaveChanges();
+
+        var result = orderRepository!.GetAll().ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(1, result[0].ClientId);
+    }
 }
