@@ -12,6 +12,7 @@ namespace DarkKitchen.Tests.Services;
 public class OrderServiceTest
 {
     private Mock<IOrderRepository>? orderRepositoryMock;
+    private Mock<IUserRepository>? userRepositoryMock;
     private Mock<IProductRepository>? productRepositoryMock;
     private Mock<IPromotionRepository>? promotionRepositoryMock;
     private OrderService? orderService;
@@ -23,9 +24,10 @@ public class OrderServiceTest
     public void Setup()
     {
         orderRepositoryMock = new Mock<IOrderRepository>(MockBehavior.Strict);
+        userRepositoryMock = new Mock<IUserRepository>(MockBehavior.Strict);
         productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
         promotionRepositoryMock = new Mock<IPromotionRepository>(MockBehavior.Strict);
-        orderService = new OrderService(orderRepositoryMock.Object);
+        orderService = new OrderService(orderRepositoryMock.Object, userRepositoryMock.Object);
 
         productEntity = new Product()
         {
@@ -223,5 +225,17 @@ public class OrderServiceTest
         validOrder = validOrder with { address = validOrder.address with { doorNumber = string.Empty } };
 
         Assert.ThrowsException<Exception>(() => orderService!.CreateOrder(validOrder));
+    }
+
+    [TestMethod]
+    public void GetSalesReport_NoOrders_ReturnsEmptyReport()
+    {
+        orderRepositoryMock!.Setup(r => r.GetAll()).Returns([]);
+        userRepositoryMock!.Setup(r => r.GetUsers(null, null)).Returns([]);
+
+        var result = orderService!.GetSalesReport();
+
+        Assert.AreEqual(0, result.months.Count);
+        Assert.AreEqual(0m, result.total);
     }
 }
