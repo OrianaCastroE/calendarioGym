@@ -96,6 +96,26 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
         var order = orderRepository.GetById(orderId)
             ?? throw new NotFoundException("Order not found.");
 
+        if(!Enum.TryParse<OrderStatus>(order.Status, out var currentStatus))
+        {
+            throw new BadRequestException("Invalid current order status.");
+        }
+
+        var validTransitions = new Dictionary<OrderStatus, List<OrderStatus>>
+    {
+        { OrderStatus.Pending, [OrderStatus.Prepared, OrderStatus.Canceled] },
+        { OrderStatus.Prepared, [OrderStatus.OnItsWay] },
+        { OrderStatus.OnItsWay, [OrderStatus.Delivered, OrderStatus.NotDelivered] },
+        { OrderStatus.Canceled, [] },
+        { OrderStatus.Delivered, [] },
+        { OrderStatus.NotDelivered, [] }
+    };
+
+        if(!validTransitions[currentStatus].Contains(status))
+        {
+            throw new BadRequestException($"Cannot change order status from {currentStatus} to {status}.");
+        }
+
         order.Status = status.ToString();
 
         orderRepository.Update(order);
