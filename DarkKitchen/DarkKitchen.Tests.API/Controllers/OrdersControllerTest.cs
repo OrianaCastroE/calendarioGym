@@ -150,4 +150,17 @@ public class OrdersControllerTest
 
         Assert.ThrowsException<NotFoundException>(() => ordersController!.UpdateOrderStatus(1, newStatus));
     }
+
+    [TestMethod]
+    public void GetSalesReport_ValidData_ReturnsOk()
+    {
+        var report = new SalesReportDto([], 0);
+        orderServiceMock!.Setup(s => s.GetSalesReport()).Returns(report);
+
+        var result = ordersController!.GetSalesReport();
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
+    }
 }
