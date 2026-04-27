@@ -291,4 +291,14 @@ public class OrderServiceTest
         Assert.ThrowsException<BadRequestException>(() =>
             orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Canceled)), [Permission.SetOrderStatusToCanceled]));
     }
+
+    [TestMethod]
+    public void UpdateOrderStatus_InvalidCurrentStatus_ThrowsBadRequestException()
+    {
+        orderEntity!.Status = "InvalidStatus";
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+
+        Assert.ThrowsException<BadRequestException>(() =>
+            orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Prepared)), [Permission.SetOrderStatusToPrepared]));
+    }
 }
