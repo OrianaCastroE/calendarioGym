@@ -10,7 +10,8 @@ public static class DatabaseExtensions
     public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+            providerOptions => providerOptions.EnableRetryOnFailure()));
         return services;
     }
 }
