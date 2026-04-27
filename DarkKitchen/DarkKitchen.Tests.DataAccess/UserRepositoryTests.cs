@@ -72,6 +72,25 @@ public class UserRepositoryTests
     }
 
     [TestMethod]
+    public void GetById_WhenUserExists_ReturnsUser()
+    {
+        _context.Users.Add(user!);
+        _context.SaveChanges();
+
+        var result = _userRepository.GetById(user!.Id);
+
+        Assert.AreEqual(validEmail, result!.Email);
+    }
+
+    [TestMethod]
+    public void GetById_WhenUserDoesNotExist_ReturnsNull()
+    {
+        var result = _userRepository.GetById(999);
+
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
     public void AddUser_WhenUserIsValid_AddsUserToDatabase()
     {
         _userRepository.Add(user!);
