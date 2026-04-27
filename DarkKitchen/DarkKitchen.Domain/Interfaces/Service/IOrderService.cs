@@ -10,4 +10,5 @@ public interface IOrderService
     public List<OrderResponseDto> GetOrdersByStatus(OrderFilterByStatusDto filter);
     public OrderResponseDto GetOrderById(int orderId);
     public void UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus, List<Permission> userPermissions);
+    public SalesReportDto GetSalesReport();
 }

@@ -40,7 +40,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.GetCurrentPromotions,
                         Permission.GetOrderDetails,
                         Permission.GetMostPopularProducts,
-                        Permission.GetSellsReport
+                        Permission.GetSalesReport
                     ]
                 },
                 new RolePermissions
