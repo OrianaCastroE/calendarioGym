@@ -7,9 +7,10 @@ using DarkKitchen.Models.OrderDTOs;
 
 namespace DarkKitchen.Services;
 
-public class OrderService(IOrderRepository orderRepository) : IOrderService
+public class OrderService(IOrderRepository orderRepository, IUserRepository userRepository) : IOrderService
 {
     private readonly IOrderRepository orderRepository = orderRepository;
+    private readonly IUserRepository userRepository = userRepository;
 
     public OrderResponseDto CreateOrder(OrderDto newOrder)
     {
@@ -98,5 +99,18 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         order.Status = status.ToString();
 
         orderRepository.Update(order);
+    }
+
+    public SalesReportDto GetSalesReport()
+    {
+        var orders = orderRepository.GetAll();
+        var usersById = userRepository.GetUsers(null, null).ToDictionary(u => u.Id);
+
+        var months = orders
+            .GroupBy(o => new { o.CreatedAt.Year, o.CreatedAt.Month })
+            .Select(g => new MonthlySalesDto(g.Key.Year, g.Key.Month, [], 0))
+            .ToList();
+
+        return new SalesReportDto(months, 0);
     }
 }

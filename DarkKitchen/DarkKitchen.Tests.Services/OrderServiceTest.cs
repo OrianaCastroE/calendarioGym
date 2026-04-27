@@ -236,6 +236,6 @@ public class OrderServiceTest
         var result = orderService!.GetSalesReport();
 
         Assert.AreEqual(0, result.months.Count);
-        Assert.AreEqual(0m, result.total);
+        Assert.AreEqual(0, result.total);
     }
 }
