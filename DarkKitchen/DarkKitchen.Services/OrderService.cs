@@ -134,10 +134,10 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
             var lines = new List<ClientSalesLineDto>();
             decimal monthTotal = 0;
 
-            foreach(var line in monthEntry.Value.OrderBy(l => l.Key))
+            foreach(var clientEntry in monthEntry.Value.OrderBy(c => c.Key))
             {
-                lines.Add(new ClientSalesLineDto(line.Key, line.Value));
-                monthTotal += line.Value;
+                lines.Add(new ClientSalesLineDto(clientEntry.Key, clientEntry.Value));
+                monthTotal += clientEntry.Value;
             }
 
             months.Add(new MonthlySalesDto(monthEntry.Key.Year, monthEntry.Key.Month, lines, monthTotal));
