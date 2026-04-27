@@ -29,7 +29,7 @@ public class ProductControllerTest
         productServiceMock = new Mock<IProductService>(MockBehavior.Strict);
         productController = new ProductsController(productServiceMock.Object);
 
-        validProduct = new UpdateProductDto(validProductId, null, validProductName, validProductDescription, null, validCategory, null, validImageUrl, isActive);
+        validProduct = new UpdateProductDto(validProductId, null, validProductName, validProductDescription, null, validCategory, null, validImageUrl, isActive, 0);
 
         validCreateProduct = new CreateProductDto(null, validProductName, validProductDescription, null, validCategory, null, validImageUrl);
     }

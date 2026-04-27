@@ -84,7 +84,7 @@ public class ProductService(IProductRepository repository) : IProductService
             throw new NotFoundException("No products found.");
         }
 
-        return _repository.GetProducts(filter).Select(p => new UpdateProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive));
+        return _repository.GetProducts(filter).Select(p => new UpdateProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive, p.UnitsSold));
     }
 
     public IEnumerable<UpdateProductDto> GetMostRequestedProducts(DateRangeDto dates)
@@ -96,7 +96,7 @@ public class ProductService(IProductRepository repository) : IProductService
             throw new NotFoundException("No products found.");
         }
 
-        return products.Select(p => new UpdateProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive));
+        return products.Select(p => new UpdateProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive, p.UnitsSold));
     }
 
     public void UpdateStatus(int id, ProductStatusDto status)
