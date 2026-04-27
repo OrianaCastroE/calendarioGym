@@ -87,6 +87,18 @@ public class UserService(IUserRepository userRepository) : IUserService
         _userRepository.Delete(user);
     }
 
+    public UserResponseDto? GetUserById(int id)
+    {
+        User? user = _userRepository.GetById(id);
+
+        if(user == null)
+        {
+            return null;
+        }
+
+        return new UserResponseDto(user.Id, user.Name, user.Surname, user.Email, user.Phone, user.Role.ToString());
+    }
+
     public void CreateUserWithRole(CreateUserDto newUser)
     {
         ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password);
