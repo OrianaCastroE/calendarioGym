@@ -108,9 +108,19 @@ public class OrderService(IOrderRepository orderRepository, IUserRepository user
 
         var months = orders
             .GroupBy(o => new { o.CreatedAt.Year, o.CreatedAt.Month })
-            .Select(g => new MonthlySalesDto(g.Key.Year, g.Key.Month, [], 0))
+            .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month)
+            .Select(g => new MonthlySalesDto(
+                g.Key.Year,
+                g.Key.Month,
+                g.GroupBy(o => o.ClientId)
+                    .Select(cg => new ClientSalesLineDto(
+                        $"{usersById[cg.Key].Name} {usersById[cg.Key].Surname}",
+                        cg.Sum(o => o.Total)))
+                    .OrderBy(l => l.clientName)
+                    .ToList(),
+                g.Sum(o => o.Total)))
             .ToList();
 
-        return new SalesReportDto(months, 0);
+        return new SalesReportDto(months, months.Sum(m => m.total));
     }
 }
