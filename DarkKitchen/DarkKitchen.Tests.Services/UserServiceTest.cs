@@ -303,4 +303,29 @@ public class UserServiceTest
         Assert.ThrowsException<NameEmptyException>(() =>
             _userService!.CreateUserWithRole(new CreateUserDto(string.Empty, "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!", "Admin")));
     }
+
+    [TestMethod]
+    public void GetUserById_WhenUserExists_ShouldReturnUser()
+    {
+        _userRepositoryMock!
+            .Setup(repository => repository.GetById(1))
+            .Returns(_user!);
+
+        var result = _userService!.GetUserById(1);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(_user!.Name, result.Value.name);
+    }
+
+    [TestMethod]
+    public void GetUserById_WhenUserDoesNotExist_ShouldReturnNull()
+    {
+        _userRepositoryMock!
+            .Setup(repository => repository.GetById(999))
+            .Returns((User?)null);
+
+        var result = _userService!.GetUserById(999);
+
+        Assert.IsNull(result);
+    }
 }
