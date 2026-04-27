@@ -2,7 +2,9 @@ using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Enums;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.OrderDTOs;
+using DarkKitchen.Models.UserDTOs;
 using DarkKitchen.Services;
 using Moq;
 
@@ -12,6 +14,7 @@ namespace DarkKitchen.Tests.Services;
 public class OrderServiceTest
 {
     private Mock<IOrderRepository>? orderRepositoryMock;
+    private Mock<IUserService>? userServiceMock;
     private Mock<IProductRepository>? productRepositoryMock;
     private Mock<IPromotionRepository>? promotionRepositoryMock;
     private OrderService? orderService;
@@ -23,9 +26,10 @@ public class OrderServiceTest
     public void Setup()
     {
         orderRepositoryMock = new Mock<IOrderRepository>(MockBehavior.Strict);
+        userServiceMock = new Mock<IUserService>(MockBehavior.Strict);
         productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
         promotionRepositoryMock = new Mock<IPromotionRepository>(MockBehavior.Strict);
-        orderService = new OrderService(orderRepositoryMock.Object);
+        orderService = new OrderService(orderRepositoryMock.Object, userServiceMock.Object);
 
         productEntity = new Product()
         {
@@ -300,5 +304,29 @@ public class OrderServiceTest
 
         Assert.ThrowsException<BadRequestException>(() =>
             orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Prepared)), [Permission.SetOrderStatusToPrepared]));
+    }
+
+    [TestMethod]
+    public void GetSalesReport_NoOrders_ReturnsEmptyReport()
+    {
+        orderRepositoryMock!.Setup(r => r.GetAll()).Returns([]);
+
+        var result = orderService!.GetSalesReport();
+
+        Assert.AreEqual(0, result.months.Count);
+        Assert.AreEqual(0, result.total);
+    }
+
+    [TestMethod]
+    public void GetSalesReport_ValidData_ReturnsReport()
+    {
+        var user = new UserResponseDto(1, "validName", "validSurname", "validEmail@gmail.com", "099123456", "Client");
+        orderRepositoryMock!.Setup(r => r.GetAll()).Returns([orderEntity!]);
+        userServiceMock!.Setup(s => s.GetUserById(1)).Returns(user);
+
+        var result = orderService!.GetSalesReport();
+
+        Assert.AreEqual(1, result.months.Count);
+        Assert.AreEqual("validName validSurname", result.months[0].lines[0].clientName);
     }
 }

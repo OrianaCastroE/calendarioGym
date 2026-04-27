@@ -7,9 +7,10 @@ using DarkKitchen.Models.OrderDTOs;
 
 namespace DarkKitchen.Services;
 
-public class OrderService(IOrderRepository orderRepository) : IOrderService
+public class OrderService(IOrderRepository orderRepository, IUserService userService) : IOrderService
 {
     private readonly IOrderRepository orderRepository = orderRepository;
+    private readonly IUserService userService = userService;
 
     public OrderResponseDto CreateOrder(OrderDto newOrder)
     {
@@ -118,5 +119,51 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         order.Status = status.ToString();
 
         orderRepository.Update(order);
+    }
+
+    public SalesReportDto GetSalesReport()
+    {
+        var orders = orderRepository.GetAll().ToList();
+
+        var aggregated = new Dictionary<(int Year, int Month), Dictionary<string, decimal>>();
+
+        foreach(var order in orders)
+        {
+            var user = userService.GetUserById(order.ClientId)!.Value;
+            var clientName = $"{user.name} {user.surname}";
+            var key = (order.CreatedAt.Year, order.CreatedAt.Month);
+
+            if(!aggregated.ContainsKey(key))
+            {
+                aggregated[key] = [];
+            }
+
+            if(!aggregated[key].ContainsKey(clientName))
+            {
+                aggregated[key][clientName] = 0;
+            }
+
+            aggregated[key][clientName] += order.Total;
+        }
+
+        var months = new List<MonthlySalesDto>();
+        decimal grandTotal = 0;
+
+        foreach(var monthEntry in aggregated.OrderBy(m => m.Key.Year).ThenBy(m => m.Key.Month))
+        {
+            var lines = new List<ClientSalesLineDto>();
+            decimal monthTotal = 0;
+
+            foreach(var clientEntry in monthEntry.Value.OrderBy(c => c.Key))
+            {
+                lines.Add(new ClientSalesLineDto(clientEntry.Key, clientEntry.Value));
+                monthTotal += clientEntry.Value;
+            }
+
+            months.Add(new MonthlySalesDto(monthEntry.Key.Year, monthEntry.Key.Month, lines, monthTotal));
+            grandTotal += monthTotal;
+        }
+
+        return new SalesReportDto(months, grandTotal);
     }
 }

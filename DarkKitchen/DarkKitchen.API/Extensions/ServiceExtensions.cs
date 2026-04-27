@@ -11,6 +11,7 @@ public static class ServiceExtensions
     {
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IUserService, UserService>();
         return services;
     }
 }

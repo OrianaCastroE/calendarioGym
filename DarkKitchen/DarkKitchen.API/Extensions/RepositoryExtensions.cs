@@ -11,6 +11,7 @@ public static class RepositoryExtensions
     {
         services.AddScoped<IPromotionRepository, PromotionRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
 }

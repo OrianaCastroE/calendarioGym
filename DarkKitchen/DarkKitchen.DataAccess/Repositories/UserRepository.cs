@@ -22,6 +22,11 @@ public class UserRepository(AppDbContext context) : IUserRepository
         return context.Users.FirstOrDefault(u => u.Email == email);
     }
 
+    public User? GetById(int id)
+    {
+        return context.Users.Find(id);
+    }
+
     public List<User> GetUsers(string? name, string? surname)
     {
         return context.Users.Where(u =>

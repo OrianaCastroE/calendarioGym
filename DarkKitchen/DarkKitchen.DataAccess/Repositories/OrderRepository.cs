@@ -18,6 +18,11 @@ public class OrderRepository(AppDbContext context) : IOrderRepository
         return context.Orders.Find(id);
     }
 
+    public IEnumerable<Order> GetAll()
+    {
+        return context.Orders.ToList();
+    }
+
     public IEnumerable<Order> GetClientOrders(int clientId, DateTime? dateFrom, DateTime? dateTo, string? status)
     {
         var query = context.Orders.Where(o => o.ClientId == clientId);

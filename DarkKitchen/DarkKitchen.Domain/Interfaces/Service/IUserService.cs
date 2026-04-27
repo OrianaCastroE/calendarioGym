@@ -9,4 +9,5 @@ public interface IUserService
     public void UpdateUser(UserDto updatedUser);
     public List<UserResponseDto> GetUsers(UserFiltersDto filter);
     public void DeleteUser(string email);
+    public UserResponseDto? GetUserById(int id);
 }
