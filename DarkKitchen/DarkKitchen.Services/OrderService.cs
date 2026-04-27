@@ -7,10 +7,10 @@ using DarkKitchen.Models.OrderDTOs;
 
 namespace DarkKitchen.Services;
 
-public class OrderService(IOrderRepository orderRepository, IUserRepository userRepository) : IOrderService
+public class OrderService(IOrderRepository orderRepository, IUserService userService) : IOrderService
 {
     private readonly IOrderRepository orderRepository = orderRepository;
-    private readonly IUserRepository userRepository = userRepository;
+    private readonly IUserService userService = userService;
 
     public OrderResponseDto CreateOrder(OrderDto newOrder)
     {
@@ -103,24 +103,47 @@ public class OrderService(IOrderRepository orderRepository, IUserRepository user
 
     public SalesReportDto GetSalesReport()
     {
-        var orders = orderRepository.GetAll();
-        var usersById = userRepository.GetUsers(null, null).ToDictionary(u => u.Id);
+        var orders = orderRepository.GetAll().ToList();
 
-        var months = orders
-            .GroupBy(o => new { o.CreatedAt.Year, o.CreatedAt.Month })
-            .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month)
-            .Select(g => new MonthlySalesDto(
-                g.Key.Year,
-                g.Key.Month,
-                g.GroupBy(o => o.ClientId)
-                    .Select(cg => new ClientSalesLineDto(
-                        $"{usersById[cg.Key].Name} {usersById[cg.Key].Surname}",
-                        cg.Sum(o => o.Total)))
-                    .OrderBy(l => l.clientName)
-                    .ToList(),
-                g.Sum(o => o.Total)))
-            .ToList();
+        var aggregated = new Dictionary<(int Year, int Month), Dictionary<string, decimal>>();
 
-        return new SalesReportDto(months, months.Sum(m => m.total));
+        foreach(var order in orders)
+        {
+            var user = userService.GetUserById(order.ClientId)!.Value;
+            var clientName = $"{user.name} {user.surname}";
+            var key = (order.CreatedAt.Year, order.CreatedAt.Month);
+
+            if(!aggregated.ContainsKey(key))
+            {
+                aggregated[key] = [];
+            }
+
+            if(!aggregated[key].ContainsKey(clientName))
+            {
+                aggregated[key][clientName] = 0;
+            }
+
+            aggregated[key][clientName] += order.Total;
+        }
+
+        var months = new List<MonthlySalesDto>();
+        decimal grandTotal = 0;
+
+        foreach(var monthEntry in aggregated.OrderBy(m => m.Key.Year).ThenBy(m => m.Key.Month))
+        {
+            var lines = new List<ClientSalesLineDto>();
+            decimal monthTotal = 0;
+
+            foreach(var line in monthEntry.Value.OrderBy(l => l.Key))
+            {
+                lines.Add(new ClientSalesLineDto(line.Key, line.Value));
+                monthTotal += line.Value;
+            }
+
+            months.Add(new MonthlySalesDto(monthEntry.Key.Year, monthEntry.Key.Month, lines, monthTotal));
+            grandTotal += monthTotal;
+        }
+
+        return new SalesReportDto(months, grandTotal);
     }
 }

@@ -2,7 +2,9 @@ using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Enums;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.OrderDTOs;
+using DarkKitchen.Models.UserDTOs;
 using DarkKitchen.Services;
 using Moq;
 
@@ -12,7 +14,7 @@ namespace DarkKitchen.Tests.Services;
 public class OrderServiceTest
 {
     private Mock<IOrderRepository>? orderRepositoryMock;
-    private Mock<IUserRepository>? userRepositoryMock;
+    private Mock<IUserService>? userServiceMock;
     private Mock<IProductRepository>? productRepositoryMock;
     private Mock<IPromotionRepository>? promotionRepositoryMock;
     private OrderService? orderService;
@@ -24,10 +26,10 @@ public class OrderServiceTest
     public void Setup()
     {
         orderRepositoryMock = new Mock<IOrderRepository>(MockBehavior.Strict);
-        userRepositoryMock = new Mock<IUserRepository>(MockBehavior.Strict);
+        userServiceMock = new Mock<IUserService>(MockBehavior.Strict);
         productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
         promotionRepositoryMock = new Mock<IPromotionRepository>(MockBehavior.Strict);
-        orderService = new OrderService(orderRepositoryMock.Object, userRepositoryMock.Object);
+        orderService = new OrderService(orderRepositoryMock.Object, userServiceMock.Object);
 
         productEntity = new Product()
         {
@@ -231,7 +233,6 @@ public class OrderServiceTest
     public void GetSalesReport_NoOrders_ReturnsEmptyReport()
     {
         orderRepositoryMock!.Setup(r => r.GetAll()).Returns([]);
-        userRepositoryMock!.Setup(r => r.GetUsers(null, null)).Returns([]);
 
         var result = orderService!.GetSalesReport();
 
@@ -242,9 +243,9 @@ public class OrderServiceTest
     [TestMethod]
     public void GetSalesReport_ValidData_ReturnsReport()
     {
-        var user = new User { Id = 1, Name = "validName", Surname = "validSurname", Email = "validEmail@gmail.com", Phone = "099123456", Password = "validPassword", Role = Role.Client };
+        var user = new UserResponseDto(1, "validName", "validSurname", "validEmail@gmail.com", "099123456", "Client");
         orderRepositoryMock!.Setup(r => r.GetAll()).Returns([orderEntity!]);
-        userRepositoryMock!.Setup(r => r.GetUsers(null, null)).Returns([user]);
+        userServiceMock!.Setup(s => s.GetUserById(1)).Returns(user);
 
         var result = orderService!.GetSalesReport();
 
