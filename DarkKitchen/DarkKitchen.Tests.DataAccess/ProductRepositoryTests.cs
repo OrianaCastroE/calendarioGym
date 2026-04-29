@@ -241,8 +241,7 @@ public class ProductRepositoryTests
             Id = 1,
             ClientId = 1,
             DeliveryType = "express",
-            Street = "Test Street",
-            DoorNumber = "1",
+            Address = new Address { Street = "Test Street", DoorNumber = "1" },
             CreatedAt = new DateTime(2024, 6, 15),
             Products =
             [

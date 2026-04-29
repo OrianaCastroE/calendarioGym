@@ -7,9 +7,7 @@ public class Order
     public int Id { get; set; }
     public int ClientId { get; set; }
     public required string DeliveryType { get; set; }
-    public required string Street { get; set; }
-    public required string DoorNumber { get; set; }
-    public string? Apartment { get; set; }
+    public required Address Address { get; set; }
     public string Status { get; set; } = nameof(OrderStatus.Pending);
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }

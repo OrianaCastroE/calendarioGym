@@ -23,9 +23,7 @@ public class OrderTest
             Id = id,
             ClientId = clientId,
             DeliveryType = deliveryType,
-            Street = street,
-            DoorNumber = doorNumber,
-            Apartment = apartment,
+            Address = new Address { Street = street, DoorNumber = doorNumber, Apartment = apartment },
             Status = status,
             CreatedAt = createdAt
         };
@@ -46,13 +44,34 @@ public class OrderTest
     [TestMethod]
     public void Order_WithValidData_HasCorrectStreet()
     {
-        Assert.AreEqual(street, order!.Street);
+        Assert.AreEqual(street, order!.Address.Street);
     }
 
     [TestMethod]
     public void Order_WithValidData_HasCorrectDoorNumber()
     {
-        Assert.AreEqual(doorNumber, order!.DoorNumber);
+        Assert.AreEqual(doorNumber, order!.Address.DoorNumber);
+    }
+
+    [TestMethod]
+    public void Order_WithValidData_HasCorrectApartment()
+    {
+        Assert.AreEqual(apartment, order!.Address.Apartment);
+    }
+
+    [TestMethod]
+    public void Order_WithNullApartment_ApartmentIsNull()
+    {
+        var orderWithoutApartment = new Order
+        {
+            ClientId = clientId,
+            DeliveryType = deliveryType,
+            Address = new Address { Street = street, DoorNumber = doorNumber },
+            Status = status,
+            CreatedAt = createdAt
+        };
+
+        Assert.IsNull(orderWithoutApartment.Address.Apartment);
     }
 
     [TestMethod]
