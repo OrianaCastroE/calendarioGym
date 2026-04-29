@@ -1,4 +1,5 @@
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Models.PromotionDTOs;
 using DarkKitchen.Services;
@@ -106,27 +107,29 @@ public class PromotionServiceTest
     }
 
     [TestMethod]
-    public void GetPromotions_ValidFilter_ReturnsPromotions()
-    {
-        promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null))
-            .Returns([promotionEntity!]);
-
-        var result = promotionService!.GetPromotions(new PromotionFiltersDto(null, null, null));
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(1, result.Count);
-    }
-
-    [TestMethod]
     public void GetPromotions_NoPromotionsFound_ReturnsEmptyList()
     {
-        promotionRepositoryMock!.Setup(r => r.GetPromotions(null, null, null))
+        var date = new DateTime(2026, 1, 27);
+        promotionRepositoryMock!.Setup(r => r.GetPromotions(date, null, null))
             .Returns([]);
 
-        var result = promotionService!.GetPromotions(new PromotionFiltersDto(null, null, null));
+        var result = promotionService!.GetPromotions(new PromotionFiltersDto(date, null, null));
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void GetPromotions_ValidFilter_ReturnsPromotions()
+    {
+        var date = new DateTime(2026, 1, 27);
+        promotionRepositoryMock!.Setup(r => r.GetPromotions(date, null, null))
+            .Returns([promotionEntity!]);
+
+        var result = promotionService!.GetPromotions(new PromotionFiltersDto(date, null, null));
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
     }
 
     [TestMethod]
@@ -178,5 +181,12 @@ public class PromotionServiceTest
 
         Assert.IsTrue(result.ContainsKey(1));
         Assert.IsFalse(result.ContainsKey(2));
+    }
+
+    [TestMethod]
+    public void GetPromotions_WhenDateIsNull_ThrowsBadRequestException()
+    {
+        Assert.ThrowsException<BadRequestException>(() =>
+            promotionService!.GetPromotions(new PromotionFiltersDto(null, null, null)));
     }
 }

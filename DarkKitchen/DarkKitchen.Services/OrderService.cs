@@ -52,9 +52,7 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
             });
         }
 
-        var discountByProduct = productService.GetBestDiscountByProduct(
-            orderProducts.Select(op => op.ProductId),
-            DateTime.UtcNow.Date);
+        var discountByProduct = productService.GetBestDiscountByProduct(orderProducts.Select(op => op.ProductId), DateTime.UtcNow.Date);
 
         decimal subtotal = 0;
         decimal discount = 0;
