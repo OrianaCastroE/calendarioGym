@@ -212,6 +212,18 @@ public class ProductServiceTest
     }
 
     [TestMethod]
+    public void GetByCode_WhenProductHasNoImages_ReturnsDtoWithNullImages()
+    {
+        validProduct!.Images = null;
+        productRepositoryMock!.Setup(r => r.GetByCode("PROD01")).Returns(validProduct!);
+
+        var result = productService!.GetByCode("PROD01");
+
+        Assert.IsNotNull(result);
+        Assert.IsNull(result.Value.imageUrl);
+    }
+
+    [TestMethod]
     public void GetBestDiscountByProduct_DelegatesToPromotionService()
     {
         var expected = new Dictionary<int, int> { { 1, 25 } };
