@@ -128,4 +128,55 @@ public class PromotionServiceTest
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
     }
+
+    [TestMethod]
+    public void GetBestDiscountByProduct_WhenNoActivePromotions_ReturnsEmptyDictionary()
+    {
+        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
+            .Returns([]);
+
+        var result = promotionService!.GetBestDiscountByProduct([1, 2], DateTime.UtcNow);
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void GetBestDiscountByProduct_WhenSinglePromotion_ReturnsThatDiscount()
+    {
+        promotionEntity!.DiscountPercentage = 15;
+        promotionEntity.Products = [new Product { Id = 1 }];
+        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
+            .Returns([promotionEntity]);
+
+        var result = promotionService!.GetBestDiscountByProduct([1], DateTime.UtcNow);
+
+        Assert.AreEqual(15, result[1]);
+    }
+
+    [TestMethod]
+    public void GetBestDiscountByProduct_WhenMultiplePromotionsForSameProduct_ReturnsHighest()
+    {
+        var lowPromo = new Promotion { Id = 1, Name = "Low", DiscountPercentage = 10, Products = [new Product { Id = 1 }] };
+        var highPromo = new Promotion { Id = 2, Name = "High", DiscountPercentage = 25, Products = [new Product { Id = 1 }] };
+        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
+            .Returns([lowPromo, highPromo]);
+
+        var result = promotionService!.GetBestDiscountByProduct([1], DateTime.UtcNow);
+
+        Assert.AreEqual(25, result[1]);
+    }
+
+    [TestMethod]
+    public void GetBestDiscountByProduct_WhenPromotionCoversUnrequestedProduct_ItIsExcluded()
+    {
+        promotionEntity!.DiscountPercentage = 20;
+        promotionEntity.Products = [new Product { Id = 1 }, new Product { Id = 2 }];
+        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
+            .Returns([promotionEntity]);
+
+        var result = promotionService!.GetBestDiscountByProduct([1], DateTime.UtcNow);
+
+        Assert.IsTrue(result.ContainsKey(1));
+        Assert.IsFalse(result.ContainsKey(2));
+    }
 }
