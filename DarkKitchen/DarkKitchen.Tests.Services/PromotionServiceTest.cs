@@ -1,4 +1,5 @@
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Models.PromotionDTOs;
 using DarkKitchen.Services;
@@ -178,5 +179,12 @@ public class PromotionServiceTest
 
         Assert.IsTrue(result.ContainsKey(1));
         Assert.IsFalse(result.ContainsKey(2));
+    }
+
+    [TestMethod]
+    public void GetPromotions_WhenDateIsNull_ThrowsBadRequestException()
+    {
+        Assert.ThrowsException<BadRequestException>(() =>
+            promotionService!.GetPromotions(new PromotionFiltersDto(null, null, null)));
     }
 }
