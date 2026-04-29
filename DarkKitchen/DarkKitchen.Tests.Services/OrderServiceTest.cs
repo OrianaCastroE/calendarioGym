@@ -52,12 +52,27 @@ public class OrderServiceTest
     public void CreateOrder_ValidData_OrderCreated()
     {
         productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns(productDto);
+        productServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
+            .Returns(new Dictionary<int, int>());
         orderRepositoryMock!.Setup(r => r.Add(It.IsAny<Order>()));
 
         var result = orderService!.CreateOrder(validOrder, 1);
 
         orderRepositoryMock!.Verify(r => r.Add(It.IsAny<Order>()), Times.Once);
         Assert.IsNotNull(result);
+    }
+
+    [TestMethod]
+    public void CreateOrder_WhenProductHasActivePromotion_DiscountApplied()
+    {
+        productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns(productDto);
+        productServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
+            .Returns(new Dictionary<int, int> { { 1, 25 } });
+        orderRepositoryMock!.Setup(r => r.Add(It.IsAny<Order>()));
+
+        var result = orderService!.CreateOrder(validOrder, 1);
+
+        Assert.AreEqual(50, result.discount);
     }
 
     [TestMethod]
@@ -236,6 +251,8 @@ public class OrderServiceTest
     {
         validOrder = validOrder with { deliveryType = "24hs" };
         productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns(productDto);
+        productServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
+            .Returns(new Dictionary<int, int>());
         orderRepositoryMock!.Setup(r => r.Add(It.IsAny<Order>()));
 
         var result = orderService!.CreateOrder(validOrder, 1);
