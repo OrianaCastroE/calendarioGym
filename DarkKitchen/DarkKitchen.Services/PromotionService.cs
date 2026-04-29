@@ -1,4 +1,5 @@
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.PromotionDTOs;
@@ -63,6 +64,11 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
 
     public List<PromotionResponseDto> GetPromotions(PromotionFiltersDto filter)
     {
+        if(filter.date == null)
+        {
+            throw new BadRequestException("Date is required.");
+        }
+
         var promotions = _promotionRepository.GetPromotions(filter.date, filter.productLine, filter.productName);
 
         return promotions.Select(p => new PromotionResponseDto(p.Id, p.Name, p.DiscountPercentage, p.DateFrom, p.DateTo)).ToList();
