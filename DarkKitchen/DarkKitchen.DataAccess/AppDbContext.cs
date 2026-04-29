@@ -26,21 +26,25 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                     Role = Role.Admin,
                     Permissions =
                     [
+                        Permission.GetOrderDetails,
+                        Permission.SetOrderStatusToPrepared,
+                        Permission.SetOrderStatusToCanceled,
+                        Permission.SetOrderStatusToOnItsWay,
+                        Permission.SetOrderStatusToDelivered,
                         Permission.CreateUser,
+                        Permission.GetUsers,
                         Permission.UpdateUser,
                         Permission.DeleteUser,
-                        Permission.GetUsers,
                         Permission.CreateProduct,
+                        Permission.GetProducts,
+                        Permission.GetMostPopularProducts,
                         Permission.UpdateProduct,
                         Permission.UpdateProductStatus,
-                        Permission.GetProducts,
                         Permission.CreatePromotion,
+                        Permission.GetCurrentPromotions,
                         Permission.UpdatePromotion,
                         Permission.UpdatePromotionProducts,
-                        Permission.GetCurrentPromotions,
-                        Permission.GetOrderDetails,
-                        Permission.GetMostPopularProducts,
-                        Permission.GetSalesReport
+                        Permission.GetSalesReport,
                     ]
                 },
                 new RolePermissions
@@ -48,10 +52,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                     Role = Role.Client,
                     Permissions =
                     [
-                        Permission.GetProducts,
-                        Permission.GetCurrentPromotions,
                         Permission.PlaceOrder,
-                        Permission.GetMyOrders
+                        Permission.GetMyOrders,
+                        Permission.GetProducts,
+                        Permission.GetCurrentPromotions
                     ]
                 },
                 new RolePermissions
@@ -62,7 +66,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.GetOrdersByStatus,
                         Permission.GetOrderDetails,
                         Permission.SetOrderStatusToPrepared,
-                        Permission.SetOrderStatusToCanceled,
                         Permission.SetOrderStatusToOnItsWay,
                         Permission.SetOrderStatusToDelivered,
                         Permission.SetOrderStatusToNotDelivered
@@ -70,10 +73,40 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 });
         });
 
-        modelBuilder.Entity<User>()
-            .HasOne<RolePermissions>()
-            .WithMany()
-            .HasForeignKey(u => u.Role)
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<User>(b =>
+        {
+            b.HasOne<RolePermissions>()
+                .WithMany()
+                .HasForeignKey(u => u.Role)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasIndex(u => u.Email).IsUnique();
+        });
+
+        modelBuilder.Entity<Product>(b =>
+        {
+            b.HasIndex(p => p.Code).IsUnique();
+        });
+
+        modelBuilder.Entity<Promotion>(b =>
+        {
+            b.HasMany(p => p.Products)
+                .WithMany();
+        });
+
+        modelBuilder.Entity<Order>(b =>
+        {
+            b.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(o => o.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<OrderProduct>(b =>
+        {
+            b.HasOne<Product>()
+                .WithMany()
+                .HasForeignKey(op => op.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 }
