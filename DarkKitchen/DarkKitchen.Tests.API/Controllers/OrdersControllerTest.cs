@@ -39,7 +39,7 @@ public class OrdersControllerTest
 
         validOrder = new OrderDto("express", new AddressDto("18 de Julio", "1234", "101"), [new OrderProductDto("PROD01", 2)]);
 
-        orderResponse = new OrderResponseDto(1, 1, "Pending", DateTime.Now, 100, 10, 122, []);
+        orderResponse = new OrderResponseDto(1, 1, "Pending", DateTime.Now, 100, 0, 22, 10, 132, []);
 
         orders = [orderResponse];
     }
