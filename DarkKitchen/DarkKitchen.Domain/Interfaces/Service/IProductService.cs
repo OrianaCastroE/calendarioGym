@@ -11,4 +11,5 @@ public interface IProductService
     public ProductDto? GetByCode(string code);
     public IEnumerable<ProductDto> GetMostRequestedProducts(DateRangeDto dates);
     public void UpdateStatus(int id, ProductStatusDto status);
+    public Dictionary<int, int> GetBestDiscountByProduct(IEnumerable<int> productIds, DateTime date);
 }

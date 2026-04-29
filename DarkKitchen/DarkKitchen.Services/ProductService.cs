@@ -7,9 +7,10 @@ using DarkKitchen.Models.ProductDTOs;
 
 namespace DarkKitchen.Services;
 
-public class ProductService(IProductRepository repository) : IProductService
+public class ProductService(IProductRepository repository, IPromotionService promotionService) : IProductService
 {
     private readonly IProductRepository _repository = repository;
+    private readonly IPromotionService _promotionService = promotionService;
 
     public void CreateProduct(CreateProductDto newProduct)
     {
@@ -117,5 +118,10 @@ public class ProductService(IProductRepository repository) : IProductService
 
         product.IsActive = status.isActive;
         _repository.Update(product);
+    }
+
+    public Dictionary<int, int> GetBestDiscountByProduct(IEnumerable<int> productIds, DateTime date)
+    {
+        return _promotionService.GetBestDiscountByProduct(productIds, date);
     }
 }
