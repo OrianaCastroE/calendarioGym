@@ -21,7 +21,7 @@ public class UserService(IUserRepository userRepository) : IUserService
             Surname = newUser.surname,
             Email = newUser.email,
             Phone = newUser.phone,
-            Password = newUser.password,
+            Password = BCrypt.Net.BCrypt.HashPassword(newUser.password),
             Role = Role.Client,
         };
 
@@ -55,7 +55,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
         if(updatedUser.password != null)
         {
-            user.Password = updatedUser.password;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(updatedUser.password);
         }
 
         _userRepository.Update(user);
@@ -114,7 +114,7 @@ public class UserService(IUserRepository userRepository) : IUserService
             Surname = newUser.surname!,
             Email = newUser.email!,
             Phone = newUser.phone!,
-            Password = newUser.password!,
+            Password = BCrypt.Net.BCrypt.HashPassword(newUser.password),
             Role = role,
         };
 
