@@ -188,6 +188,27 @@ public class ProductServiceTest
     }
 
     [TestMethod]
+    public void GetProductByCode_WhenProductExists_ReturnsDto()
+    {
+        productRepositoryMock!.Setup(r => r.GetByCode("PROD01")).Returns(validProduct!);
+
+        var result = productService!.GetProductByCode("PROD01");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("PROD01", result.Value.code);
+    }
+
+    [TestMethod]
+    public void GetProductByCode_WhenProductDoesNotExist_ReturnsNull()
+    {
+        productRepositoryMock!.Setup(r => r.GetByCode("MISSING")).Returns((Product?)null);
+
+        var result = productService!.GetProductByCode("MISSING");
+
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
     public void UpdateProduct_WhenOnlyNameIsProvided_UpdatesOnlyName()
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
