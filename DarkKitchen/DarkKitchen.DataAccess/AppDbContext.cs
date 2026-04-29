@@ -99,6 +99,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithMany()
                 .HasForeignKey(o => o.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            b.OwnsOne(o => o.Address, a =>
+            {
+                a.Property(x => x.Street).HasColumnName("Street");
+                a.Property(x => x.DoorNumber).HasColumnName("DoorNumber");
+                a.Property(x => x.Apartment).HasColumnName("Apartment");
+            });
         });
 
         modelBuilder.Entity<OrderProduct>(b =>
