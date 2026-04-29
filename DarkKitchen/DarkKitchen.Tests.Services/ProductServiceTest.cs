@@ -1,6 +1,7 @@
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 using DarkKitchen.Services;
@@ -12,6 +13,7 @@ namespace DarkKitchen.Tests.Services;
 public class ProductServiceTest
 {
     private Mock<IProductRepository>? productRepositoryMock;
+    private Mock<IPromotionService>? promotionServiceMock;
     private ProductService? productService;
     private Product? validProduct;
     private CreateProductDto validCreateProductDto;
@@ -21,7 +23,8 @@ public class ProductServiceTest
     public void Setup()
     {
         productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
-        productService = new ProductService(productRepositoryMock.Object);
+        promotionServiceMock = new Mock<IPromotionService>(MockBehavior.Strict);
+        productService = new ProductService(productRepositoryMock.Object, promotionServiceMock.Object);
 
         validProduct = new Product
         {
@@ -206,6 +209,18 @@ public class ProductServiceTest
         var result = productService!.GetByCode("MISSING");
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetBestDiscountByProduct_DelegatesToPromotionService()
+    {
+        var expected = new Dictionary<int, int> { { 1, 25 } };
+        promotionServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
+            .Returns(expected);
+
+        var result = productService!.GetBestDiscountByProduct([1], DateTime.UtcNow);
+
+        Assert.AreSame(expected, result);
     }
 
     [TestMethod]
