@@ -18,7 +18,7 @@ public class ProductControllerTest
     private readonly string validCategory = "Valid Category";
     private readonly string[] validImageUrl = ["http://example.com/image.jpg"];
     private readonly bool isActive = true;
-    private UpdateProductDto validProduct;
+    private ProductDto validProduct;
     private CreateProductDto validCreateProduct;
     private ProductsController? productController;
     private Mock<IProductService>? productServiceMock;
@@ -29,7 +29,7 @@ public class ProductControllerTest
         productServiceMock = new Mock<IProductService>(MockBehavior.Strict);
         productController = new ProductsController(productServiceMock.Object);
 
-        validProduct = new UpdateProductDto(validProductId, null, validProductName, validProductDescription, null, validCategory, null, validImageUrl, isActive, 0);
+        validProduct = new ProductDto(validProductId, null, validProductName, validProductDescription, null, validCategory, null, validImageUrl, isActive, 0);
 
         validCreateProduct = new CreateProductDto(null, validProductName, validProductDescription, null, validCategory, null, validImageUrl);
     }
@@ -59,7 +59,7 @@ public class ProductControllerTest
     public void GetProducts_WhenValidProducts_ReturnsOk()
     {
         List<string> categories = ["Fútbol", "Baloncesto", "Tenis"];
-        var products = new List<UpdateProductDto>();
+        var products = new List<ProductDto>();
         productServiceMock.Setup(s => s.GetProducts(It.IsAny<ProductFilterDto>())).Returns(products!);
         var result = productController.GetProducts(new ProductFilterDto(validProductLine, categories, validProductName));
         var resultObj = result as ObjectResult;
@@ -80,7 +80,7 @@ public class ProductControllerTest
     [TestMethod]
     public void GetMostRequestedProducts_WhenValidProducts_ReturnsOkWithProdcuts()
     {
-        var products = new List<UpdateProductDto> { validProduct };
+        var products = new List<ProductDto> { validProduct };
         var dateFrom = DateTime.Now.AddDays(-7);
         var dateTo = DateTime.Now;
         productServiceMock.Setup(s => s.GetMostRequestedProducts(It.IsAny<DateRangeDto>())).Returns(products);
