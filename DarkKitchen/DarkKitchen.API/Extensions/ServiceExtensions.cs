@@ -13,6 +13,8 @@ public static class ServiceExtensions
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<ISessionService, SessionService>();
+        services.AddScoped<IRolePermissionsService, RolePermissionsService>();
         return services;
     }
 }
