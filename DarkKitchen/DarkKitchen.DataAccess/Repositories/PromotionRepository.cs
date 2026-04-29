@@ -15,12 +15,17 @@ public class PromotionRepository(AppDbContext context) : IPromotionRepository
     public void Update(Promotion promotion)
     {
         var existingPromotion = context.Promotion.Find(promotion.Id);
-        if(existingPromotion == null)
-        {
-            throw new Exception("Promotion not found");
-        }
+        context.Entry(existingPromotion!).CurrentValues.SetValues(promotion);
+        context.SaveChanges();
+    }
 
-        context.Entry(existingPromotion).CurrentValues.SetValues(promotion);
+    public void SetProducts(int promotionId, List<int> productIds)
+    {
+        var promotion = context.Promotion
+            .Include(p => p.Products)
+            .First(p => p.Id == promotionId);
+
+        promotion.Products = context.Products.Where(p => productIds.Contains(p.Id)).ToList();
         context.SaveChanges();
     }
 

@@ -55,11 +55,7 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
         var promotion = _promotionRepository.GetById(promotionId)
             ?? throw new Exception("Promotion not found.");
 
-        promotion.Products = promotion.Products
-            .Where(p => productIds.Contains(p.Id))
-            .ToList();
-
-        _promotionRepository.Update(promotion);
+        _promotionRepository.SetProducts(promotionId, productIds);
     }
 
     public List<PromotionResponseDto> GetPromotions(PromotionFiltersDto filter)
