@@ -185,4 +185,19 @@ public class PromotionRepositoryTests
         Assert.AreEqual(1, result.Products.Count);
         Assert.AreEqual(product.Id, result.Products[0].Id);
     }
+
+    [TestMethod]
+    public void SetProducts_WhenEmptyList_ClearsProducts()
+    {
+        context!.Promotion.Add(promotion!);
+        context.SaveChanges();
+
+        promotionRepository!.SetProducts(promotion!.Id, []);
+
+        var result = context.Promotion
+            .Include(p => p.Products)
+            .First(p => p.Id == promotion.Id);
+
+        Assert.AreEqual(0, result.Products.Count);
+    }
 }
