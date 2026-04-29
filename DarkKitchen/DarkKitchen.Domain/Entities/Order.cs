@@ -6,14 +6,16 @@ public class Order
 {
     public int Id { get; set; }
     public int ClientId { get; set; }
-    public string DeliveryType { get; set; } = string.Empty;
-    public string Street { get; set; } = string.Empty;
-    public string DoorNumber { get; set; } = string.Empty;
+    public required string DeliveryType { get; set; }
+    public required string Street { get; set; }
+    public required string DoorNumber { get; set; }
     public string? Apartment { get; set; }
     public string Status { get; set; } = nameof(OrderStatus.Pending);
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public decimal Subtotal { get; set; }
+    public decimal Discount { get; set; }
+    public decimal Iva { get; set; }
     public decimal ShippingCost { get; set; }
     public decimal Total { get; set; }
     public List<OrderProduct> Products { get; set; } = [];
