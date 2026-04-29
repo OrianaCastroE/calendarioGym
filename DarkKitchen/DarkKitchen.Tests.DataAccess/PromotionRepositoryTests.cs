@@ -85,7 +85,7 @@ public class PromotionRepositoryTests
     [TestMethod]
     public void UpdatePromotion_WhenPromotionDoesNotExist_ThrowsException()
     {
-        Assert.ThrowsException<Exception>(() =>
+        Assert.ThrowsException<ArgumentNullException>(() =>
         {
             promotionRepository!.Update(promotion!);
         });
