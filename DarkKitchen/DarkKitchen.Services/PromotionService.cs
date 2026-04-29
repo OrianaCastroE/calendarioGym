@@ -53,14 +53,13 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
 
     public void UpdatePromotionProducts(int promotionId, List<int> productIds)
     {
-        var promotion = _promotionRepository.GetById(promotionId)
-            ?? throw new Exception("Promotion not found.");
+        var promotion = _promotionRepository.GetById(promotionId);
+        if(promotion == null)
+        {
+            throw new Exception("Promotion not found.");
+        }
 
-        promotion.Products = promotion.Products
-            .Where(p => productIds.Contains(p.Id))
-            .ToList();
-
-        _promotionRepository.Update(promotion);
+        _promotionRepository.SetProducts(promotionId, productIds);
     }
 
     public List<PromotionResponseDto> GetPromotions(PromotionFiltersDto filter)

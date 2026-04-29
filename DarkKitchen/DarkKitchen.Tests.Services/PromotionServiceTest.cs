@@ -89,13 +89,12 @@ public class PromotionServiceTest
     [TestMethod]
     public void UpdatePromotionProducts_ValidData_ProductsUpdated()
     {
-        promotionEntity!.Products = [new Product { Id = 1 }];
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns(promotionEntity!);
-        promotionRepositoryMock!.Setup(r => r.Update(It.IsAny<Promotion>()));
+        promotionRepositoryMock!.Setup(r => r.SetProducts(1, It.IsAny<List<int>>()));
 
         promotionService!.UpdatePromotionProducts(1, [1, 2, 3]);
 
-        promotionRepositoryMock!.Verify(r => r.Update(It.IsAny<Promotion>()), Times.Once);
+        promotionRepositoryMock!.Verify(r => r.SetProducts(1, It.IsAny<List<int>>()), Times.Once);
     }
 
     [TestMethod]
