@@ -8,4 +8,5 @@ public interface IPromotionRepository
     void Update(Promotion promotion);
     Promotion? GetById(int id);
     IEnumerable<Promotion> GetPromotions(DateTime? date, string? productLine, string? productName);
+    IEnumerable<Promotion> GetActiveForProducts(IEnumerable<int> productIds, DateTime date);
 }
