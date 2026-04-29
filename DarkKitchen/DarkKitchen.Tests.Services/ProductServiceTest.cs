@@ -188,22 +188,22 @@ public class ProductServiceTest
     }
 
     [TestMethod]
-    public void GetProductByCode_WhenProductExists_ReturnsDto()
+    public void GetByCode_WhenProductExists_ReturnsDto()
     {
         productRepositoryMock!.Setup(r => r.GetByCode("PROD01")).Returns(validProduct!);
 
-        var result = productService!.GetProductByCode("PROD01");
+        var result = productService!.GetByCode("PROD01");
 
         Assert.IsNotNull(result);
         Assert.AreEqual("PROD01", result.Value.code);
     }
 
     [TestMethod]
-    public void GetProductByCode_WhenProductDoesNotExist_ReturnsNull()
+    public void GetByCode_WhenProductDoesNotExist_ReturnsNull()
     {
         productRepositoryMock!.Setup(r => r.GetByCode("MISSING")).Returns((Product?)null);
 
-        var result = productService!.GetProductByCode("MISSING");
+        var result = productService!.GetByCode("MISSING");
 
         Assert.IsNull(result);
     }

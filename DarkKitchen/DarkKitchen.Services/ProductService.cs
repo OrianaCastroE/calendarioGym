@@ -75,6 +75,17 @@ public class ProductService(IProductRepository repository) : IProductService
         _repository.Update(product);
     }
 
+    public UpdateProductDto? GetByCode(string code)
+    {
+        var product = _repository.GetByCode(code);
+        if(product == null)
+        {
+            return null;
+        }
+
+        return new UpdateProductDto(product.Id, product.Code, product.Name, product.Description, product.ProductLine, product.Category, product.Price, product.Images?.Select(i => i.Url).ToArray(), product.IsActive, product.UnitsSold);
+    }
+
     public IEnumerable<UpdateProductDto> GetProducts(ProductFilterDto filter)
     {
         IEnumerable<Product> products = _repository.GetProducts(filter);
