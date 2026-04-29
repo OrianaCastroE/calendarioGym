@@ -7,41 +7,65 @@ using DarkKitchen.Models.OrderDTOs;
 
 namespace DarkKitchen.Services;
 
-public class OrderService(IOrderRepository orderRepository, IUserService userService) : IOrderService
+public class OrderService(IOrderRepository orderRepository, IUserService userService, IProductService productService) : IOrderService
 {
     private readonly IOrderRepository orderRepository = orderRepository;
     private readonly IUserService userService = userService;
+    private readonly IProductService productService = productService;
+    private readonly decimal expressDeliveryPrice = 500;
+    private readonly decimal nextDayDeliveryPrice = 250;
 
-    public OrderResponseDto CreateOrder(OrderDto newOrder)
+    public OrderResponseDto CreateOrder(OrderDto newOrder, int clientId)
     {
         if(newOrder.products.Count == 0)
         {
-            throw new Exception("Order must have at least one product.");
+            throw new BadRequestException("Order must have at least one product.");
         }
 
         if(newOrder.deliveryType != "express" && newOrder.deliveryType != "24hs")
         {
-            throw new Exception("Invalid delivery type.");
+            throw new BadRequestException("Invalid delivery type.");
         }
 
         if(string.IsNullOrEmpty(newOrder.address.street))
         {
-            throw new Exception("Street cannot be empty.");
+            throw new BadRequestException("Street cannot be empty.");
         }
 
         if(string.IsNullOrEmpty(newOrder.address.doorNumber))
         {
-            throw new Exception("Door number cannot be empty.");
+            throw new BadRequestException("Door number cannot be empty.");
         }
 
-        var order = new Order()
+        decimal subtotal = 0;
+        var orderProducts = new List<OrderProduct>();
+        foreach(var item in newOrder.products)
         {
+            var product = productService.GetByCode(item.productCode)
+                ?? throw new NotFoundException($"Product {item.productCode} not found.");
+
+            subtotal += product.price!.Value * item.quantity;
+            orderProducts.Add(new OrderProduct
+            {
+                ProductId = product.id!.Value,
+                Quantity = item.quantity,
+                UnitPrice = product.price!.Value
+            });
+        }
+
+        var shippingCost = newOrder.deliveryType == "express" ? expressDeliveryPrice : nextDayDeliveryPrice;
+
+        var order = new Order
+        {
+            ClientId = clientId,
             DeliveryType = newOrder.deliveryType,
             Street = newOrder.address.street,
             DoorNumber = newOrder.address.doorNumber,
             Apartment = newOrder.address.apartment,
-            Status = "Pending",
-            CreatedAt = DateTime.Now
+            Subtotal = subtotal,
+            ShippingCost = shippingCost,
+            Total = subtotal + shippingCost,
+            Products = orderProducts
         };
 
         orderRepository.Add(order);
