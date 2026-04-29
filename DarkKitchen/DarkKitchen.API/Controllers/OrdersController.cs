@@ -17,7 +17,8 @@ public class OrdersController(IOrderService orderService) : ControllerBase
     [HttpPost]
     public IActionResult CreateOrder([FromBody] OrderDto newOrder)
     {
-        var order = _orderService.CreateOrder(newOrder);
+        var clientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var order = _orderService.CreateOrder(newOrder, clientId);
         return Created(string.Empty, order);
     }
 
