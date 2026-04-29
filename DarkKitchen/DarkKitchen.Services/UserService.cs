@@ -15,6 +15,11 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password);
 
+        if(_userRepository.GetByEmail(newUser.email!) != null)
+        {
+            throw new BadRequestException("Email already in use.");
+        }
+
         var user = new User
         {
             Name = newUser.name,
@@ -102,6 +107,11 @@ public class UserService(IUserRepository userRepository) : IUserService
     public void CreateUserWithRole(CreateUserDto newUser)
     {
         ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password);
+
+        if(_userRepository.GetByEmail(newUser.email!) != null)
+        {
+            throw new BadRequestException("Email already in use.");
+        }
 
         if(!Enum.TryParse<Role>(newUser.role, ignoreCase: true, out var role))
         {

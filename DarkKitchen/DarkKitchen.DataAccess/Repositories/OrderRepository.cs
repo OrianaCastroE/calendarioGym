@@ -65,10 +65,7 @@ public class OrderRepository(AppDbContext context) : IOrderRepository
     public void Update(Order order)
     {
         var existingOrder = context.Orders.Find(order.Id);
-        if(existingOrder == null)
-        {
-            throw new Exception("Order not found");
-        }
+        if(existingOrder == null) return;
 
         context.Entry(existingOrder).CurrentValues.SetValues(order);
         context.SaveChanges();

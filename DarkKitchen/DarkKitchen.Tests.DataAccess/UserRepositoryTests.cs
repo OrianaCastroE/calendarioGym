@@ -180,11 +180,10 @@ public class UserRepositoryTests
     }
 
     [TestMethod]
-    public void UpdateUser_WhenUserDoesNotExist_ThrowsException()
+    public void UpdateUser_WhenUserDoesNotExist_DoesNothing()
     {
-        Assert.ThrowsException<Exception>(() =>
-        {
-            _userRepository.Update(user!);
-        });
+        _userRepository.Update(user!);
+
+        Assert.AreEqual(0, _context!.Users.Count());
     }
 }

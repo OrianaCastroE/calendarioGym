@@ -84,12 +84,11 @@ public class OrderRepositoryTests
     }
 
     [TestMethod]
-    public void UpdateOrder_WhenOrderDoesNotExist_ThrowsException()
+    public void UpdateOrder_WhenOrderDoesNotExist_DoesNothing()
     {
-        Assert.ThrowsException<Exception>(() =>
-        {
-            orderRepository!.Update(order!);
-        });
+        orderRepository!.Update(order!);
+
+        Assert.AreEqual(0, context!.Orders.Count());
     }
 
     [TestMethod]

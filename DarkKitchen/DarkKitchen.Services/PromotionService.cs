@@ -14,17 +14,17 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
     {
         if(string.IsNullOrEmpty(newPromotion.name))
         {
-            throw new Exception("Name cannot be empty.");
+            throw new BadRequestException("Name cannot be empty.");
         }
 
         if(newPromotion.discountPercentage <= 0 || newPromotion.discountPercentage > 100)
         {
-            throw new Exception("Discount percentage must be between 1 and 100.");
+            throw new BadRequestException("Discount percentage must be between 1 and 100.");
         }
 
         if(newPromotion.dateFrom >= newPromotion.dateTo)
         {
-            throw new Exception("DateFrom must be before DateTo.");
+            throw new BadRequestException("DateFrom must be before DateTo.");
         }
 
         var promotion = new Promotion()
@@ -41,7 +41,7 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
     public void UpdatePromotion(int id, PromotionDto updatedPromotion)
     {
         var promotion = _promotionRepository.GetById(id)
-            ?? throw new Exception("Promotion not found.");
+            ?? throw new NotFoundException("Promotion not found.");
 
         promotion.Name = updatedPromotion.name;
         promotion.DiscountPercentage = updatedPromotion.discountPercentage;
@@ -56,7 +56,7 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
         var promotion = _promotionRepository.GetById(promotionId);
         if(promotion == null)
         {
-            throw new Exception("Promotion not found.");
+            throw new NotFoundException("Promotion not found.");
         }
 
         _promotionRepository.SetProducts(promotionId, productIds);
