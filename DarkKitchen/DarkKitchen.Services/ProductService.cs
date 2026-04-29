@@ -32,7 +32,7 @@ public class ProductService(IProductRepository repository) : IProductService
         _repository.Add(product);
     }
 
-    public void UpdateProduct(UpdateProductDto updatedProduct)
+    public void UpdateProduct(ProductDto updatedProduct)
     {
         Product product = _repository.GetById(updatedProduct.id ?? 0)
         ?? throw new NotFoundException("Product not found.");
@@ -75,7 +75,7 @@ public class ProductService(IProductRepository repository) : IProductService
         _repository.Update(product);
     }
 
-    public UpdateProductDto? GetByCode(string code)
+    public ProductDto? GetByCode(string code)
     {
         var product = _repository.GetByCode(code);
         if(product == null)
@@ -83,10 +83,10 @@ public class ProductService(IProductRepository repository) : IProductService
             return null;
         }
 
-        return new UpdateProductDto(product.Id, product.Code, product.Name, product.Description, product.ProductLine, product.Category, product.Price, product.Images?.Select(i => i.Url).ToArray(), product.IsActive, product.UnitsSold);
+        return new ProductDto(product.Id, product.Code, product.Name, product.Description, product.ProductLine, product.Category, product.Price, product.Images?.Select(i => i.Url).ToArray(), product.IsActive, product.UnitsSold);
     }
 
-    public IEnumerable<UpdateProductDto> GetProducts(ProductFilterDto filter)
+    public IEnumerable<ProductDto> GetProducts(ProductFilterDto filter)
     {
         IEnumerable<Product> products = _repository.GetProducts(filter);
 
@@ -95,10 +95,10 @@ public class ProductService(IProductRepository repository) : IProductService
             throw new NotFoundException("No products found.");
         }
 
-        return _repository.GetProducts(filter).Select(p => new UpdateProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive, p.UnitsSold));
+        return _repository.GetProducts(filter).Select(p => new ProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive, p.UnitsSold));
     }
 
-    public IEnumerable<UpdateProductDto> GetMostRequestedProducts(DateRangeDto dates)
+    public IEnumerable<ProductDto> GetMostRequestedProducts(DateRangeDto dates)
     {
         IEnumerable<Product> products = _repository.GetMostRequestedProducts(dates);
 
@@ -107,7 +107,7 @@ public class ProductService(IProductRepository repository) : IProductService
             throw new NotFoundException("No products found.");
         }
 
-        return products.Select(p => new UpdateProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive, p.UnitsSold));
+        return products.Select(p => new ProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive, p.UnitsSold));
     }
 
     public void UpdateStatus(int id, ProductStatusDto status)
