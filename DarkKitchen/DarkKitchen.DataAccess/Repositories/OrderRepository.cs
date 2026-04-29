@@ -51,7 +51,7 @@ public class OrderRepository(AppDbContext context) : IOrderRepository
 
         if(!string.IsNullOrEmpty(address))
         {
-            query = query.Where(o => o.Street.Contains(address));
+            query = query.Where(o => o.Address.Street.Contains(address));
         }
 
         if(!string.IsNullOrEmpty(status))

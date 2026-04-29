@@ -19,9 +19,7 @@ public class OrderRepositoryTests
         {
             ClientId = 1,
             DeliveryType = "express",
-            Street = "18 de Julio",
-            DoorNumber = "1234",
-            Apartment = "101",
+            Address = new Address { Street = "18 de Julio", DoorNumber = "1234", Apartment = "101" },
             Status = "Pending",
             CreatedAt = DateTime.Now
         };

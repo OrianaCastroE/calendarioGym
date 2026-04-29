@@ -75,9 +75,12 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
         {
             ClientId = clientId,
             DeliveryType = newOrder.deliveryType,
-            Street = newOrder.address.street,
-            DoorNumber = newOrder.address.doorNumber,
-            Apartment = newOrder.address.apartment,
+            Address = new Address
+            {
+                Street = newOrder.address.street,
+                DoorNumber = newOrder.address.doorNumber,
+                Apartment = newOrder.address.apartment,
+            },
             Subtotal = subtotal,
             Discount = discount,
             Iva = iva,

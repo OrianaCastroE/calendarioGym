@@ -30,9 +30,6 @@ namespace DarkKitchen.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Apartment")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
@@ -43,18 +40,16 @@ namespace DarkKitchen.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DoorNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Iva")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ShippingCost")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -68,6 +63,8 @@ namespace DarkKitchen.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Orders");
                 });
@@ -99,6 +96,8 @@ namespace DarkKitchen.DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("OrderProducts");
                 });
 
@@ -115,7 +114,7 @@ namespace DarkKitchen.DataAccess.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -133,12 +132,13 @@ namespace DarkKitchen.DataAccess.Migrations
                     b.Property<string>("ProductLine")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PromotionId")
+                    b.Property<int>("UnitsSold")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PromotionId");
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -208,17 +208,17 @@ namespace DarkKitchen.DataAccess.Migrations
                         new
                         {
                             Role = 0,
-                            Permissions = "[9,11,12,10,13,16,17,14,18,20,21,19,3,15,22]"
+                            Permissions = "[3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22]"
                         },
                         new
                         {
                             Role = 1,
-                            Permissions = "[14,19,0,1]"
+                            Permissions = "[0,1,14,19]"
                         },
                         new
                         {
                             Role = 2,
-                            Permissions = "[2,3,4,5,6,7,8]"
+                            Permissions = "[2,3,4,6,7,8]"
                         });
                 });
 
@@ -232,7 +232,7 @@ namespace DarkKitchen.DataAccess.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -255,9 +255,66 @@ namespace DarkKitchen.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("Role");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ProductPromotion", b =>
+                {
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromotionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductsId", "PromotionId");
+
+                    b.HasIndex("PromotionId");
+
+                    b.ToTable("ProductPromotion");
+                });
+
+            modelBuilder.Entity("DarkKitchen.Domain.Entities.Order", b =>
+                {
+                    b.HasOne("DarkKitchen.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsOne("DarkKitchen.Domain.Entities.Address", "Address", b1 =>
+                        {
+                            b1.Property<int>("OrderId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Apartment")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Apartment");
+
+                            b1.Property<string>("DoorNumber")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("DoorNumber");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Street");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.Navigation("Address")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DarkKitchen.Domain.Entities.OrderProduct", b =>
@@ -267,13 +324,12 @@ namespace DarkKitchen.DataAccess.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("DarkKitchen.Domain.Entities.Product", b =>
-                {
-                    b.HasOne("DarkKitchen.Domain.Entities.Promotion", null)
-                        .WithMany("Products")
-                        .HasForeignKey("PromotionId");
+                    b.HasOne("DarkKitchen.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DarkKitchen.Domain.Entities.ProductImage", b =>
@@ -294,6 +350,21 @@ namespace DarkKitchen.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProductPromotion", b =>
+                {
+                    b.HasOne("DarkKitchen.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DarkKitchen.Domain.Entities.Promotion", null)
+                        .WithMany()
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DarkKitchen.Domain.Entities.Order", b =>
                 {
                     b.Navigation("Products");
@@ -302,11 +373,6 @@ namespace DarkKitchen.DataAccess.Migrations
             modelBuilder.Entity("DarkKitchen.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Images");
-                });
-
-            modelBuilder.Entity("DarkKitchen.Domain.Entities.Promotion", b =>
-                {
-                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }
