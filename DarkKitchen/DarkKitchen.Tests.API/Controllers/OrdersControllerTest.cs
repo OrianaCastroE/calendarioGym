@@ -47,7 +47,7 @@ public class OrdersControllerTest
     [TestMethod]
     public void CreateOrder_ValidData_ReturnsCreated()
     {
-        orderServiceMock!.Setup(s => s.CreateOrder(validOrder)).Returns(orderResponse);
+        orderServiceMock!.Setup(s => s.CreateOrder(validOrder, 1)).Returns(orderResponse);
         var result = ordersController!.CreateOrder(validOrder);
         var resultObj = result as ObjectResult;
 
@@ -59,7 +59,7 @@ public class OrdersControllerTest
     public void CreateOrder_NoProducts_ThrowsBadRequestException()
     {
         var emptyOrder = new OrderDto("express", new AddressDto("18 de Julio", "1234", "101"), []);
-        orderServiceMock!.Setup(s => s.CreateOrder(emptyOrder)).Throws(new BadRequestException("Order must have at least one product."));
+        orderServiceMock!.Setup(s => s.CreateOrder(emptyOrder, 1)).Throws(new BadRequestException("Order must have at least one product."));
 
         Assert.ThrowsException<BadRequestException>(() => ordersController!.CreateOrder(emptyOrder));
     }
