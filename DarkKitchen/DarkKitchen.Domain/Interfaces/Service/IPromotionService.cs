@@ -8,4 +8,5 @@ public interface IPromotionService
     public void UpdatePromotion(int id, PromotionDto updatedPromotion);
     public void UpdatePromotionProducts(int promotionId, List<int> productIds);
     public List<PromotionResponseDto> GetPromotions(PromotionFiltersDto filter);
+    public Dictionary<int, int> GetBestDiscountByProduct(IEnumerable<int> productIds, DateTime date);
 }
