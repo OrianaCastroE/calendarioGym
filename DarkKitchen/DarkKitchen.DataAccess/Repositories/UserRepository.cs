@@ -36,7 +36,10 @@ public class UserRepository(AppDbContext context) : IUserRepository
     public void Update(User user)
     {
         var existingUser = context.Users.Find(user.Id);
-        if(existingUser == null) return;
+        if(existingUser == null)
+        {
+            return;
+        }
 
         context.Entry(existingUser).CurrentValues.SetValues(user);
         context.SaveChanges();
