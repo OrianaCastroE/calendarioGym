@@ -1,6 +1,7 @@
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
 using DarkKitchen.Services;
@@ -12,16 +13,18 @@ namespace DarkKitchen.Tests.Services;
 public class ProductServiceTest
 {
     private Mock<IProductRepository>? productRepositoryMock;
+    private Mock<IPromotionService>? promotionServiceMock;
     private ProductService? productService;
     private Product? validProduct;
     private CreateProductDto validCreateProductDto;
-    private UpdateProductDto validUpdateProductDto;
+    private ProductDto validProductDto;
 
     [TestInitialize]
     public void Setup()
     {
         productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
-        productService = new ProductService(productRepositoryMock.Object);
+        promotionServiceMock = new Mock<IPromotionService>(MockBehavior.Strict);
+        productService = new ProductService(productRepositoryMock.Object, promotionServiceMock.Object);
 
         validProduct = new Product
         {
@@ -38,7 +41,7 @@ public class ProductServiceTest
 
         validCreateProductDto = new CreateProductDto("PROD01", "Valid Product", "Valid Description", "Valid Line", "Valid Category", 100, ["http://example.com/image.jpg"]);
 
-        validUpdateProductDto = new UpdateProductDto(1, "PROD01", "Updated Product", "Updated Description", "Updated Line", "Updated Category", 150, ["http://example.com/updated_image.jpg"], true, 0);
+        validProductDto = new ProductDto(1, "PROD01", "Updated Product", "Updated Description", "Updated Line", "Updated Category", 150, ["http://example.com/updated_image.jpg"], true, 0);
     }
 
     [TestMethod]
@@ -73,7 +76,7 @@ public class ProductServiceTest
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
 
-        productService!.UpdateProduct(validUpdateProductDto);
+        productService!.UpdateProduct(validProductDto);
 
         productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
     }
@@ -83,7 +86,7 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
 
-        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateProduct(validUpdateProductDto));
+        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateProduct(validProductDto));
     }
 
     [TestMethod]
@@ -174,7 +177,7 @@ public class ProductServiceTest
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
 
-        var dtoWithNulls = new UpdateProductDto(1, null, null, null, null, null, null, null, null, null);
+        var dtoWithNulls = new ProductDto(1, null, null, null, null, null, null, null, null, null);
 
         productService!.UpdateProduct(dtoWithNulls);
 
@@ -188,12 +191,45 @@ public class ProductServiceTest
     }
 
     [TestMethod]
+    public void GetByCode_WhenProductExists_ReturnsDto()
+    {
+        productRepositoryMock!.Setup(r => r.GetByCode("PROD01")).Returns(validProduct!);
+
+        var result = productService!.GetByCode("PROD01");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("PROD01", result.Value.code);
+    }
+
+    [TestMethod]
+    public void GetByCode_WhenProductDoesNotExist_ReturnsNull()
+    {
+        productRepositoryMock!.Setup(r => r.GetByCode("MISSING")).Returns((Product?)null);
+
+        var result = productService!.GetByCode("MISSING");
+
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetBestDiscountByProduct_DelegatesToPromotionService()
+    {
+        var expected = new Dictionary<int, int> { { 1, 25 } };
+        promotionServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
+            .Returns(expected);
+
+        var result = productService!.GetBestDiscountByProduct([1], DateTime.UtcNow);
+
+        Assert.AreSame(expected, result);
+    }
+
+    [TestMethod]
     public void UpdateProduct_WhenOnlyNameIsProvided_UpdatesOnlyName()
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
 
-        var dtoOnlyName = new UpdateProductDto(1, null, "New Name", null, null, null, null, null, null, null);
+        var dtoOnlyName = new ProductDto(1, null, "New Name", null, null, null, null, null, null, null);
 
         productService!.UpdateProduct(dtoOnlyName);
 

@@ -68,4 +68,24 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
 
         return promotions.Select(p => new PromotionResponseDto(p.Id, p.Name, p.DiscountPercentage, p.DateFrom, p.DateTo)).ToList();
     }
+
+    public Dictionary<int, int> GetBestDiscountByProduct(IEnumerable<int> productIds, DateTime date)
+    {
+        var requested = productIds.ToHashSet();
+        var promotions = _promotionRepository.GetActiveForProducts(requested, date);
+        var best = new Dictionary<int, int>();
+
+        foreach(var promo in promotions)
+        {
+            foreach(var product in promo.Products.Where(p => requested.Contains(p.Id)))
+            {
+                if(!best.TryGetValue(product.Id, out var current) || promo.DiscountPercentage > current)
+                {
+                    best[product.Id] = promo.DiscountPercentage;
+                }
+            }
+        }
+
+        return best;
+    }
 }

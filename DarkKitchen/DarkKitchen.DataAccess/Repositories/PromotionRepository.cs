@@ -1,5 +1,6 @@
 ﻿using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Interfaces.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace DarkKitchen.DataAccess.Repositories;
 
@@ -38,5 +39,13 @@ public class PromotionRepository(AppDbContext context) : IPromotionRepository
         }
 
         return query.ToList();
+    }
+
+    public IEnumerable<Promotion> GetActiveForProducts(IEnumerable<int> productIds, DateTime date)
+    {
+        return context.Promotion
+            .Include(p => p.Products)
+            .Where(p => p.DateFrom <= date && p.DateTo >= date && p.Products.Any(prod => productIds.Contains(prod.Id)))
+            .ToList();
     }
 }

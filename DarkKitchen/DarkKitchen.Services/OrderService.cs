@@ -7,60 +7,104 @@ using DarkKitchen.Models.OrderDTOs;
 
 namespace DarkKitchen.Services;
 
-public class OrderService(IOrderRepository orderRepository, IUserService userService) : IOrderService
+public class OrderService(IOrderRepository orderRepository, IUserService userService, IProductService productService) : IOrderService
 {
     private readonly IOrderRepository orderRepository = orderRepository;
     private readonly IUserService userService = userService;
+    private readonly IProductService productService = productService;
+    private readonly decimal expressDeliveryPrice = 500;
+    private readonly decimal nextDayDeliveryPrice = 250;
+    private readonly decimal ivaRate = 0.22m;
 
-    public OrderResponseDto CreateOrder(OrderDto newOrder)
+    public OrderResponseDto CreateOrder(OrderDto newOrder, int clientId)
     {
         if(newOrder.products.Count == 0)
         {
-            throw new Exception("Order must have at least one product.");
+            throw new BadRequestException("Order must have at least one product.");
         }
 
         if(newOrder.deliveryType != "express" && newOrder.deliveryType != "24hs")
         {
-            throw new Exception("Invalid delivery type.");
+            throw new BadRequestException("Invalid delivery type.");
         }
 
         if(string.IsNullOrEmpty(newOrder.address.street))
         {
-            throw new Exception("Street cannot be empty.");
+            throw new BadRequestException("Street cannot be empty.");
         }
 
         if(string.IsNullOrEmpty(newOrder.address.doorNumber))
         {
-            throw new Exception("Door number cannot be empty.");
+            throw new BadRequestException("Door number cannot be empty.");
         }
 
-        var order = new Order()
+        var orderProducts = new List<OrderProduct>();
+        foreach(var item in newOrder.products)
         {
+            var product = productService.GetByCode(item.productCode)
+                ?? throw new NotFoundException($"Product {item.productCode} not found.");
+
+            orderProducts.Add(new OrderProduct
+            {
+                ProductId = product.id!.Value,
+                Quantity = item.quantity,
+                UnitPrice = product.price!.Value
+            });
+        }
+
+        var discountByProduct = productService.GetBestDiscountByProduct(
+            orderProducts.Select(op => op.ProductId),
+            DateTime.UtcNow.Date);
+
+        decimal subtotal = 0;
+        decimal discount = 0;
+        foreach(var line in orderProducts)
+        {
+            var lineSubtotal = line.UnitPrice * line.Quantity;
+            subtotal += lineSubtotal;
+
+            if(discountByProduct.TryGetValue(line.ProductId, out var percentage))
+            {
+                line.DiscountPercentage = percentage;
+                discount += lineSubtotal * percentage / 100;
+            }
+        }
+
+        var iva = (subtotal - discount) * ivaRate;
+        var shippingCost = newOrder.deliveryType == "express" ? expressDeliveryPrice : nextDayDeliveryPrice;
+
+        var order = new Order
+        {
+            ClientId = clientId,
             DeliveryType = newOrder.deliveryType,
             Street = newOrder.address.street,
             DoorNumber = newOrder.address.doorNumber,
             Apartment = newOrder.address.apartment,
-            Status = "Pending",
-            CreatedAt = DateTime.Now
+            Subtotal = subtotal,
+            Discount = discount,
+            Iva = iva,
+            ShippingCost = shippingCost,
+            Total = subtotal - discount + iva + shippingCost,
+            Products = orderProducts
         };
 
         orderRepository.Add(order);
 
-        return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.ShippingCost, order.Total, []);
+        return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.Discount, order.Iva, order.ShippingCost, order.Total, []);
     }
 
     public List<OrderResponseDto> GetClientOrders(int clientId, OrderFiltersDto filter)
     {
         var orders = orderRepository.GetClientOrders(clientId, filter.dateFrom, filter.dateTo, filter.status);
 
-        return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.ShippingCost, o.Total, [])).ToList();
+        return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.Discount, o.Iva, o.ShippingCost, o.Total, [])).ToList();
     }
 
     public List<OrderResponseDto> GetOrdersByStatus(OrderFilterByStatusDto filter)
     {
         var orders = orderRepository.GetOrdersByStatus(filter.dateFrom, filter.dateTo, filter.address, filter.status);
 
-        return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.ShippingCost, o.Total, [])).ToList();
+        return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.Discount, o.Iva, o.ShippingCost, o.Total, [])).ToList();
     }
 
     public OrderResponseDto GetOrderById(int orderId)
@@ -68,7 +112,7 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
         var order = orderRepository.GetById(orderId)
             ?? throw new Exception("Order not found.");
 
-        return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.ShippingCost, order.Total, []);
+        return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.Discount, order.Iva, order.ShippingCost, order.Total, []);
     }
 
     public void UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus, List<Permission> userPermissions)

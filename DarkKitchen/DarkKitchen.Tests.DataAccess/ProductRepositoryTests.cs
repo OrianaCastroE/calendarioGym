@@ -134,6 +134,24 @@ public class ProductRepositoryTests
     }
 
     [TestMethod]
+    public void GetByCode_WhenProductExists_ReturnsProduct()
+    {
+        context!.Products.Add(product!);
+        context.SaveChanges();
+
+        var result = productRepository!.GetByCode(product!.Code);
+
+        Assert.IsNotNull(result);
+    }
+
+    [TestMethod]
+    public void GetByCode_WhenProductDoesNotExist_ReturnsNull()
+    {
+        var result = productRepository!.GetByCode("MISSING");
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
     public void GetProducts_WhenProductsExist_ReturnsProducts()
     {
         context!.Products.Add(product!);
@@ -222,6 +240,9 @@ public class ProductRepositoryTests
         {
             Id = 1,
             ClientId = 1,
+            DeliveryType = "express",
+            Street = "Test Street",
+            DoorNumber = "1",
             CreatedAt = new DateTime(2024, 6, 15),
             Products =
             [

@@ -33,6 +33,11 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         return context.Products.FirstOrDefault(p => p.Id == id);
     }
 
+    public Product? GetByCode(string code)
+    {
+        return context.Products.FirstOrDefault(p => p.Code == code);
+    }
+
     public IEnumerable<Product> GetProducts(ProductFilterDto filter)
     {
         var query = context.Products.AsQueryable();

@@ -24,7 +24,7 @@ public class ProductsController(IProductService productService) : ControllerBase
 
     [Authorize(Policy = nameof(Permission.UpdateProduct))]
     [HttpPut]
-    public IActionResult UpdateProduct([FromBody] UpdateProductDto product)
+    public IActionResult UpdateProduct([FromBody] ProductDto product)
     {
         _productService.UpdateProduct(product);
         return Ok("Product updated correctly.");

@@ -121,4 +121,43 @@ public class PromotionRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
     }
+
+    [TestMethod]
+    public void GetActiveForProducts_WhenActivePromotionCoversProduct_ReturnsPromotion()
+    {
+        var product = new Product { Id = 1, Code = "P1", Name = "P1", Price = 100, IsActive = true };
+        promotion!.Products = [product];
+        context!.Promotion.Add(promotion);
+        context.SaveChanges();
+
+        var result = promotionRepository!.GetActiveForProducts([1], new DateTime(2026, 1, 27)).ToList();
+
+        Assert.AreEqual(1, result.Count);
+    }
+
+    [TestMethod]
+    public void GetActiveForProducts_WhenDateOutsideRange_ReturnsEmpty()
+    {
+        var product = new Product { Id = 1, Code = "P1", Name = "P1", Price = 100, IsActive = true };
+        promotion!.Products = [product];
+        context!.Promotion.Add(promotion);
+        context.SaveChanges();
+
+        var result = promotionRepository!.GetActiveForProducts([1], new DateTime(2026, 2, 15)).ToList();
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void GetActiveForProducts_WhenProductNotInPromotion_ReturnsEmpty()
+    {
+        var product = new Product { Id = 1, Code = "P1", Name = "P1", Price = 100, IsActive = true };
+        promotion!.Products = [product];
+        context!.Promotion.Add(promotion);
+        context.SaveChanges();
+
+        var result = promotionRepository!.GetActiveForProducts([99], new DateTime(2026, 1, 27)).ToList();
+
+        Assert.AreEqual(0, result.Count);
+    }
 }
