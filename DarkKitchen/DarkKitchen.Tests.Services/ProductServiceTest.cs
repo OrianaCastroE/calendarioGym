@@ -47,11 +47,20 @@ public class ProductServiceTest
     [TestMethod]
     public void CreateProduct_WhenValidParams_CallsRepository()
     {
+        productRepositoryMock!.Setup(r => r.GetByCode(validCreateProductDto.code!)).Returns((Product?)null);
         productRepositoryMock!.Setup(r => r.Add(It.IsAny<Product>()));
 
         productService!.CreateProduct(validCreateProductDto);
 
         productRepositoryMock!.Verify(r => r.Add(It.IsAny<Product>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void CreateProduct_WhenDuplicateCode_ThrowsBadRequestException()
+    {
+        productRepositoryMock!.Setup(r => r.GetByCode(validCreateProductDto.code!)).Returns(validProduct!);
+
+        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(validCreateProductDto));
     }
 
     [TestMethod]

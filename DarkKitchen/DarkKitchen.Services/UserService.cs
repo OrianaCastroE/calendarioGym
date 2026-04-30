@@ -15,13 +15,18 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password);
 
+        if(_userRepository.GetByEmail(newUser.email!) != null)
+        {
+            throw new BadRequestException("Email already in use.");
+        }
+
         var user = new User
         {
             Name = newUser.name,
             Surname = newUser.surname,
             Email = newUser.email,
             Phone = newUser.phone,
-            Password = newUser.password,
+            Password = BCrypt.Net.BCrypt.HashPassword(newUser.password),
             Role = Role.Client,
         };
 
@@ -55,7 +60,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
         if(updatedUser.password != null)
         {
-            user.Password = updatedUser.password;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(updatedUser.password);
         }
 
         _userRepository.Update(user);
@@ -103,6 +108,11 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password);
 
+        if(_userRepository.GetByEmail(newUser.email!) != null)
+        {
+            throw new BadRequestException("Email already in use.");
+        }
+
         if(!Enum.TryParse<Role>(newUser.role, ignoreCase: true, out var role))
         {
             throw new BadRequestException("Invalid role.");
@@ -114,7 +124,7 @@ public class UserService(IUserRepository userRepository) : IUserService
             Surname = newUser.surname!,
             Email = newUser.email!,
             Phone = newUser.phone!,
-            Password = newUser.password!,
+            Password = BCrypt.Net.BCrypt.HashPassword(newUser.password),
             Role = role,
         };
 

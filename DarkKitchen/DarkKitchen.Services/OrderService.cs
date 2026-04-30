@@ -111,7 +111,7 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
     public OrderResponseDto GetOrderById(int orderId)
     {
         var order = orderRepository.GetById(orderId)
-            ?? throw new Exception("Order not found.");
+            ?? throw new NotFoundException("Order not found.");
 
         return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.Discount, order.Iva, order.ShippingCost, order.Total, []);
     }

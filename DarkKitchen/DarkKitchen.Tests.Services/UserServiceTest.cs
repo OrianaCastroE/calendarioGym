@@ -39,6 +39,9 @@ public class UserServiceTest
     public void CreateUser_WhenValidUser_ShouldCreateUser()
     {
         _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail(_validUser.email!))
+            .Returns((User?)null);
+        _userRepositoryMock!
             .Setup(repository => repository.Add(It.IsAny<User>()));
 
         _userService!.CreateUser(_validUser);
@@ -283,6 +286,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUserWithRole_WhenValidUser_ShouldCreateUser()
     {
+        _userRepositoryMock!.Setup(repository => repository.GetByEmail("validEmail@gmail.com")).Returns((User?)null);
         _userRepositoryMock!.Setup(repository => repository.Add(It.IsAny<User>()));
 
         _userService!.CreateUserWithRole(new CreateUserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!", "Admin"));
@@ -293,8 +297,27 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUserWithRole_WhenInvalidRole_ShouldThrowBadRequestException()
     {
+        _userRepositoryMock!.Setup(repository => repository.GetByEmail("validEmail@gmail.com")).Returns((User?)null);
+
         Assert.ThrowsException<BadRequestException>(() =>
             _userService!.CreateUserWithRole(new CreateUserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!", "InvalidRole")));
+    }
+
+    [TestMethod]
+    public void CreateUser_WhenDuplicateEmail_ShouldThrowBadRequestException()
+    {
+        _userRepositoryMock!.Setup(repository => repository.GetByEmail(_validUser.email!)).Returns(_user!);
+
+        Assert.ThrowsException<BadRequestException>(() => _userService!.CreateUser(_validUser));
+    }
+
+    [TestMethod]
+    public void CreateUserWithRole_WhenDuplicateEmail_ShouldThrowBadRequestException()
+    {
+        _userRepositoryMock!.Setup(repository => repository.GetByEmail("validEmail@gmail.com")).Returns(_user!);
+
+        Assert.ThrowsException<BadRequestException>(() =>
+            _userService!.CreateUserWithRole(new CreateUserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!", "Admin")));
     }
 
     [TestMethod]

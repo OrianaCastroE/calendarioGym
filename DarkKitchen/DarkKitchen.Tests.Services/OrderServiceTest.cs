@@ -138,7 +138,7 @@ public class OrderServiceTest
     {
         orderRepositoryMock!.Setup(r => r.GetById(1)).Returns((Order?)null);
 
-        Assert.ThrowsException<Exception>(() => orderService!.GetOrderById(1));
+        Assert.ThrowsException<NotFoundException>(() => orderService!.GetOrderById(1));
     }
 
     [TestMethod]

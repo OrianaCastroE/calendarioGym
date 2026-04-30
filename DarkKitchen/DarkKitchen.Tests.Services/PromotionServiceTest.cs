@@ -48,7 +48,7 @@ public class PromotionServiceTest
     {
         validPromotion = validPromotion with { discountPercentage = 0 };
 
-        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion));
+        Assert.ThrowsException<BadRequestException>(() => promotionService!.CreatePromotion(validPromotion));
     }
 
     [TestMethod]
@@ -56,7 +56,7 @@ public class PromotionServiceTest
     {
         validPromotion = validPromotion with { dateFrom = new DateTime(2026, 1, 30), dateTo = new DateTime(2026, 1, 25) };
 
-        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion));
+        Assert.ThrowsException<BadRequestException>(() => promotionService!.CreatePromotion(validPromotion));
     }
 
     [TestMethod]
@@ -64,7 +64,7 @@ public class PromotionServiceTest
     {
         validPromotion = validPromotion with { name = string.Empty };
 
-        Assert.ThrowsException<Exception>(() => promotionService!.CreatePromotion(validPromotion));
+        Assert.ThrowsException<BadRequestException>(() => promotionService!.CreatePromotion(validPromotion));
     }
 
     [TestMethod]
@@ -83,7 +83,7 @@ public class PromotionServiceTest
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns((Promotion?)null);
 
-        Assert.ThrowsException<Exception>(() => promotionService!.UpdatePromotion(1, validPromotion));
+        Assert.ThrowsException<NotFoundException>(() => promotionService!.UpdatePromotion(1, validPromotion));
     }
 
     [TestMethod]
@@ -102,7 +102,7 @@ public class PromotionServiceTest
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns((Promotion?)null);
 
-        Assert.ThrowsException<Exception>(() => promotionService!.UpdatePromotionProducts(1, [1, 2, 3]));
+        Assert.ThrowsException<NotFoundException>(() => promotionService!.UpdatePromotionProducts(1, [1, 2, 3]));
     }
 
     [TestMethod]

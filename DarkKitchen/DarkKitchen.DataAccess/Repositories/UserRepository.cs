@@ -38,7 +38,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
         var existingUser = context.Users.Find(user.Id);
         if(existingUser == null)
         {
-            throw new Exception("User not found");
+            return;
         }
 
         context.Entry(existingUser).CurrentValues.SetValues(user);

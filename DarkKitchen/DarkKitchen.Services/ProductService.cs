@@ -19,6 +19,11 @@ public class ProductService(IProductRepository repository, IPromotionService pro
             throw new BadRequestException("Name is required.");
         }
 
+        if(_repository.GetByCode(newProduct.code!) != null)
+        {
+            throw new BadRequestException("Product code already in use.");
+        }
+
         var product = new Product
         {
             Code = newProduct.code!,

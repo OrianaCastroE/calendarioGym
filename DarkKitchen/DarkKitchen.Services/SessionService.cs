@@ -43,6 +43,7 @@ public class SessionService(
         claims.AddRange(permissions.Select(p => new Claim("permission", p.ToString())));
 
         var token = new JwtSecurityToken(
+            issuer: configuration["Jwt:Issuer"],
             claims: claims,
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credentials);

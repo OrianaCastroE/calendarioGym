@@ -31,6 +31,7 @@ public class SessionServiceTest
         rolePermissionsServiceMock = new Mock<IRolePermissionsService>(MockBehavior.Strict);
         configurationMock = new Mock<IConfiguration>(MockBehavior.Strict);
         configurationMock.Setup(c => c["Jwt:Key"]).Returns("test-secret-key-minimum-32-chars!!");
+        configurationMock.Setup(c => c["Jwt:Issuer"]).Returns("DarkKitchen");
         sessionService = new SessionService(
             userRepositoryMock.Object,
             rolePermissionsServiceMock.Object,
