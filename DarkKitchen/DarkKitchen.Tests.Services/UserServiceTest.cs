@@ -75,6 +75,30 @@ public class UserServiceTest
     }
 
     [TestMethod]
+    public void CreateUser_WhenEmailIsEmpty_ShouldThrowBadRequestException()
+    {
+        _validUser = _validUser with { email = "" };
+
+        Assert.ThrowsException<BadRequestException>(() => _userService!.CreateUser(_validUser));
+    }
+
+    [TestMethod]
+    public void CreateUser_WhenEmailHasTooManyAtSigns_ShouldThrowBadRequestException()
+    {
+        _validUser = _validUser with { email = "a@b@c@.com" };
+
+        Assert.ThrowsException<BadRequestException>(() => _userService!.CreateUser(_validUser));
+    }
+
+    [TestMethod]
+    public void CreateUser_WhenPasswordHasConsecutiveDigits_ShouldThrowBadRequestException()
+    {
+        _validUser = _validUser with { password = "ValidPass12!aaaaaa" };
+
+        Assert.ThrowsException<BadRequestException>(() => _userService!.CreateUser(_validUser));
+    }
+
+    [TestMethod]
     public void CreateUser_WhenLongPassword_ShouldThrowBadRequestException()
     {
         _validUser = _validUser with { password = "longPassworddddddddddddddddddd" };
