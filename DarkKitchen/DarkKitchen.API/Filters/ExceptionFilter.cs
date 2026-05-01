@@ -60,7 +60,7 @@ public class ExceptionFilter : IExceptionFilter
         {
             context.Result = new ObjectResult(new
             {
-                Message = "Internal server error"// + ": " + exception.Message
+                Message = "Internal server error" + ": " + exception.Message
             })
             {
                 StatusCode = 500
