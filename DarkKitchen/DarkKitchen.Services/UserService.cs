@@ -79,14 +79,14 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         if(string.IsNullOrWhiteSpace(email))
         {
-            throw new EmailEmptyException();
+            throw new BadRequestException("Invalid email.");
         }
 
         User? user = _userRepository.GetByEmail(email);
 
         if(user == null)
         {
-            throw new UserNotFoundException();
+            throw new NotFoundException("User");
         }
 
         _userRepository.Delete(user);
@@ -133,50 +133,74 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     private static void ValidateUserFields(string? name, string? surname, string? email, string? password)
     {
+        var message = string.Empty;
+
         if(string.IsNullOrEmpty(name))
         {
-            throw new NameEmptyException();
+            message = "Name can't be empty.";
         }
 
         if(string.IsNullOrEmpty(surname))
         {
-            throw new SurnameEmptyException();
+            message = "Surname can't be empty.";
         }
 
-        if(!email!.Contains('@'))
+        if(string.IsNullOrEmpty(email))
         {
-            throw new InvalidEmailException();
+            throw new BadRequestException("Invalid email format.");
+        }
+
+        if((!email!.Contains('@')) || email.Count(c => c == '@') > 2)
+        {
+            message = "Invalid email format.";
         }
 
         if(password!.Length > 25)
         {
-            throw new PasswordTooLongException();
+            message = "Password can't have more than 25 characters.";
         }
 
         if(password.Length < 15)
         {
-            throw new PasswordTooShortException();
+            message = "Password can't have less than 15 characters.";
         }
 
         if(!password.Any(char.IsUpper))
         {
-            throw new PasswordMissingUppercaseException();
+            message = "Password must contain at least one upper case.";
         }
 
         if(!password.Any(char.IsLower))
         {
-            throw new PasswordMissingLowercaseException();
+            message = "Password must contain at least one lower case.";
         }
 
         var specialChars = "!@#$%^&*()_+-=[]{};:,.<>?/~";
         if(!password.Any(specialChars.Contains))
         {
-            throw new PasswordMissingSpecialCharacterException();
+            message = "Password must contain at least one special character (!@#$%^&*()_+-=[]{};:,.<>?/~).";
         }
 
         if(!password.Any(char.IsDigit))
         {
-            throw new PasswordMissingNumberException();
+            message = "Password must contain at least one number.";
+        }
+
+        var previousCharWasDigit = false;
+        foreach(var letter in password)
+        {
+            if(char.IsDigit(letter) && previousCharWasDigit)
+            {
+                message = "Password can't contain a number sequence.";
+                break;
+            }
+
+            previousCharWasDigit = char.IsDigit(letter);
+        }
+
+        if(!string.IsNullOrEmpty(message))
+        {
+            throw new BadRequestException(message);
         }
     }
 }
