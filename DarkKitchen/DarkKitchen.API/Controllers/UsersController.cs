@@ -37,9 +37,9 @@ public class UsersController(IUserService userService) : ControllerBase
 
     [Authorize(Policy = nameof(Permission.GetUsers))]
     [HttpGet]
-    public IActionResult GetUsers([FromQuery] UserFiltersDto filter)
+    public IActionResult GetUsers([FromQuery] string? name, [FromQuery] string? surname)
     {
-        var users = _userService.GetUsers(filter);
+        var users = _userService.GetUsers(new UserFiltersDto(name, surname));
         return Ok(users);
     }
 
