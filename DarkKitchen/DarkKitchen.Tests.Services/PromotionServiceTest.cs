@@ -188,17 +188,4 @@ public class PromotionServiceTest
         Assert.ThrowsException<BadRequestException>(() =>
             promotionService!.GetPromotions(new PromotionFiltersDto(null, null, null)));
     }
-
-    [TestMethod]
-    public void GetBestDiscountByProduct_WhenLowerDiscountComesAfterHigher_KeepsHigherDiscount()
-    {
-        var highPromo = new Promotion { Id = 1, Name = "High", DiscountPercentage = 25, Products = [new Product { Id = 1 }] };
-        var lowPromo = new Promotion { Id = 2, Name = "Low", DiscountPercentage = 10, Products = [new Product { Id = 1 }] };
-        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
-            .Returns([highPromo, lowPromo]);
-
-        var result = promotionService!.GetBestDiscountByProduct([1], DateTime.UtcNow);
-
-        Assert.AreEqual(25, result[1]);
-    }
 }

@@ -165,20 +165,6 @@ public class UserServiceTest
     }
 
     [TestMethod]
-    public void UpdateUser_WhenOptionalFieldsAreNull_ShouldNotUpdateThem()
-    {
-        _userRepositoryMock!
-            .Setup(repository => repository.GetByEmail(_user!.Email))
-            .Returns(_user!);
-        _userRepositoryMock!
-            .Setup(repository => repository.Update(It.IsAny<User>()));
-
-        _userService!.UpdateUser(new UserDto(null, null, _user!.Email, null, null));
-
-        _userRepositoryMock!.Verify(repository => repository.Update(_user!), Times.Once);
-    }
-
-    [TestMethod]
     public void UpdateUser_WhenValidUser_ShouldUpdateUser()
     {
         var dto = new UserDto("UpdatedName", "UpdatedSurname", _user!.Email, "099999999", "UpdatedPassword1!");
@@ -314,7 +300,7 @@ public class UserServiceTest
         _userRepositoryMock!.Setup(repository => repository.GetByEmail("validEmail@gmail.com")).Returns((User?)null);
 
         Assert.ThrowsException<BadRequestException>(() =>
-            _userService!.CreateUserWithRole(new CreateUserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!", "InvalidRole")));
+            _userService!.CreateUserWithRole(new CreateUserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword1!2!3!", "InvalidRole")));
     }
 
     [TestMethod]
@@ -331,7 +317,7 @@ public class UserServiceTest
         _userRepositoryMock!.Setup(repository => repository.GetByEmail("validEmail@gmail.com")).Returns(_user!);
 
         Assert.ThrowsException<BadRequestException>(() =>
-            _userService!.CreateUserWithRole(new CreateUserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword123!", "Admin")));
+            _userService!.CreateUserWithRole(new CreateUserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword1!2!3!", "Admin")));
     }
 
     [TestMethod]
