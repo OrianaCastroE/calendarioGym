@@ -77,7 +77,7 @@ public class UserServiceTest
     [TestMethod]
     public void CreateUser_WhenEmailIsEmpty_ShouldThrowBadRequestException()
     {
-        _validUser = _validUser with { email = "" };
+        _validUser = _validUser with { email = string.Empty };
 
         Assert.ThrowsException<BadRequestException>(() => _userService!.CreateUser(_validUser));
     }
