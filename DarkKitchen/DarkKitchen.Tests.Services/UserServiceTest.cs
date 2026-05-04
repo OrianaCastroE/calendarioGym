@@ -165,6 +165,20 @@ public class UserServiceTest
     }
 
     [TestMethod]
+    public void UpdateUser_WhenOptionalFieldsAreNull_ShouldNotUpdateThem()
+    {
+        _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail(_user!.Email))
+            .Returns(_user!);
+        _userRepositoryMock!
+            .Setup(repository => repository.Update(It.IsAny<User>()));
+
+        _userService!.UpdateUser(new UserDto(null, null, _user!.Email, null, null));
+
+        _userRepositoryMock!.Verify(repository => repository.Update(_user!), Times.Once);
+    }
+
+    [TestMethod]
     public void UpdateUser_WhenValidUser_ShouldUpdateUser()
     {
         var dto = new UserDto("UpdatedName", "UpdatedSurname", _user!.Email, "099999999", "UpdatedPassword1!");
