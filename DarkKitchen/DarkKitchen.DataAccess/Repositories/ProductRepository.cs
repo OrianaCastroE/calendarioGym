@@ -87,7 +87,6 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         }
 
         product.IsActive = status.isActive;
-        context.Products.Update(product);
         context.SaveChanges();
     }
 }
