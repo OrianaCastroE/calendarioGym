@@ -16,6 +16,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         }
 
         context.Products.Add(product);
+        context.SaveChanges();
     }
 
     public void Update(Product product)
@@ -26,6 +27,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         }
 
         context.Products.Update(product);
+        context.SaveChanges();
     }
 
     public Product? GetById(int id)
@@ -86,5 +88,6 @@ public class ProductRepository(AppDbContext context) : IProductRepository
 
         product.IsActive = status.isActive;
         context.Products.Update(product);
+        context.SaveChanges();
     }
 }
