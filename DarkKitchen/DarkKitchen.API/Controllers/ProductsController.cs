@@ -32,9 +32,9 @@ public class ProductsController(IProductService productService) : ControllerBase
 
     [Authorize(Policy = nameof(Permission.GetProducts))]
     [HttpGet]
-    public IActionResult GetProducts([FromQuery] ProductFilterDto filter)
+    public IActionResult GetProducts([FromQuery] string? productLine, [FromQuery] List<string>? categories, [FromQuery] string? name)
     {
-        var products = _productService.GetProducts(filter);
+        var products = _productService.GetProducts(new ProductFilterDto(productLine, categories, name));
         return Ok(products);
     }
 

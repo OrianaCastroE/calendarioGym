@@ -66,7 +66,6 @@ public class ProductRepositoryTests
     public void AddProduct_WhenProductIsValid_AddsProductToDatabase()
     {
         productRepository!.Add(product!);
-        context!.SaveChanges();
 
         var result = context.Products.Include(p => p.Images).FirstOrDefault(p => p.Id == 1);
 
@@ -79,7 +78,6 @@ public class ProductRepositoryTests
     public void AddProduct_WhenProductIsNull_DoesNotAddProductToDatabase()
     {
         productRepository!.Add(null!);
-        context!.SaveChanges();
 
         var result = context.Products.FirstOrDefault(p => p.Id == 1);
 
@@ -94,7 +92,7 @@ public class ProductRepositoryTests
         product!.Name = "Updated Product";
 
         productRepository!.Update(product!);
-        context.SaveChanges();
+
         var result = context.Products.FirstOrDefault(p => p.Id == product.Id);
 
         Assert.IsNotNull(result);
@@ -107,7 +105,6 @@ public class ProductRepositoryTests
         context!.Products.Add(product!);
         context!.SaveChanges();
         productRepository!.Update(null!);
-        context.SaveChanges();
 
         var result = context.Products.FirstOrDefault(p => p.Id == product.Id);
 
@@ -157,7 +154,9 @@ public class ProductRepositoryTests
         context!.Products.Add(product!);
         context.SaveChanges();
         filter = new ProductFilterDto(null, null, "Test");
+
         var result = productRepository!.GetProducts(filter);
+
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
     }
@@ -166,7 +165,9 @@ public class ProductRepositoryTests
     public void GetProducts_WhenNoProductsExist_ReturnsEmptyList()
     {
         filter = new ProductFilterDto(null, null, "Test");
+
         var result = productRepository!.GetProducts(filter);
+
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
     }
@@ -176,7 +177,9 @@ public class ProductRepositoryTests
     {
         context!.Products.Add(product!);
         context.SaveChanges();
+
         var result = productRepository!.GetProducts(new ProductFilterDto(null, null, null));
+
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
     }
@@ -187,7 +190,9 @@ public class ProductRepositoryTests
         context!.Products.Add(product!);
         context.SaveChanges();
         filter = new ProductFilterDto("SomeLine", null, null);
+
         var result = productRepository!.GetProducts(filter);
+
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
     }
@@ -197,7 +202,9 @@ public class ProductRepositoryTests
     {
         context!.Products.Add(product!);
         context.SaveChanges();
+
         filter = new ProductFilterDto(null, ["Test Category"], null);
+
         var result = productRepository!.GetProducts(filter);
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
@@ -210,7 +217,6 @@ public class ProductRepositoryTests
         context.SaveChanges();
 
         productRepository!.UpdateStatus(product!.Id, new ProductStatusDto(false));
-        context.SaveChanges();
 
         var result = context.Products.FirstOrDefault(p => p.Id == product.Id);
         Assert.IsNotNull(result);
@@ -222,8 +228,9 @@ public class ProductRepositoryTests
     {
         context!.Products.Add(product!);
         context.SaveChanges();
+
         productRepository!.UpdateStatus(999, new ProductStatusDto(false));
-        context.SaveChanges();
+
         var result = context.Products.FirstOrDefault(p => p.Id == product.Id);
         Assert.IsNotNull(result);
         Assert.IsTrue(result.IsActive);

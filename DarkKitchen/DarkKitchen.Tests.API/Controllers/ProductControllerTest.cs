@@ -61,7 +61,7 @@ public class ProductControllerTest
         List<string> categories = ["Fútbol", "Baloncesto", "Tenis"];
         var products = new List<ProductDto>();
         productServiceMock.Setup(s => s.GetProducts(It.IsAny<ProductFilterDto>())).Returns(products!);
-        var result = productController.GetProducts(new ProductFilterDto(validProductLine, categories, validProductName));
+        var result = productController.GetProducts(validProductLine, categories, validProductName);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -74,7 +74,7 @@ public class ProductControllerTest
     {
         productServiceMock.Setup(s => s.GetProducts(It.IsAny<ProductFilterDto>())).Throws(new NotFoundException("No products found."));
 
-        Assert.ThrowsException<NotFoundException>(() => productController.GetProducts(new ProductFilterDto(validProductLine, null, validProductName)));
+        Assert.ThrowsException<NotFoundException>(() => productController.GetProducts(validProductLine, null, validProductName));
     }
 
     [TestMethod]
