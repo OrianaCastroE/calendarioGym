@@ -327,6 +327,30 @@ public class OrderServiceTest
     }
 
     [TestMethod]
+    public void GetSalesReport_SameClientTwoOrdersSameMonth_AggregatesCorrectly()
+    {
+        var order2 = new Order
+        {
+            Id = 2,
+            ClientId = 1,
+            DeliveryType = "express",
+            Address = new Address { Street = "18 de Julio", DoorNumber = "1234" },
+            CreatedAt = orderEntity!.CreatedAt,
+            Subtotal = 100,
+            ShippingCost = 10,
+            Total = 128.1m
+        };
+        var user = new UserResponseDto(1, "validName", "validSurname", "validEmail@gmail.com", "099123456", "Client");
+        orderRepositoryMock!.Setup(r => r.GetAll()).Returns([orderEntity!, order2]);
+        userServiceMock!.Setup(s => s.GetUserById(1)).Returns(user);
+
+        var result = orderService!.GetSalesReport();
+
+        Assert.AreEqual(1, result.months.Count);
+        Assert.AreEqual(1, result.months[0].lines.Count);
+    }
+
+    [TestMethod]
     public void UpdateOrderStatus_InvalidCurrentStatus_ThrowsBadRequestException()
     {
         orderEntity!.Status = "InvalidStatus";
