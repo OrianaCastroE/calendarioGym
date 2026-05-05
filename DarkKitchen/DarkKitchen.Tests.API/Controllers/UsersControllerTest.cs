@@ -117,7 +117,13 @@ public class UsersControllerTest
     public void GetUsers_ValidFilter_ReturnsOk()
     {
         userServiceMock.Setup(s => s.GetUsers(It.IsAny<UserFiltersDto>())).Returns(users!);
-        var result = userController.GetUsers("Name", "Surname");
+        var filters = new UserFiltersDto
+        {
+            Name = "Name",
+            Surname = "Surname"
+        };
+
+        var result = userController.GetUsers(filters);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -128,7 +134,13 @@ public class UsersControllerTest
     public void GetUsers_NoUsersFound_ThrowsNotFoundException()
     {
         userServiceMock.Setup(s => s.GetUsers(It.IsAny<UserFiltersDto>())).Throws(new NotFoundException("No users found."));
-        Assert.ThrowsException<NotFoundException>(() => userController.GetUsers("Name", "Surname"));
+        var filters = new UserFiltersDto
+        {
+            Name = "Name",
+            Surname = "Surname"
+        };
+
+        Assert.ThrowsException<NotFoundException>(() => userController.GetUsers(filters));
     }
 
     [TestMethod]
