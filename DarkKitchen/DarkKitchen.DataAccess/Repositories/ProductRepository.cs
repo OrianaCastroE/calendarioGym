@@ -44,19 +44,19 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     {
         var query = context.Products.AsQueryable();
 
-        if(!string.IsNullOrEmpty(filter.productLine))
+        if(!string.IsNullOrEmpty(filter.ProductLine))
         {
-            query = query.Where(p => p.ProductLine == filter.productLine);
+            query = query.Where(p => p.ProductLine == filter.ProductLine);
         }
 
-        if(filter.categories != null && filter.categories.Count > 0)
+        if(filter.Categories != null && filter.Categories.Count > 0)
         {
-            query = query.Where(p => p.Category != null && filter.categories.Contains(p.Category));
+            query = query.Where(p => p.Category != null && filter.Categories.Contains(p.Category));
         }
 
-        if(!string.IsNullOrEmpty(filter.name))
+        if(!string.IsNullOrEmpty(filter.Name))
         {
-            query = query.Where(p => p.Name.Contains(filter.name));
+            query = query.Where(p => p.Name.Contains(filter.Name));
         }
 
         return query.ToList();
@@ -65,7 +65,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     public IEnumerable<Product> GetMostRequestedProducts(DateRangeDto dates)
     {
         var productIds = context.Orders
-            .Where(o => o.CreatedAt >= dates.dateFrom && o.CreatedAt <= dates.dateTo)
+            .Where(o => o.CreatedAt >= dates.DateFrom && o.CreatedAt <= dates.DateTo)
             .SelectMany(o => o.Products)
             .GroupBy(op => op.ProductId)
             .OrderByDescending(g => g.Sum(op => op.Quantity))

@@ -189,8 +189,13 @@ public class UserServiceTest
         _userRepositoryMock!
             .Setup(repository => repository.GetUsers("validName", "validSurname"))
             .Returns([]);
+        var filters = new UserFiltersDto
+        {
+            Name = "validName",
+            Surname = "validSurname"
+        };
 
-        List<UserResponseDto> result = _userService!.GetUsers(new UserFiltersDto("validName", "validSurname"));
+        List<UserResponseDto> result = _userService!.GetUsers(filters);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
@@ -214,8 +219,13 @@ public class UserServiceTest
         _userRepositoryMock!
             .Setup(repository => repository.GetUsers("validName", "validSurname"))
             .Returns(users);
+        var filters = new UserFiltersDto
+        {
+            Name = "validName",
+            Surname = "validSurname"
+        };
 
-        List<UserResponseDto> result = _userService!.GetUsers(new UserFiltersDto("validName", "validSurname"));
+        List<UserResponseDto> result = _userService!.GetUsers(filters);
 
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual("validName", result[0].name);
@@ -240,8 +250,13 @@ public class UserServiceTest
         _userRepositoryMock!
             .Setup(repository => repository.GetUsers("validName", "validSurname"))
             .Returns(users);
+        var filters = new UserFiltersDto
+        {
+            Name = "validName",
+            Surname = "validSurname"
+        };
 
-        var result = _userService!.GetUsers(new UserFiltersDto("validName", "validSurname"));
+        var result = _userService!.GetUsers(filters);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);

@@ -68,7 +68,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public List<UserResponseDto> GetUsers(UserFiltersDto filter)
     {
-        List<User> users = _userRepository.GetUsers(filter.name, filter.surname);
+        List<User> users = _userRepository.GetUsers(filter.Name, filter.Surname);
 
         var result = users.Select(user => new UserResponseDto(user.Id, user.Name, user.Surname, user.Email, user.Phone, user.Role.ToString())).ToList();
 

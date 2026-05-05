@@ -102,8 +102,12 @@ public class ProductServiceTest
     public void GetProducts_WhenProductsExist_ReturnsMappedDtos()
     {
         productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilterDto>())).Returns([validProduct!]);
+        var filters = new ProductFilterDto
+        {
+            ProductLine = "Valid Line"
+        };
 
-        var result = productService!.GetProducts(new ProductFilterDto("Valid Line", null, null));
+        var result = productService!.GetProducts(filters);
 
         Assert.AreEqual(1, result.Count());
     }
@@ -112,8 +116,9 @@ public class ProductServiceTest
     public void GetProducts_WhenNoProductsFound_ThrowsNotFoundException()
     {
         productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilterDto>())).Returns([]);
+        var filters = new ProductFilterDto { };
 
-        Assert.ThrowsException<NotFoundException>(() => productService!.GetProducts(new ProductFilterDto(null, null, null)));
+        Assert.ThrowsException<NotFoundException>(() => productService!.GetProducts(filters));
     }
 
     [TestMethod]
@@ -121,8 +126,9 @@ public class ProductServiceTest
     {
         validProduct!.Images = null;
         productRepositoryMock!.Setup(r => r.GetProducts(It.IsAny<ProductFilterDto>())).Returns([validProduct!]);
+        var filters = new ProductFilterDto { };
 
-        var result = productService!.GetProducts(new ProductFilterDto(null, null, null));
+        var result = productService!.GetProducts(filters);
 
         Assert.IsNull(result.Single().imageUrl);
     }
@@ -130,7 +136,11 @@ public class ProductServiceTest
     [TestMethod]
     public void GetMostRequestedProducts_WhenProductsExist_ReturnsMappedDtos()
     {
-        var dates = new DateRangeDto(DateTime.Now.AddDays(-7), DateTime.Now);
+        var dates = new DateRangeDto
+        {
+            DateFrom = DateTime.Now.AddDays(-7),
+            DateTo = DateTime.Now
+        };
         productRepositoryMock!.Setup(r => r.GetMostRequestedProducts(dates)).Returns([validProduct!]);
 
         var result = productService!.GetMostRequestedProducts(dates);
@@ -141,7 +151,11 @@ public class ProductServiceTest
     [TestMethod]
     public void GetMostRequestedProducts_WhenNoProductsFound_ThrowsNotFoundException()
     {
-        var dates = new DateRangeDto(DateTime.Now.AddDays(-7), DateTime.Now);
+        var dates = new DateRangeDto
+        {
+            DateFrom = DateTime.Now.AddDays(-7),
+            DateTo = DateTime.Now
+        };
         productRepositoryMock!.Setup(r => r.GetMostRequestedProducts(dates)).Returns([]);
 
         Assert.ThrowsException<NotFoundException>(() => productService!.GetMostRequestedProducts(dates));
@@ -150,7 +164,11 @@ public class ProductServiceTest
     [TestMethod]
     public void GetMostRequestedProducts_WhenProductHasNoImages_ReturnsMappedDtoWithNullImages()
     {
-        var dates = new DateRangeDto(DateTime.Now.AddDays(-7), DateTime.Now);
+        var dates = new DateRangeDto
+        {
+            DateFrom = DateTime.Now.AddDays(-7),
+            DateTo = DateTime.Now
+        };
         validProduct!.Images = null;
         productRepositoryMock!.Setup(r => r.GetMostRequestedProducts(dates)).Returns([validProduct!]);
 
