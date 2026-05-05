@@ -112,7 +112,7 @@ public class PromotionServiceTest
         promotionRepositoryMock!.Setup(r => r.GetPromotions(date, null, null))
             .Returns([]);
 
-        var result = promotionService!.GetPromotions(new PromotionFiltersDto(date, null, null));
+        var result = promotionService!.GetPromotions(new PromotionFiltersDto { Date = date });
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
@@ -125,7 +125,7 @@ public class PromotionServiceTest
         promotionRepositoryMock!.Setup(r => r.GetPromotions(date, null, null))
             .Returns([promotionEntity!]);
 
-        var result = promotionService!.GetPromotions(new PromotionFiltersDto(date, null, null));
+        var result = promotionService!.GetPromotions(new PromotionFiltersDto { Date = date });
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
@@ -186,6 +186,6 @@ public class PromotionServiceTest
     public void GetPromotions_WhenDateIsNull_ThrowsBadRequestException()
     {
         Assert.ThrowsException<BadRequestException>(() =>
-            promotionService!.GetPromotions(new PromotionFiltersDto(null, null, null)));
+            promotionService!.GetPromotions(new PromotionFiltersDto()));
     }
 }
