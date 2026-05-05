@@ -87,7 +87,7 @@ public class OrdersControllerTest
     public void GetOrdersByStatus_ValidFilter_ReturnsOk()
     {
         orderServiceMock!.Setup(s => s.GetOrdersByStatus(It.IsAny<OrderFilterByStatusDto>())).Returns(orders!);
-        var result = ordersController!.GetOrdersByStatus(new OrderFilterByStatusDto(DateTime.Now.AddDays(-7), DateTime.Now, null, null));
+        var result = ordersController!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -99,7 +99,7 @@ public class OrdersControllerTest
     {
         orderServiceMock!.Setup(s => s.GetOrdersByStatus(It.IsAny<OrderFilterByStatusDto>())).Throws(new NotFoundException("No orders found."));
 
-        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetOrdersByStatus(new OrderFilterByStatusDto(DateTime.Now.AddDays(-7), DateTime.Now, null, null)));
+        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetOrdersByStatus(DateTime.Now.AddDays(-7), DateTime.Now, null, null));
     }
 
     [TestMethod]

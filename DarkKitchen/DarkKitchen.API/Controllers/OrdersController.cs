@@ -34,9 +34,10 @@ public class OrdersController(IOrderService orderService) : ControllerBase
 
     [Authorize(Policy = nameof(Permission.GetOrdersByStatus))]
     [HttpGet]
-    public IActionResult GetOrdersByStatus([FromQuery] OrderFilterByStatusDto filter)
+    public IActionResult GetOrdersByStatus([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo, [FromQuery] string? address, [FromQuery] string? status)
     {
-        var orders = _orderService.GetOrdersByStatus(filter);
+        var filters = new OrderFilterByStatusDto(dateFrom, dateTo, address, status);
+        var orders = _orderService.GetOrdersByStatus(filters);
         return Ok(orders);
     }
 
