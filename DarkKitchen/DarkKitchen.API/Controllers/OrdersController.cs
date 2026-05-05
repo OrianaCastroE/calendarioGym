@@ -24,9 +24,8 @@ public class OrdersController(IOrderService orderService) : ControllerBase
 
     [Authorize(Policy = nameof(Permission.GetMyOrders))]
     [HttpGet("client")]
-    public IActionResult GetClientOrders([FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo, [FromQuery] string? status)
+    public IActionResult GetClientOrders([FromQuery] OrderFiltersDto filters)
     {
-        var filters = new OrderFiltersDto(dateFrom, dateTo, status);
         var clientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
         var orders = _orderService.GetClientOrders(clientId, filters);
         return Ok(orders);
@@ -34,9 +33,8 @@ public class OrdersController(IOrderService orderService) : ControllerBase
 
     [Authorize(Policy = nameof(Permission.GetOrdersByStatus))]
     [HttpGet]
-    public IActionResult GetOrdersByStatus([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo, [FromQuery] string? address, [FromQuery] string? status)
+    public IActionResult GetOrdersByStatus([FromQuery] OrderFilterByStatusDto filters)
     {
-        var filters = new OrderFilterByStatusDto(dateFrom, dateTo, address, status);
         var orders = _orderService.GetOrdersByStatus(filters);
         return Ok(orders);
     }
