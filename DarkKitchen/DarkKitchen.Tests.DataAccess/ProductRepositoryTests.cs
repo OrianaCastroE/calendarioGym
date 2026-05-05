@@ -11,7 +11,6 @@ namespace DarkKitchen.Tests.DataAccess;
 public class ProductRepositoryTests
 {
     private Product? product;
-    private ProductFilterDto filter;
     private AppDbContext? context;
     private ProductRepository? productRepository;
 
@@ -44,8 +43,6 @@ public class ProductRepositoryTests
 
             ]
         };
-
-        filter = new ProductFilterDto("productLine", ["cat1", "cat2"], "Product");
 
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
@@ -153,9 +150,12 @@ public class ProductRepositoryTests
     {
         context!.Products.Add(product!);
         context.SaveChanges();
-        filter = new ProductFilterDto(null, null, "Test");
+        var filters = new ProductFilterDto
+        {
+            Name = "Test"
+        };
 
-        var result = productRepository!.GetProducts(filter);
+        var result = productRepository!.GetProducts(filters);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
@@ -164,9 +164,12 @@ public class ProductRepositoryTests
     [TestMethod]
     public void GetProducts_WhenNoProductsExist_ReturnsEmptyList()
     {
-        filter = new ProductFilterDto(null, null, "Test");
+        var filters = new ProductFilterDto
+        {
+            Name = "Test"
+        };
 
-        var result = productRepository!.GetProducts(filter);
+        var result = productRepository!.GetProducts(filters);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
@@ -177,8 +180,9 @@ public class ProductRepositoryTests
     {
         context!.Products.Add(product!);
         context.SaveChanges();
+        var filters = new ProductFilterDto { };
 
-        var result = productRepository!.GetProducts(new ProductFilterDto(null, null, null));
+        var result = productRepository!.GetProducts(filters);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
@@ -189,9 +193,12 @@ public class ProductRepositoryTests
     {
         context!.Products.Add(product!);
         context.SaveChanges();
-        filter = new ProductFilterDto("SomeLine", null, null);
+        var filters = new ProductFilterDto
+        {
+            ProductLine = "SomeLine"
+        };
 
-        var result = productRepository!.GetProducts(filter);
+        var result = productRepository!.GetProducts(filters);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
@@ -203,9 +210,12 @@ public class ProductRepositoryTests
         context!.Products.Add(product!);
         context.SaveChanges();
 
-        filter = new ProductFilterDto(null, ["Test Category"], null);
+        var filters = new ProductFilterDto
+        {
+            Categories = ["Test Category"]
+        };
 
-        var result = productRepository!.GetProducts(filter);
+        var result = productRepository!.GetProducts(filters);
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
     }
@@ -259,7 +269,12 @@ public class ProductRepositoryTests
         context.Orders.Add(order);
         context.SaveChanges();
 
-        var dates = new DateRangeDto(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31));
+        var dates = new DateRangeDto
+        {
+            DateFrom = new DateTime(2024, 1, 1),
+            DateTo = new DateTime(2024, 12, 31)
+        };
+
         var result = productRepository!.GetMostRequestedProducts(dates).ToList();
 
         Assert.AreEqual(2, result.Count);
@@ -270,8 +285,14 @@ public class ProductRepositoryTests
     [TestMethod]
     public void GetMostRequestedProducts_WhenNoProductsInRange_ReturnsEmptyList()
     {
-        var dates = new DateRangeDto(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31));
+        var dates = new DateRangeDto
+        {
+            DateFrom = new DateTime(2024, 1, 1),
+            DateTo = new DateTime(2024, 12, 31)
+        };
+
         var result = productRepository!.GetMostRequestedProducts(dates).ToList();
+
         Assert.AreEqual(0, result.Count);
     }
 }
