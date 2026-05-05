@@ -1,6 +1,6 @@
 ﻿namespace DarkKitchen.Models.PromotionDTOs;
 
-public record PromotionFiltersDto
+public sealed record PromotionFiltersDto
 {
     public DateTime? Date { get; init; }
     public string? ProductLine { get; init; }
