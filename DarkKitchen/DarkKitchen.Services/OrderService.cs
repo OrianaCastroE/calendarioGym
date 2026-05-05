@@ -20,7 +20,7 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
     {
         if(newOrder.products.Count == 0)
         {
-            throw new BadRequestException("Order must have at least one product.");
+            throw new BadRequestException("An order must have at least one product.");
         }
 
         if(newOrder.deliveryType != "express" && newOrder.deliveryType != "24hs")
