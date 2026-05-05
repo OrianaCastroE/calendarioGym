@@ -68,7 +68,7 @@ public class OrdersControllerTest
     public void GetClientOrders_ValidFilter_ReturnsOk()
     {
         orderServiceMock!.Setup(s => s.GetClientOrders(It.IsAny<int>(), It.IsAny<OrderFiltersDto>())).Returns(orders!);
-        var result = ordersController!.GetClientOrders(new OrderFiltersDto(null, null, null));
+        var result = ordersController!.GetClientOrders(null, null, null);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -80,7 +80,7 @@ public class OrdersControllerTest
     {
         orderServiceMock!.Setup(s => s.GetClientOrders(It.IsAny<int>(), It.IsAny<OrderFiltersDto>())).Throws(new NotFoundException("No orders found."));
 
-        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetClientOrders(new OrderFiltersDto(null, null, null)));
+        Assert.ThrowsException<NotFoundException>(() => ordersController!.GetClientOrders(null, null, null));
     }
 
     [TestMethod]

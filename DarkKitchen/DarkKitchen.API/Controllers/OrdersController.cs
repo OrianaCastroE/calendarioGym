@@ -24,10 +24,11 @@ public class OrdersController(IOrderService orderService) : ControllerBase
 
     [Authorize(Policy = nameof(Permission.GetMyOrders))]
     [HttpGet("client")]
-    public IActionResult GetClientOrders([FromQuery] OrderFiltersDto filter)
+    public IActionResult GetClientOrders([FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo, [FromQuery] string? status)
     {
+        var filters = new OrderFiltersDto(dateFrom, dateTo, status);
         var clientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        var orders = _orderService.GetClientOrders(clientId, filter);
+        var orders = _orderService.GetClientOrders(clientId, filters);
         return Ok(orders);
     }
 
