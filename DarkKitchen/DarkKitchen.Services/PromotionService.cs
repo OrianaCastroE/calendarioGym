@@ -64,12 +64,12 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
 
     public List<PromotionResponseDto> GetPromotions(PromotionFiltersDto filter)
     {
-        if(filter.date == null)
+        if(filter.Date == null)
         {
             throw new BadRequestException("Date is required.");
         }
 
-        var promotions = _promotionRepository.GetPromotions(filter.date, filter.productLine, filter.productName);
+        var promotions = _promotionRepository.GetPromotions(filter.Date, filter.ProductLine, filter.ProductName);
 
         return promotions.Select(p => new PromotionResponseDto(p.Id, p.Name, p.DiscountPercentage, p.DateFrom, p.DateTo)).ToList();
     }
