@@ -20,7 +20,7 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
     {
         if(newOrder.products.Count == 0)
         {
-            throw new BadRequestException("Order must have at least one product.");
+            throw new BadRequestException("An order must have at least one product.");
         }
 
         if(newOrder.deliveryType != "express" && newOrder.deliveryType != "24hs")
@@ -96,14 +96,14 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
 
     public List<OrderResponseDto> GetClientOrders(int clientId, OrderFiltersDto filter)
     {
-        var orders = orderRepository.GetClientOrders(clientId, filter.dateFrom, filter.dateTo, filter.status);
+        var orders = orderRepository.GetClientOrders(clientId, filter.DateFrom, filter.DateTo, filter.Status);
 
         return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.Discount, o.Iva, o.ShippingCost, o.Total, [])).ToList();
     }
 
     public List<OrderResponseDto> GetOrdersByStatus(OrderFilterByStatusDto filter)
     {
-        var orders = orderRepository.GetOrdersByStatus(filter.dateFrom, filter.dateTo, filter.address, filter.status);
+        var orders = orderRepository.GetOrdersByStatus(filter.DateFrom, filter.DateTo, filter.Address, filter.Status);
 
         return orders.Select(o => new OrderResponseDto(o.Id, o.ClientId, o.Status, o.CreatedAt, o.Subtotal, o.Discount, o.Iva, o.ShippingCost, o.Total, [])).ToList();
     }
