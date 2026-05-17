@@ -412,4 +412,14 @@ public class OrderServiceTest
         Assert.AreEqual(nameof(OrderStatus.Canceled), orderEntity!.Status);
         orderRepositoryMock!.Verify(r => r.Update(orderEntity!), Times.Once);
     }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromDelayedToOnItsWay_ThrowsBadRequestException()
+    {
+        orderEntity!.Status = nameof(OrderStatus.Delayed);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+
+        Assert.ThrowsException<BadRequestException>(() =>
+            orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.OnItsWay)), [Permission.SetOrderStatusToOnItsWay]));
+    }
 }
