@@ -130,6 +130,7 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
             OrderStatus.OnItsWay => Permission.SetOrderStatusToOnItsWay,
             OrderStatus.Delivered => Permission.SetOrderStatusToDelivered,
             OrderStatus.NotDelivered => Permission.SetOrderStatusToNotDelivered,
+            OrderStatus.Delayed => Permission.SetOrderStatusToDelayed,
             _ => throw new BadRequestException("Invalid order status.")
         };
 
@@ -147,14 +148,15 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
         }
 
         var validTransitions = new Dictionary<OrderStatus, List<OrderStatus>>
-    {
-        { OrderStatus.Pending, [OrderStatus.Prepared, OrderStatus.Canceled] },
-        { OrderStatus.Prepared, [OrderStatus.OnItsWay] },
-        { OrderStatus.OnItsWay, [OrderStatus.Delivered, OrderStatus.NotDelivered] },
-        { OrderStatus.Canceled, [] },
-        { OrderStatus.Delivered, [] },
-        { OrderStatus.NotDelivered, [] }
-    };
+        {
+            { OrderStatus.Pending, [OrderStatus.Prepared, OrderStatus.Canceled, OrderStatus.Delayed] },
+            { OrderStatus.Prepared, [OrderStatus.OnItsWay] },
+            { OrderStatus.OnItsWay, [OrderStatus.Delivered, OrderStatus.NotDelivered] },
+            { OrderStatus.Canceled, [] },
+            { OrderStatus.Delivered, [] },
+            { OrderStatus.NotDelivered, [] },
+            { OrderStatus.Delayed, [OrderStatus.Prepared, OrderStatus.Canceled] }
+        };
 
         if(!validTransitions[currentStatus].Contains(status))
         {

@@ -51,6 +51,11 @@ public enum Permission
     SetOrderStatusToNotDelivered,
 
     /// <summary>
+    /// Permission to mark an order as delayed.
+    /// </summary>
+    SetOrderStatusToDelayed,
+
+    /// <summary>
     /// Permission to create a new user.
     /// </summary>
     CreateUser,

@@ -365,4 +365,71 @@ public class OrderServiceTest
         Assert.AreEqual(1, result.months.Count);
         Assert.AreEqual("validName validSurname", result.months[0].lines[0].clientName);
     }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromPendingToDelayed_Succeeds()
+    {
+        var order = new Order
+        {
+            Id = 1,
+            ClientId = 1,
+            Status = nameof(OrderStatus.Pending),
+            DeliveryType = "express",
+            Address = new Address { Street = "Test", DoorNumber = "123" }
+        };
+
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(order);
+        orderRepositoryMock!.Setup(r => r.Update(order));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Delayed)), [Permission.SetOrderStatusToDelayed]);
+
+        Assert.AreEqual(nameof(OrderStatus.Delayed), order.Status);
+        orderRepositoryMock!.Verify(r => r.Update(order), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromDelayedToPrepared_Succeeds()
+    {
+        orderEntity!.Status = nameof(OrderStatus.Delayed);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+        orderRepositoryMock!.Setup(r => r.Update(orderEntity!));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Prepared)), [Permission.SetOrderStatusToPrepared]);
+
+        Assert.AreEqual(nameof(OrderStatus.Prepared), orderEntity!.Status);
+        orderRepositoryMock!.Verify(r => r.Update(orderEntity!), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromDelayedToCanceled_Succeeds()
+    {
+        orderEntity!.Status = nameof(OrderStatus.Delayed);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+        orderRepositoryMock!.Setup(r => r.Update(orderEntity!));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Canceled)), [Permission.SetOrderStatusToCanceled]);
+
+        Assert.AreEqual(nameof(OrderStatus.Canceled), orderEntity!.Status);
+        orderRepositoryMock!.Verify(r => r.Update(orderEntity!), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromDelayedToOnItsWay_ThrowsBadRequestException()
+    {
+        orderEntity!.Status = nameof(OrderStatus.Delayed);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+
+        Assert.ThrowsException<BadRequestException>(() =>
+            orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.OnItsWay)), [Permission.SetOrderStatusToOnItsWay]));
+    }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromPreparedToDelayed_ThrowsBadRequestException()
+    {
+        orderEntity!.Status = nameof(OrderStatus.Prepared);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+
+        Assert.ThrowsException<BadRequestException>(() =>
+            orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Delayed)), [Permission.SetOrderStatusToDelayed]));
+    }
 }
