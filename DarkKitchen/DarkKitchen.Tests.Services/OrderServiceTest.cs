@@ -399,4 +399,17 @@ public class OrderServiceTest
         Assert.AreEqual(nameof(OrderStatus.Prepared), orderEntity!.Status);
         orderRepositoryMock!.Verify(r => r.Update(orderEntity!), Times.Once);
     }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromDelayedToCanceled_Succeeds()
+    {
+        orderEntity!.Status = nameof(OrderStatus.Delayed);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+        orderRepositoryMock!.Setup(r => r.Update(orderEntity!));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Canceled)), [Permission.SetOrderStatusToCanceled]);
+
+        Assert.AreEqual(nameof(OrderStatus.Canceled), orderEntity!.Status);
+        orderRepositoryMock!.Verify(r => r.Update(orderEntity!), Times.Once);
+    }
 }
