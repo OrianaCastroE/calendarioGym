@@ -386,4 +386,17 @@ public class OrderServiceTest
         Assert.AreEqual(nameof(OrderStatus.Delayed), order.Status);
         orderRepositoryMock!.Verify(r => r.Update(order), Times.Once);
     }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromDelayedToPrepared_Succeeds()
+    {
+        orderEntity!.Status = nameof(OrderStatus.Delayed);
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(orderEntity!);
+        orderRepositoryMock!.Setup(r => r.Update(orderEntity!));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Prepared)), [Permission.SetOrderStatusToPrepared]);
+
+        Assert.AreEqual(nameof(OrderStatus.Prepared), orderEntity!.Status);
+        orderRepositoryMock!.Verify(r => r.Update(orderEntity!), Times.Once);
+    }
 }
