@@ -68,7 +68,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.SetOrderStatusToPrepared,
                         Permission.SetOrderStatusToOnItsWay,
                         Permission.SetOrderStatusToDelivered,
-                        Permission.SetOrderStatusToNotDelivered
+                        Permission.SetOrderStatusToNotDelivered,
+                        Permission.SetOrderStatusToDelayed
                     ]
                 });
         });
