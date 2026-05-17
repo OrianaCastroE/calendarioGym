@@ -365,4 +365,25 @@ public class OrderServiceTest
         Assert.AreEqual(1, result.months.Count);
         Assert.AreEqual("validName validSurname", result.months[0].lines[0].clientName);
     }
+
+    [TestMethod]
+    public void UpdateOrderStatus_FromPendingToDelayed_Succeeds()
+    {
+        var order = new Order
+        {
+            Id = 1,
+            ClientId = 1,
+            Status = nameof(OrderStatus.Pending),
+            DeliveryType = "express",
+            Address = new Address { Street = "Test", DoorNumber = "123" }
+        };
+
+        orderRepositoryMock!.Setup(r => r.GetById(1)).Returns(order);
+        orderRepositoryMock!.Setup(r => r.Update(order));
+
+        orderService!.UpdateOrderStatus(1, new UpdateOrderStatusDto(nameof(OrderStatus.Delayed)), [Permission.SetOrderStatusToDelayed]);
+
+        Assert.AreEqual(nameof(OrderStatus.Delayed), order.Status);
+        orderRepositoryMock!.Verify(r => r.Update(order), Times.Once);
+    }
 }
