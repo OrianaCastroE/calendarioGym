@@ -116,7 +116,7 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
         return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.Discount, order.Iva, order.ShippingCost, order.Total, []);
     }
 
-    public void UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus, List<Permission> userPermissions)
+    public UpdateOrderStatusResponseDto UpdateOrderStatus(int orderId, UpdateOrderStatusDto newStatus, List<Permission> userPermissions)
     {
         if(!Enum.TryParse<OrderStatus>(newStatus.status, out var status))
         {
@@ -164,8 +164,11 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
         }
 
         order.Status = status.ToString();
+        order.UpdatedAt = DateTime.UtcNow;
 
         orderRepository.Update(order);
+
+        return new UpdateOrderStatusResponseDto($"Order status updated to: {status}", order.UpdatedAt.Value);
     }
 
     public SalesReportDto GetSalesReport()
