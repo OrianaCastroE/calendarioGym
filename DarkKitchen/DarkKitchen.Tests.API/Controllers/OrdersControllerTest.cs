@@ -140,7 +140,8 @@ public class OrdersControllerTest
     public void UpdateOrderStatus_ValidStatus_ReturnsOk()
     {
         var newStatus = new UpdateOrderStatusDto(nameof(OrderStatus.Prepared));
-        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus, It.IsAny<List<Permission>>()));
+        orderServiceMock!.Setup(s => s.UpdateOrderStatus(1, newStatus, It.IsAny<List<Permission>>()))
+            .Returns(new UpdateOrderStatusResponseDto("Order status updated to: Prepared", DateTime.UtcNow));
         var result = ordersController!.UpdateOrderStatus(1, newStatus);
         var resultObj = result as ObjectResult;
 

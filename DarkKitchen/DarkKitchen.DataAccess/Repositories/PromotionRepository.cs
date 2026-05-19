@@ -36,7 +36,7 @@ public class PromotionRepository(AppDbContext context) : IPromotionRepository
 
     public IEnumerable<Promotion> GetPromotions(DateTime? date, string? productLine, string? productName)
     {
-        var query = context.Promotion.AsQueryable();
+        var query = context.Promotion.Include(p => p.Products).AsQueryable();
 
         if(date.HasValue)
         {

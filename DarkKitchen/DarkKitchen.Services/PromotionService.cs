@@ -71,7 +71,7 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
 
         var promotions = _promotionRepository.GetPromotions(filter.Date, filter.ProductLine, filter.ProductName);
 
-        return promotions.Select(p => new PromotionResponseDto(p.Id, p.Name, p.DiscountPercentage, p.DateFrom, p.DateTo)).ToList();
+        return promotions.Select(p => new PromotionResponseDto(p.Id, p.Name, p.DiscountPercentage, p.DateFrom, p.DateTo, p.Products.Select(x => x.Code).ToList())).ToList();
     }
 
     public Dictionary<int, int> GetBestDiscountByProduct(IEnumerable<int> productIds, DateTime date)

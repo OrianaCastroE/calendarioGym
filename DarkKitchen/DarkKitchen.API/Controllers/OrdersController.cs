@@ -54,8 +54,8 @@ public class OrdersController(IOrderService orderService) : ControllerBase
         var permissions = User.FindAll("permission")
             .Select(c => Enum.Parse<Permission>(c.Value))
             .ToList();
-        _orderService.UpdateOrderStatus(orderId, newStatus, permissions);
-        return Ok("Order status updated.");
+        var result = _orderService.UpdateOrderStatus(orderId, newStatus, permissions);
+        return Ok(result);
     }
 
     [Authorize(Policy = nameof(Permission.GetSalesReport))]
