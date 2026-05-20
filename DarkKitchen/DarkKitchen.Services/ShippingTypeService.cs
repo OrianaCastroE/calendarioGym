@@ -12,7 +12,9 @@ public class ShippingTypeService(IShippingTypeRepository shippingTypeRepository)
 
     public List<ShippingTypeResponseDto> GetAll()
     {
-        throw new NotImplementedException();
+        return _shippingTypeRepository.GetAll()
+            .Select(s => new ShippingTypeResponseDto(s.Id, s.Name, s.Price))
+            .ToList();
     }
 
     public ShippingTypeResponseDto GetById(int id)
