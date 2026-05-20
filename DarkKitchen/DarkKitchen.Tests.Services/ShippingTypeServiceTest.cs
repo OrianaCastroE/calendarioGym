@@ -52,4 +52,16 @@ public class ShippingTypeServiceTest
 
         Assert.ThrowsException<BadRequestException>(() => shippingTypeService!.Create(dto));
     }
+
+    [TestMethod]
+    public void GetAll_ReturnsAllShippingTypes()
+    {
+        shippingTypeRepositoryMock!.Setup(r => r.GetAll()).Returns([shippingTypeEntity!]);
+
+        var result = shippingTypeService!.GetAll();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(shippingTypeEntity!.Name, result[0].name);
+        Assert.AreEqual(shippingTypeEntity!.Price, result[0].price);
+    }
 }
