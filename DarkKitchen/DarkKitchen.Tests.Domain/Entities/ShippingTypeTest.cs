@@ -1,4 +1,5 @@
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Exceptions;
 
 namespace DarkKitchen.Tests.Domain.Entities;
 
@@ -15,5 +16,11 @@ public class ShippingTypeTest
 
         Assert.AreEqual(validName, shippingType.Name);
         Assert.AreEqual(validPrice, shippingType.Price);
+    }
+
+    [TestMethod]
+    public void ShippingType_WithEmptyName_ThrowsBadRequestException()
+    {
+        Assert.ThrowsException<BadRequestException>(() => new ShippingType(string.Empty, validPrice));
     }
 }
