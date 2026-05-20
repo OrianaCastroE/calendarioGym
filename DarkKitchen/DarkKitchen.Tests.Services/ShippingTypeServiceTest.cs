@@ -44,4 +44,12 @@ public class ShippingTypeServiceTest
 
         Assert.ThrowsException<BadRequestException>(() => shippingTypeService!.Create(dto));
     }
+
+    [TestMethod]
+    public void Create_WithNegativePrice_ThrowsBadRequestException()
+    {
+        var dto = validDto with { price = -1 };
+
+        Assert.ThrowsException<BadRequestException>(() => shippingTypeService!.Create(dto));
+    }
 }
