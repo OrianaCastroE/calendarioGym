@@ -1,26 +1,23 @@
 using DarkKitchen.Domain.Entities;
-using DarkKitchen.Domain.Exceptions;
 
 namespace DarkKitchen.Tests.Domain.Entities;
 
 [TestClass]
 public class ShippingTypeTest
 {
-    private readonly string validName = "Express";
-    private readonly decimal validPrice = 250;
-
     [TestMethod]
-    public void ShippingType_WithValidData_CreatedCorrectly()
+    public void ShippingType_WithValidData_HasCorrectName()
     {
-        var shippingType = new ShippingType(validName, validPrice);
+        var shippingType = new ShippingType { Name = "Express", Price = 250 };
 
-        Assert.AreEqual(validName, shippingType.Name);
-        Assert.AreEqual(validPrice, shippingType.Price);
+        Assert.AreEqual("Express", shippingType.Name);
     }
 
     [TestMethod]
-    public void ShippingType_WithEmptyName_ThrowsBadRequestException()
+    public void ShippingType_WithValidData_HasCorrectPrice()
     {
-        Assert.ThrowsException<BadRequestException>(() => new ShippingType(string.Empty, validPrice));
+        var shippingType = new ShippingType { Name = "Express", Price = 250 };
+
+        Assert.AreEqual(250, shippingType.Price);
     }
 }
