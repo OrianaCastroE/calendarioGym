@@ -1,4 +1,5 @@
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Models.ShippingTypeDTOs;
 using DarkKitchen.Services;
@@ -34,5 +35,13 @@ public class ShippingTypeServiceTest
         shippingTypeRepositoryMock!.Verify(r => r.Add(It.IsAny<ShippingType>()), Times.Once);
         Assert.AreEqual(validDto.name, result.name);
         Assert.AreEqual(validDto.price, result.price);
+    }
+
+    [TestMethod]
+    public void Create_WithEmptyName_ThrowsBadRequestException()
+    {
+        var dto = validDto with { name = string.Empty };
+
+        Assert.ThrowsException<BadRequestException>(() => shippingTypeService!.Create(dto));
     }
 }
