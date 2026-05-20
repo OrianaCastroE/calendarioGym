@@ -27,6 +27,11 @@ public class ShippingTypeService(IShippingTypeRepository shippingTypeRepository)
             throw new BadRequestException("Shipping type name cannot be empty.");
         }
 
+        if(dto.price <= 0)
+        {
+            throw new BadRequestException("Shipping type price must be greater than zero.");
+        }
+
         var shippingType = new ShippingType
         {
             Name = dto.name,
