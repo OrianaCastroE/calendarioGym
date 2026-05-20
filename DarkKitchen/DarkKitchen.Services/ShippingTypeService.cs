@@ -1,4 +1,5 @@
 using DarkKitchen.Domain.Entities;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.ShippingTypeDTOs;
@@ -21,6 +22,11 @@ public class ShippingTypeService(IShippingTypeRepository shippingTypeRepository)
 
     public ShippingTypeResponseDto Create(ShippingTypeDto dto)
     {
+        if(string.IsNullOrEmpty(dto.name))
+        {
+            throw new BadRequestException("Shipping type name cannot be empty.");
+        }
+
         var shippingType = new ShippingType
         {
             Name = dto.name,
