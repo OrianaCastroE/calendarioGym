@@ -1,5 +1,4 @@
 using DarkKitchen.Domain.Entities;
-using DarkKitchen.Domain.Exceptions;
 
 namespace DarkKitchen.Tests.Domain.Entities;
 
