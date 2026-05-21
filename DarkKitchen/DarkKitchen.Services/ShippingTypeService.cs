@@ -50,6 +50,14 @@ public class ShippingTypeService(IShippingTypeRepository shippingTypeRepository)
 
     public ShippingTypeResponseDto Update(int id, ShippingTypeDto dto)
     {
-        throw new NotImplementedException();
+        var existing = _shippingTypeRepository.GetById(id)
+            ?? throw new NotFoundException("Shipping type not found.");
+
+        existing.Name = dto.name;
+        existing.Price = dto.price;
+
+        _shippingTypeRepository.Update(existing);
+
+        return new ShippingTypeResponseDto(existing.Id, existing.Name, existing.Price);
     }
 }
