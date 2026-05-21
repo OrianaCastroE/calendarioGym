@@ -115,4 +115,12 @@ public class ShippingTypeServiceTest
         Assert.ThrowsException<BadRequestException>(() =>
             shippingTypeService!.Update(1, validDto with { price = -1 }));
     }
+
+    [TestMethod]
+    public void Update_NotFound_ThrowsNotFoundException()
+    {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(99)).Returns((ShippingType?)null);
+
+        Assert.ThrowsException<NotFoundException>(() => shippingTypeService!.Update(99, validDto));
+    }
 }
