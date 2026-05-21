@@ -7,7 +7,7 @@ public class ShippingTypeRepository(AppDbContext context) : IShippingTypeReposit
 {
     public IEnumerable<ShippingType> GetAll()
     {
-        throw new NotImplementedException();
+        return context.ShippingTypes.ToList();
     }
 
     public ShippingType? GetById(int id)
