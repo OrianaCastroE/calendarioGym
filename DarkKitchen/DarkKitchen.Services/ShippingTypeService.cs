@@ -19,7 +19,10 @@ public class ShippingTypeService(IShippingTypeRepository shippingTypeRepository)
 
     public ShippingTypeResponseDto GetById(int id)
     {
-        throw new NotImplementedException();
+        var shippingType = _shippingTypeRepository.GetById(id)
+            ?? throw new NotFoundException("Shipping type not found.");
+
+        return new ShippingTypeResponseDto(shippingType.Id, shippingType.Name, shippingType.Price);
     }
 
     public ShippingTypeResponseDto Create(ShippingTypeDto dto)
