@@ -63,4 +63,16 @@ public class ShippingTypeRepositoryTests
 
         Assert.IsNull(result);
     }
+
+    [TestMethod]
+    public void GetAll_WhenShippingTypesExist_ReturnsAll()
+    {
+        context!.ShippingTypes.Add(shippingType!);
+        context.SaveChanges();
+
+        var result = shippingTypeRepository!.GetAll().ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("Express", result[0].Name);
+    }
 }
