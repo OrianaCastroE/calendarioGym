@@ -70,4 +70,16 @@ public class ShippingTypesControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(201, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void Update_WithValidData_ReturnsOk()
+    {
+        shippingTypeServiceMock!.Setup(s => s.Update(1, validDto)).Returns(shippingTypeResponse);
+
+        var result = shippingTypesController!.Update(1, validDto);
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
+    }
 }
