@@ -58,4 +58,16 @@ public class ShippingTypesControllerTest
 
         Assert.ThrowsException<NotFoundException>(() => shippingTypesController!.GetById(99));
     }
+
+    [TestMethod]
+    public void Create_WithValidData_ReturnsCreated()
+    {
+        shippingTypeServiceMock!.Setup(s => s.Create(validDto)).Returns(shippingTypeResponse);
+
+        var result = shippingTypesController!.Create(validDto);
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(201, resultObj.StatusCode);
+    }
 }
