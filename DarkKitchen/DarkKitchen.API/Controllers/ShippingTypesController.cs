@@ -12,6 +12,7 @@ public class ShippingTypesController(IShippingTypeService shippingTypeService) :
 {
     private readonly IShippingTypeService _shippingTypeService = shippingTypeService;
 
+    [Authorize(Policy = nameof(Permission.GetShippingTypes))]
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -19,6 +20,7 @@ public class ShippingTypesController(IShippingTypeService shippingTypeService) :
         return Ok(shippingTypes);
     }
 
+    [Authorize(Policy = nameof(Permission.GetShippingTypes))]
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
@@ -26,6 +28,7 @@ public class ShippingTypesController(IShippingTypeService shippingTypeService) :
         return Ok(shippingType);
     }
 
+    [Authorize(Policy = nameof(Permission.CreateShippingType))]
     [HttpPost]
     public IActionResult Create([FromBody] ShippingTypeDto dto)
     {
@@ -33,6 +36,7 @@ public class ShippingTypesController(IShippingTypeService shippingTypeService) :
         return Created(string.Empty, created);
     }
 
+    [Authorize(Policy = nameof(Permission.UpdateShippingType))]
     [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] ShippingTypeDto dto)
     {
