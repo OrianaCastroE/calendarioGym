@@ -82,4 +82,12 @@ public class ShippingTypesControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void Update_WhenNotFound_ThrowsNotFoundException()
+    {
+        shippingTypeServiceMock!.Setup(s => s.Update(99, validDto)).Throws(new NotFoundException("Shipping type not found."));
+
+        Assert.ThrowsException<NotFoundException>(() => shippingTypesController!.Update(99, validDto));
+    }
 }
