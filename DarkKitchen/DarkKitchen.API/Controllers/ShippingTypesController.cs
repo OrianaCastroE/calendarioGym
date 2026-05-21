@@ -26,9 +26,11 @@ public class ShippingTypesController(IShippingTypeService shippingTypeService) :
         return Ok(shippingType);
     }
 
+    [HttpPost]
     public IActionResult Create([FromBody] ShippingTypeDto dto)
     {
-        throw new NotImplementedException();
+        var created = _shippingTypeService.Create(dto);
+        return Created(string.Empty, created);
     }
 
     public IActionResult Update(int id, [FromBody] ShippingTypeDto dto)
