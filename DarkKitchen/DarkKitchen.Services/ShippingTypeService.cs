@@ -53,6 +53,16 @@ public class ShippingTypeService(IShippingTypeRepository shippingTypeRepository)
         var existing = _shippingTypeRepository.GetById(id)
             ?? throw new NotFoundException("Shipping type not found.");
 
+        if(string.IsNullOrEmpty(dto.name))
+        {
+            throw new BadRequestException("Shipping type name cannot be empty.");
+        }
+
+        if(dto.price <= 0)
+        {
+            throw new BadRequestException("Shipping type price must be greater than zero.");
+        }
+
         existing.Name = dto.name;
         existing.Price = dto.price;
 
