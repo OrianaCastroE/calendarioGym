@@ -33,8 +33,10 @@ public class ShippingTypesController(IShippingTypeService shippingTypeService) :
         return Created(string.Empty, created);
     }
 
+    [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] ShippingTypeDto dto)
     {
-        throw new NotImplementedException();
+        var updated = _shippingTypeService.Update(id, dto);
+        return Ok(updated);
     }
 }
