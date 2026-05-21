@@ -84,4 +84,17 @@ public class ShippingTypeServiceTest
 
         Assert.ThrowsException<NotFoundException>(() => shippingTypeService!.GetById(99));
     }
+
+    [TestMethod]
+    public void Update_WithValidData_CallsRepositoryAndReturnsDto()
+    {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(1)).Returns(shippingTypeEntity!);
+        shippingTypeRepositoryMock!.Setup(r => r.Update(It.IsAny<ShippingType>()));
+
+        var result = shippingTypeService!.Update(1, validDto);
+
+        shippingTypeRepositoryMock!.Verify(r => r.Update(It.IsAny<ShippingType>()), Times.Once);
+        Assert.AreEqual(validDto.name, result.name);
+        Assert.AreEqual(validDto.price, result.price);
+    }
 }
