@@ -12,9 +12,11 @@ public class ShippingTypesController(IShippingTypeService shippingTypeService) :
 {
     private readonly IShippingTypeService _shippingTypeService = shippingTypeService;
 
+    [HttpGet]
     public IActionResult GetAll()
     {
-        throw new NotImplementedException();
+        var shippingTypes = _shippingTypeService.GetAll();
+        return Ok(shippingTypes);
     }
 
     public IActionResult GetById(int id)
