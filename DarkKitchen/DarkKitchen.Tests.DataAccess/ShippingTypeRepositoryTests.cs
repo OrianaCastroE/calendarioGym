@@ -75,4 +75,19 @@ public class ShippingTypeRepositoryTests
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual("Express", result[0].Name);
     }
+
+    [TestMethod]
+    public void Update_WhenShippingTypeExists_UpdatesInDatabase()
+    {
+        context!.ShippingTypes.Add(shippingType!);
+        context.SaveChanges();
+        shippingType!.Name = "En el día";
+        shippingType.Price = 200;
+
+        shippingTypeRepository!.Update(shippingType!);
+        var result = context.ShippingTypes.FirstOrDefault(s => s.Id == shippingType.Id);
+
+        Assert.AreEqual("En el día", result!.Name);
+        Assert.AreEqual(200, result.Price);
+    }
 }
