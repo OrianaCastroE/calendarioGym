@@ -55,4 +55,12 @@ public class ShippingTypeRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual("Express", result.Name);
     }
+
+    [TestMethod]
+    public void GetById_WhenNotExists_ReturnsNull()
+    {
+        var result = shippingTypeRepository!.GetById(999);
+
+        Assert.IsNull(result);
+    }
 }
