@@ -37,4 +37,16 @@ public class ShippingTypesControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
     }
+
+    [TestMethod]
+    public void GetById_WhenExistingId_ReturnsOk()
+    {
+        shippingTypeServiceMock!.Setup(s => s.GetById(1)).Returns(shippingTypeResponse);
+
+        var result = shippingTypesController!.GetById(1);
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj.StatusCode);
+    }
 }
