@@ -76,4 +76,12 @@ public class ShippingTypeServiceTest
         Assert.AreEqual(shippingTypeEntity!.Name, result.name);
         Assert.AreEqual(shippingTypeEntity!.Price, result.price);
     }
+
+    [TestMethod]
+    public void GetById_NotFound_ThrowsNotFoundException()
+    {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(99)).Returns((ShippingType?)null);
+
+        Assert.ThrowsException<NotFoundException>(() => shippingTypeService!.GetById(99));
+    }
 }
