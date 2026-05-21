@@ -12,7 +12,7 @@ public class ShippingTypeRepository(AppDbContext context) : IShippingTypeReposit
 
     public ShippingType? GetById(int id)
     {
-        throw new NotImplementedException();
+        return context.ShippingTypes.Find(id);
     }
 
     public void Add(ShippingType shippingType)
