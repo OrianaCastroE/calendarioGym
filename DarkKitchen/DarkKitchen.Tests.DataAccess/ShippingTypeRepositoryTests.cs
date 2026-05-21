@@ -90,4 +90,12 @@ public class ShippingTypeRepositoryTests
         Assert.AreEqual("En el día", result!.Name);
         Assert.AreEqual(200, result.Price);
     }
+
+    [TestMethod]
+    public void Update_WhenNotExists_DoesNothing()
+    {
+        shippingTypeRepository!.Update(shippingType!);
+
+        Assert.AreEqual(0, context!.ShippingTypes.Count());
+    }
 }
