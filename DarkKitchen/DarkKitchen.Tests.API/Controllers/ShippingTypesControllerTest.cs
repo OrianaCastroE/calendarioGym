@@ -1,4 +1,5 @@
 using DarkKitchen.API.Controllers;
+using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.ShippingTypeDTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -48,5 +49,13 @@ public class ShippingTypesControllerTest
 
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj.StatusCode);
+    }
+
+    [TestMethod]
+    public void GetById_NotFound_ThrowsNotFoundException()
+    {
+        shippingTypeServiceMock!.Setup(s => s.GetById(99)).Throws(new NotFoundException("Shipping type not found."));
+
+        Assert.ThrowsException<NotFoundException>(() => shippingTypesController!.GetById(99));
     }
 }
