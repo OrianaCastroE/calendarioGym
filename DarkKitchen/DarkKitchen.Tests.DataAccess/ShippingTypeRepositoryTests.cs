@@ -43,4 +43,16 @@ public class ShippingTypeRepositoryTests
         Assert.AreEqual("Express", result.Name);
         Assert.AreEqual(250, result.Price);
     }
+
+    [TestMethod]
+    public void GetById_WhenExists_ReturnsShippingType()
+    {
+        context!.ShippingTypes.Add(shippingType!);
+        context.SaveChanges();
+
+        var result = shippingTypeRepository!.GetById(shippingType!.Id);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Express", result.Name);
+    }
 }
