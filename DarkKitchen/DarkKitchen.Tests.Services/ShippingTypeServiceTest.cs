@@ -97,4 +97,13 @@ public class ShippingTypeServiceTest
         Assert.AreEqual(validDto.name, result.name);
         Assert.AreEqual(validDto.price, result.price);
     }
+
+    [TestMethod]
+    public void Update_WithEmptyName_ThrowsBadRequestException()
+    {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(1)).Returns(shippingTypeEntity!);
+
+        Assert.ThrowsException<BadRequestException>(() =>
+            shippingTypeService!.Update(1, validDto with { name = string.Empty }));
+    }
 }
