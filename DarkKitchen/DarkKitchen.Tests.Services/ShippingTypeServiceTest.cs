@@ -64,4 +64,16 @@ public class ShippingTypeServiceTest
         Assert.AreEqual(shippingTypeEntity!.Name, result[0].name);
         Assert.AreEqual(shippingTypeEntity!.Price, result[0].price);
     }
+
+    [TestMethod]
+    public void GetById_ExistingId_ReturnsDto()
+    {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(1)).Returns(shippingTypeEntity!);
+
+        var result = shippingTypeService!.GetById(1);
+
+        Assert.AreEqual(shippingTypeEntity!.Id, result.id);
+        Assert.AreEqual(shippingTypeEntity!.Name, result.name);
+        Assert.AreEqual(shippingTypeEntity!.Price, result.price);
+    }
 }
