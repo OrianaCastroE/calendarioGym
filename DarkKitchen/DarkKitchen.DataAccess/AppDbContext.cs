@@ -128,8 +128,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.HasData(
                 new ShippingType { Id = 1, Name = "Express", Price = 250 },
                 new ShippingType { Id = 2, Name = "En el día", Price = 200 },
-                new ShippingType { Id = 3, Name = "Día siguiente", Price = 180 }
-            );
+                new ShippingType { Id = 3, Name = "Día siguiente", Price = 180 });
         });
     }
 }
