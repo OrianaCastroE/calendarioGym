@@ -24,7 +24,11 @@ public class ShippingTypeRepository(AppDbContext context) : IShippingTypeReposit
     public void Update(ShippingType shippingType)
     {
         var existing = context.ShippingTypes.Find(shippingType.Id);
-        if(existing is null) return;
+        if(existing is null)
+        {
+            return;
+        }
+
         context.Entry(existing).CurrentValues.SetValues(shippingType);
         context.SaveChanges();
     }
