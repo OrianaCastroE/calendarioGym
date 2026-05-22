@@ -17,6 +17,7 @@ public class OrderServiceTest
     private Mock<IOrderRepository>? orderRepositoryMock;
     private Mock<IUserService>? userServiceMock;
     private Mock<IProductService>? productServiceMock;
+    private Mock<IShippingTypeRepository>? shippingTypeRepositoryMock;
     private OrderService? orderService;
     private OrderDto validOrder;
     private Order? orderEntity;
@@ -28,17 +29,18 @@ public class OrderServiceTest
         orderRepositoryMock = new Mock<IOrderRepository>(MockBehavior.Strict);
         userServiceMock = new Mock<IUserService>(MockBehavior.Strict);
         productServiceMock = new Mock<IProductService>(MockBehavior.Strict);
-        orderService = new OrderService(orderRepositoryMock.Object, userServiceMock.Object, productServiceMock.Object);
+        shippingTypeRepositoryMock = new Mock<IShippingTypeRepository>(MockBehavior.Strict);
+        orderService = new OrderService(orderRepositoryMock.Object, userServiceMock.Object, productServiceMock.Object, shippingTypeRepositoryMock.Object);
 
         productDto = new ProductDto(1, "PROD01", "Product 1", null, null, null, 100, null, true, 0);
 
-        validOrder = new OrderDto("express", new AddressDto("18 de Julio", "1234", "101"), [new OrderProductDto("PROD01", 2)]);
+        validOrder = new OrderDto(1, new AddressDto("18 de Julio", "1234", "101"), [new OrderProductDto("PROD01", 2)]);
 
         orderEntity = new Order()
         {
             Id = 1,
             ClientId = 1,
-            DeliveryType = "express",
+            ShippingTypeId = 1,
             Address = new Address { Street = "18 de Julio", DoorNumber = "1234" },
             CreatedAt = DateTime.Now,
             Subtotal = 200,
@@ -50,6 +52,7 @@ public class OrderServiceTest
     [TestMethod]
     public void CreateOrder_ValidData_OrderCreated()
     {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(1)).Returns(new ShippingType { Id = 1, Name = "Express", Price = 500 });
         productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns(productDto);
         productServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
             .Returns([]);
@@ -64,6 +67,7 @@ public class OrderServiceTest
     [TestMethod]
     public void CreateOrder_WhenProductHasActivePromotion_DiscountApplied()
     {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(1)).Returns(new ShippingType { Id = 1, Name = "Express", Price = 500 });
         productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns(productDto);
         productServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
             .Returns(new Dictionary<int, int> { { 1, 25 } });
@@ -83,16 +87,18 @@ public class OrderServiceTest
     }
 
     [TestMethod]
-    public void CreateOrder_InvalidDeliveryType_ThrowsBadRequestException()
+    public void CreateOrder_ShippingTypeNotFound_ThrowsNotFoundException()
     {
-        validOrder = validOrder with { deliveryType = "invalid" };
+        validOrder = validOrder with { shippingTypeId = 99 };
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(99)).Returns((ShippingType?)null);
 
-        Assert.ThrowsException<BadRequestException>(() => orderService!.CreateOrder(validOrder, 1));
+        Assert.ThrowsException<NotFoundException>(() => orderService!.CreateOrder(validOrder, 1));
     }
 
     [TestMethod]
     public void CreateOrder_EmptyStreet_ThrowsBadRequestException()
     {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(1)).Returns(new ShippingType { Id = 1, Name = "Express", Price = 500 });
         validOrder = validOrder with { address = validOrder.address with { street = string.Empty } };
 
         Assert.ThrowsException<BadRequestException>(() => orderService!.CreateOrder(validOrder, 1));
@@ -238,6 +244,7 @@ public class OrderServiceTest
     [TestMethod]
     public void CreateOrder_EmptyDoorNumber_ThrowsBadRequestException()
     {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(1)).Returns(new ShippingType { Id = 1, Name = "Express", Price = 500 });
         validOrder = validOrder with { address = validOrder.address with { doorNumber = string.Empty } };
 
         Assert.ThrowsException<BadRequestException>(() => orderService!.CreateOrder(validOrder, 1));
@@ -246,15 +253,17 @@ public class OrderServiceTest
     [TestMethod]
     public void CreateOrder_ProductNotFound_ThrowsNotFoundException()
     {
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(1)).Returns(new ShippingType { Id = 1, Name = "Express", Price = 500 });
         productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns((ProductDto?)null);
 
         Assert.ThrowsException<NotFoundException>(() => orderService!.CreateOrder(validOrder, 1));
     }
 
     [TestMethod]
-    public void CreateOrder_NextDayDelivery_OrderCreated()
+    public void CreateOrder_DifferentShippingType_OrderCreated()
     {
-        validOrder = validOrder with { deliveryType = "24hs" };
+        validOrder = validOrder with { shippingTypeId = 2 };
+        shippingTypeRepositoryMock!.Setup(r => r.GetById(2)).Returns(new ShippingType { Id = 2, Name = "En el día", Price = 200 });
         productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns(productDto);
         productServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
             .Returns([]);
@@ -374,7 +383,7 @@ public class OrderServiceTest
             Id = 1,
             ClientId = 1,
             Status = nameof(OrderStatus.Pending),
-            DeliveryType = "express",
+            ShippingTypeId = 1,
             Address = new Address { Street = "Test", DoorNumber = "123" }
         };
 
