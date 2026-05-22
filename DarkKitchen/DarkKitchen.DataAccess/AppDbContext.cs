@@ -122,10 +122,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<ShippingType>().HasData(
-            new ShippingType { Id = 1, Name = "Express", Price = 250 },
-            new ShippingType { Id = 2, Name = "En el día", Price = 200 },
-            new ShippingType { Id = 3, Name = "Día siguiente", Price = 180 }
-        );
+        modelBuilder.Entity<ShippingType>(b =>
+        {
+            b.HasIndex(st => st.Name).IsUnique();
+            b.HasData(
+                new ShippingType { Id = 1, Name = "Express", Price = 250 },
+                new ShippingType { Id = 2, Name = "En el día", Price = 200 },
+                new ShippingType { Id = 3, Name = "Día siguiente", Price = 180 }
+            );
+        });
     }
 }
