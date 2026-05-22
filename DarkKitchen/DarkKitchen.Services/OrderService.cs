@@ -7,13 +7,12 @@ using DarkKitchen.Models.OrderDTOs;
 
 namespace DarkKitchen.Services;
 
-public class OrderService(IOrderRepository orderRepository, IUserService userService, IProductService productService) : IOrderService
+public class OrderService(IOrderRepository orderRepository, IUserService userService, IProductService productService, IShippingTypeRepository shippingTypeRepository) : IOrderService
 {
     private readonly IOrderRepository orderRepository = orderRepository;
     private readonly IUserService userService = userService;
     private readonly IProductService productService = productService;
-    private readonly decimal expressDeliveryPrice = 500;
-    private readonly decimal nextDayDeliveryPrice = 250;
+    private readonly IShippingTypeRepository shippingTypeRepository = shippingTypeRepository;
     private readonly decimal ivaRate = 0.22m;
 
     public OrderResponseDto CreateOrder(OrderDto newOrder, int clientId)
@@ -23,10 +22,8 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
             throw new BadRequestException("An order must have at least one product.");
         }
 
-        if(newOrder.deliveryType != "express" && newOrder.deliveryType != "24hs")
-        {
-            throw new BadRequestException("Invalid delivery type.");
-        }
+        var shippingType = shippingTypeRepository.GetById(newOrder.shippingTypeId)
+            ?? throw new NotFoundException("Shipping type not found.");
 
         if(string.IsNullOrEmpty(newOrder.address.street))
         {
@@ -69,12 +66,12 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
         }
 
         var iva = (subtotal - discount) * ivaRate;
-        var shippingCost = newOrder.deliveryType == "express" ? expressDeliveryPrice : nextDayDeliveryPrice;
+        var shippingCost = shippingType.Price;
 
         var order = new Order
         {
             ClientId = clientId,
-            DeliveryType = newOrder.deliveryType,
+            ShippingTypeId = newOrder.shippingTypeId,
             Address = new Address
             {
                 Street = newOrder.address.street,
