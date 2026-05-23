@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using DarkKitchen.Domain.Interfaces.Service;
 
@@ -26,17 +27,7 @@ public class PluginLoader
                 continue;
             }
 
-            Type[] types;
-            try
-            {
-                types = assembly.GetTypes();
-            }
-            catch(ReflectionTypeLoadException ex)
-            {
-                types = ex.Types.Where(t => t != null).ToArray()!;
-            }
-
-            foreach(var type in types)
+            foreach(var type in GetTypesSafely(assembly))
             {
                 if(!typeof(IProductImporter).IsAssignableFrom(type)
                     || type.IsAbstract
@@ -54,5 +45,18 @@ public class PluginLoader
         }
 
         return importers;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private static Type[] GetTypesSafely(Assembly assembly)
+    {
+        try
+        {
+            return assembly.GetTypes();
+        }
+        catch(ReflectionTypeLoadException ex)
+        {
+            return ex.Types.Where(t => t != null).ToArray()!;
+        }
     }
 }

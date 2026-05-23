@@ -25,10 +25,7 @@ public class XmlProductImporter : IProductImporter
             throw new BadRequestException($"Invalid XML: {ex.Message}");
         }
 
-        var root = doc.Root
-            ?? throw new BadRequestException("XML content was empty.");
-
-        return root.Elements("product").Select(ParseProduct).ToList();
+        return doc.Root!.Elements("product").Select(ParseProduct).ToList();
     }
 
     private static ImportedProductDto ParseProduct(XElement p)

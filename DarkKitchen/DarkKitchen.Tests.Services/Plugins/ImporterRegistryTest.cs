@@ -87,6 +87,30 @@ public class ImporterRegistryTest
         _ = new ImporterRegistry([builtIn], loaderMock.Object, configurationMock!.Object);
     }
 
+    [TestMethod]
+    public void Constructor_WhenPluginsFolderNotConfigured_FallsBackToDefault()
+    {
+        var emptyConfig = new Mock<IConfiguration>();
+
+        _ = new ImporterRegistry([], loaderMock!.Object, emptyConfig.Object);
+
+        loaderMock.Verify(l => l.LoadFrom("Plugins"), Times.Once);
+    }
+
+    [TestMethod]
+    public void GetAll_WhenPluginsLoadedFromLoader_IncludesThem()
+    {
+        var plugin = new FakeImporter("CSV", ".csv");
+        loaderMock!.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns([plugin]);
+        var builtIn = new FakeImporter("JSON", ".json");
+
+        var registry = new ImporterRegistry([builtIn], loaderMock.Object, configurationMock!.Object);
+        var all = registry.GetAll().ToList();
+
+        Assert.AreEqual(2, all.Count);
+        Assert.AreSame(plugin, registry.Get("CSV"));
+    }
+
     private sealed class FakeImporter(string name, string extension) : IProductImporter
     {
         public string Name { get; } = name;

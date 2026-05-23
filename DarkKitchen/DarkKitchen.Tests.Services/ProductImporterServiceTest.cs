@@ -160,15 +160,27 @@ public class ProductImporterServiceTest
         productRepositoryMock.Setup(r => r.GetByCode("P002")).Returns(new Product { Code = "P002", Name = "Existing" });
 
         using var stream = new MemoryStream();
-        try
+        Assert.ThrowsException<BadRequestException>(() => service!.ImportProducts("JSON", stream));
+        productRepositoryMock.Verify(r => r.Add(It.IsAny<Product>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void ImportProducts_WhenImagePathsIsNull_MapsToEmptyImages()
+    {
+        var items = new List<ImportedProductDto>
         {
-            service!.ImportProducts("JSON", stream);
-            Assert.Fail("Expected BadRequestException.");
-        }
-        catch(BadRequestException)
-        {
-            productRepositoryMock.Verify(r => r.Add(It.IsAny<Product>()), Times.Never);
-        }
+            new("P001", "Pizza", 250, null, null, null, null!),
+        };
+        SetupImporterAndRegistry(items);
+        productRepositoryMock!.Setup(r => r.GetByCode("P001")).Returns((Product?)null);
+        Product? captured = null;
+        productRepositoryMock.Setup(r => r.Add(It.IsAny<Product>())).Callback<Product>(p => captured = p);
+
+        using var stream = new MemoryStream();
+        service!.ImportProducts("JSON", stream);
+
+        Assert.IsNotNull(captured);
+        Assert.AreEqual(0, captured.Images.Count);
     }
 
     [TestMethod]

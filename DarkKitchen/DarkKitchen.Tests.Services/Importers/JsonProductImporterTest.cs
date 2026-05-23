@@ -74,4 +74,13 @@ public class JsonProductImporterTest
 
         importer!.Import(stream).ToList();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(BadRequestException))]
+    public void Import_WhenJsonIsNullLiteral_ThrowsBadRequest()
+    {
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes("null"));
+
+        importer!.Import(stream).ToList();
+    }
 }

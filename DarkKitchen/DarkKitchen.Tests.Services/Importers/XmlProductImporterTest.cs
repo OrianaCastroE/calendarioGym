@@ -91,4 +91,40 @@ public class XmlProductImporterTest
 
         importer!.Import(stream).ToList();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(BadRequestException))]
+    public void Import_WhenPriceMissing_ThrowsBadRequest()
+    {
+        var xml = """
+        <products>
+          <product>
+            <code>P001</code>
+            <name>Pizza</name>
+          </product>
+        </products>
+        """;
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
+
+        importer!.Import(stream).ToList();
+    }
+
+    [TestMethod]
+    public void Import_WhenCodeAndNameMissing_MapsToEmptyStrings()
+    {
+        var xml = """
+        <products>
+          <product>
+            <price>10</price>
+          </product>
+        </products>
+        """;
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
+
+        var products = importer!.Import(stream).ToList();
+
+        Assert.AreEqual(1, products.Count);
+        Assert.AreEqual(string.Empty, products[0].code);
+        Assert.AreEqual(string.Empty, products[0].name);
+    }
 }
