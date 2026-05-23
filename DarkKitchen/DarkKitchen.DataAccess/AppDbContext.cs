@@ -46,6 +46,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.UpdatePromotion,
                         Permission.UpdatePromotionProducts,
                         Permission.GetSalesReport,
+                        Permission.GetAuditRecords,
                     ]
                 },
                 new RolePermissions

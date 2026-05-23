@@ -123,5 +123,10 @@ public enum Permission
     /// <summary>
     /// Permission to retrieve the sales report.
     /// </summary>
-    GetSalesReport
+    GetSalesReport,
+
+    /// <summary>
+    /// Permission to retrieve audit records.
+    /// </summary>
+    GetAuditRecords
 }
