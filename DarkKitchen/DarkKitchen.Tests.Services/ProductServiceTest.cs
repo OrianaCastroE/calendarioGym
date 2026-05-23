@@ -295,4 +295,16 @@ public class ProductServiceTest
 
         auditServiceMock!.Verify(a => a.LogChange("Product", It.IsAny<int>(), It.IsAny<string>(), "admin@gmail.com"), Times.Once);
     }
+
+    [TestMethod]
+    public void UpdateProduct_ValidData_AuditLogCreated()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+        productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+        auditServiceMock!.Setup(a => a.LogChange("Product", It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
+
+        productService!.UpdateProduct(validProductDto, "admin@gmail.com");
+
+        auditServiceMock!.Verify(a => a.LogChange("Product", It.IsAny<int>(), It.IsAny<string>(), "admin@gmail.com"), Times.Once);
+    }
 }
