@@ -14,6 +14,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<User> Users { get; set; }
     public DbSet<RolePermissions> RolePermissions { get; set; }
     public DbSet<AuditRecord> AuditRecords { get; set; }
+    public DbSet<ShippingType> ShippingTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,6 +48,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.UpdatePromotionProducts,
                         Permission.GetSalesReport,
                         Permission.GetAuditRecords,
+                        Permission.GetShippingTypes,
+                        Permission.CreateShippingType,
+                        Permission.UpdateShippingType,
                     ]
                 },
                 new RolePermissions
@@ -57,7 +61,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.PlaceOrder,
                         Permission.GetMyOrders,
                         Permission.GetProducts,
-                        Permission.GetCurrentPromotions
+                        Permission.GetCurrentPromotions,
+                        Permission.GetShippingTypes
                     ]
                 },
                 new RolePermissions
@@ -117,6 +122,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithMany()
                 .HasForeignKey(op => op.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ShippingType>(b =>
+        {
+            b.HasIndex(st => st.Name).IsUnique();
+            b.HasData(
+                new ShippingType { Id = 1, Name = "Express", Price = 250 },
+                new ShippingType { Id = 2, Name = "En el día", Price = 200 },
+                new ShippingType { Id = 3, Name = "Día siguiente", Price = 180 });
         });
     }
 }

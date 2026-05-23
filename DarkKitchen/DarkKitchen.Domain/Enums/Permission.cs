@@ -128,5 +128,20 @@ public enum Permission
     /// <summary>
     /// Permission to retrieve audit records.
     /// </summary>
-    GetAuditRecords
+    GetAuditRecords,
+
+    /// <summary>
+    /// Permission to retrieve the list of shipping types.
+    /// </summary>
+    GetShippingTypes,
+
+    /// <summary>
+    /// Permission to create a new shipping type.
+    /// </summary>
+    CreateShippingType,
+
+    /// <summary>
+    /// Permission to update an existing shipping type.
+    /// </summary>
+    UpdateShippingType
 }

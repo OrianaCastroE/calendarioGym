@@ -37,7 +37,7 @@ public class OrdersControllerTest
             HttpContext = new DefaultHttpContext { User = claimsPrincipal }
         };
 
-        validOrder = new OrderDto("express", new AddressDto("18 de Julio", "1234", "101"), [new OrderProductDto("PROD01", 2)]);
+        validOrder = new OrderDto(1, new AddressDto("18 de Julio", "1234", "101"), [new OrderProductDto("PROD01", 2)]);
 
         orderResponse = new OrderResponseDto(1, 1, "Pending", DateTime.Now, 100, 0, 22, 10, 132, []);
 
@@ -59,7 +59,7 @@ public class OrdersControllerTest
     [TestMethod]
     public void CreateOrder_NoProducts_ThrowsBadRequestException()
     {
-        var emptyOrder = new OrderDto("express", new AddressDto("18 de Julio", "1234", "101"), []);
+        var emptyOrder = new OrderDto(1, new AddressDto("18 de Julio", "1234", "101"), []);
         orderServiceMock!.Setup(s => s.CreateOrder(emptyOrder, 1)).Throws(new BadRequestException("Order must have at least one product."));
 
         Assert.ThrowsException<BadRequestException>(() => ordersController!.CreateOrder(emptyOrder));
