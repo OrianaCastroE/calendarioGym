@@ -31,4 +31,28 @@ public class AuditServiceTest
             a.ChangeDescription == "Product created" &&
             a.ResponsibleUser == "admin@gmail.com")), Times.Once);
     }
+
+    [TestMethod]
+    public void GetByFilter_ValidData_ReturnsRecords()
+    {
+        var records = new List<AuditRecord>
+    {
+        new AuditRecord
+        {
+            Id = 1,
+            EntityName = "Product",
+            EntityId = 1,
+            ChangeDescription = "Product created",
+            ResponsibleUser = "admin@gmail.com",
+            DateTime = DateTime.UtcNow
+        }
+    };
+
+        auditRepositoryMock!.Setup(r => r.GetByFilter("Product", null, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            .Returns(records);
+
+        var result = auditService!.GetByFilter("Product", null, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow);
+
+        Assert.AreEqual(1, result.Count());
+    }
 }
