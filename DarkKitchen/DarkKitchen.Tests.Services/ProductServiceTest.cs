@@ -18,6 +18,7 @@ public class ProductServiceTest
     private Product? validProduct;
     private CreateProductDto validCreateProductDto;
     private ProductDto validProductDto;
+    private Mock<IAuditService>? auditServiceMock;
 
     [TestInitialize]
     public void Setup()
@@ -25,6 +26,8 @@ public class ProductServiceTest
         productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
         promotionServiceMock = new Mock<IPromotionService>(MockBehavior.Strict);
         productService = new ProductService(productRepositoryMock.Object, promotionServiceMock.Object);
+        auditServiceMock = new Mock<IAuditService>(MockBehavior.Strict);
+        productService = new ProductService(productRepositoryMock.Object, promotionServiceMock.Object, auditServiceMock.Object);
 
         validProduct = new Product
         {
@@ -279,5 +282,17 @@ public class ProductServiceTest
             p.Category == validProduct!.Category &&
             p.Price == validProduct!.Price)),
             Times.Once);
+    }
+
+    [TestMethod]
+    public void CreateProduct_ValidData_AuditLogCreated()
+    {
+        productRepositoryMock!.Setup(r => r.GetByCode(validCreateProductDto.code!)).Returns((Product?)null);
+        productRepositoryMock!.Setup(r => r.Add(It.IsAny<Product>()));
+        auditServiceMock!.Setup(a => a.LogChange("Product", It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
+
+        productService!.CreateProduct(validCreateProductDto, "admin@gmail.com");
+
+        auditServiceMock!.Verify(a => a.LogChange("Product", It.IsAny<int>(), It.IsAny<string>(), "admin@gmail.com"), Times.Once);
     }
 }
