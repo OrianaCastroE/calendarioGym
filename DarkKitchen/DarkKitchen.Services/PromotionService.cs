@@ -6,11 +6,12 @@ using DarkKitchen.Models.PromotionDTOs;
 
 namespace DarkKitchen.Services;
 
-public class PromotionService(IPromotionRepository promotionRepository) : IPromotionService
+public class PromotionService(IPromotionRepository promotionRepository, IAuditService auditService) : IPromotionService
 {
     private readonly IPromotionRepository _promotionRepository = promotionRepository;
+    private readonly IAuditService _auditService = auditService;
 
-    public void CreatePromotion(PromotionDto newPromotion)
+    public void CreatePromotion(PromotionDto newPromotion, string responsibleUser)
     {
         if(string.IsNullOrEmpty(newPromotion.name))
         {
@@ -36,6 +37,7 @@ public class PromotionService(IPromotionRepository promotionRepository) : IPromo
         };
 
         _promotionRepository.Add(promotion);
+        _auditService.LogChange("Promotion", promotion.Id, "Promotion created", responsibleUser);
     }
 
     public void UpdatePromotion(int id, PromotionDto updatedPromotion)

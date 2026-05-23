@@ -1,9 +1,9 @@
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
+using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.PromotionDTOs;
 using DarkKitchen.Services;
-using DarkKitchen.Domain.Interfaces.Service;
 using Moq;
 
 namespace DarkKitchen.Tests.Services;
@@ -40,8 +40,9 @@ public class PromotionServiceTest
     public void CreatePromotion_ValidData_PromotionCreated()
     {
         promotionRepositoryMock!.Setup(r => r.Add(It.IsAny<Promotion>()));
+        auditServiceMock!.Setup(a => a.LogChange(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
 
-        promotionService!.CreatePromotion(validPromotion);
+        promotionService!.CreatePromotion(validPromotion, "admin@gmail.com");
 
         promotionRepositoryMock!.Verify(r => r.Add(It.IsAny<Promotion>()), Times.Once);
     }
@@ -51,7 +52,7 @@ public class PromotionServiceTest
     {
         validPromotion = validPromotion with { discountPercentage = 0 };
 
-        Assert.ThrowsException<BadRequestException>(() => promotionService!.CreatePromotion(validPromotion));
+        Assert.ThrowsException<BadRequestException>(() => promotionService!.CreatePromotion(validPromotion, "admin@gmail.com"));
     }
 
     [TestMethod]
@@ -59,7 +60,7 @@ public class PromotionServiceTest
     {
         validPromotion = validPromotion with { dateFrom = new DateTime(2026, 1, 30), dateTo = new DateTime(2026, 1, 25) };
 
-        Assert.ThrowsException<BadRequestException>(() => promotionService!.CreatePromotion(validPromotion));
+        Assert.ThrowsException<BadRequestException>(() => promotionService!.CreatePromotion(validPromotion, "admin@gmail.com"));
     }
 
     [TestMethod]
@@ -67,7 +68,7 @@ public class PromotionServiceTest
     {
         validPromotion = validPromotion with { name = string.Empty };
 
-        Assert.ThrowsException<BadRequestException>(() => promotionService!.CreatePromotion(validPromotion));
+        Assert.ThrowsException<BadRequestException>(() => promotionService!.CreatePromotion(validPromotion, "admin@gmail.com"));
     }
 
     [TestMethod]
@@ -112,8 +113,7 @@ public class PromotionServiceTest
     public void GetPromotions_NoPromotionsFound_ReturnsEmptyList()
     {
         var date = new DateTime(2026, 1, 27);
-        promotionRepositoryMock!.Setup(r => r.GetPromotions(date, null, null))
-            .Returns([]);
+        promotionRepositoryMock!.Setup(r => r.GetPromotions(date, null, null)).Returns([]);
 
         var result = promotionService!.GetPromotions(new PromotionFiltersDto { Date = date });
 
@@ -125,8 +125,7 @@ public class PromotionServiceTest
     public void GetPromotions_ValidFilter_ReturnsPromotions()
     {
         var date = new DateTime(2026, 1, 27);
-        promotionRepositoryMock!.Setup(r => r.GetPromotions(date, null, null))
-            .Returns([promotionEntity!]);
+        promotionRepositoryMock!.Setup(r => r.GetPromotions(date, null, null)).Returns([promotionEntity!]);
 
         var result = promotionService!.GetPromotions(new PromotionFiltersDto { Date = date });
 
@@ -137,8 +136,7 @@ public class PromotionServiceTest
     [TestMethod]
     public void GetBestDiscountByProduct_WhenNoActivePromotions_ReturnsEmptyDictionary()
     {
-        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
-            .Returns([]);
+        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>())).Returns([]);
 
         var result = promotionService!.GetBestDiscountByProduct([1, 2], DateTime.UtcNow);
 
@@ -150,8 +148,7 @@ public class PromotionServiceTest
     {
         promotionEntity!.DiscountPercentage = 15;
         promotionEntity.Products = [new Product { Id = 1 }];
-        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
-            .Returns([promotionEntity]);
+        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>())).Returns([promotionEntity]);
 
         var result = promotionService!.GetBestDiscountByProduct([1], DateTime.UtcNow);
 
@@ -163,8 +160,7 @@ public class PromotionServiceTest
     {
         var lowPromo = new Promotion { Id = 1, Name = "Low", DiscountPercentage = 10, Products = [new Product { Id = 1 }] };
         var highPromo = new Promotion { Id = 2, Name = "High", DiscountPercentage = 25, Products = [new Product { Id = 1 }] };
-        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
-            .Returns([lowPromo, highPromo]);
+        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>())).Returns([lowPromo, highPromo]);
 
         var result = promotionService!.GetBestDiscountByProduct([1], DateTime.UtcNow);
 
@@ -176,8 +172,7 @@ public class PromotionServiceTest
     {
         promotionEntity!.DiscountPercentage = 20;
         promotionEntity.Products = [new Product { Id = 1 }, new Product { Id = 2 }];
-        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
-            .Returns([promotionEntity]);
+        promotionRepositoryMock!.Setup(r => r.GetActiveForProducts(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>())).Returns([promotionEntity]);
 
         var result = promotionService!.GetBestDiscountByProduct([1], DateTime.UtcNow);
 

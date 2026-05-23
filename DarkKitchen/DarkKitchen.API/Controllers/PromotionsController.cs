@@ -16,7 +16,8 @@ public class PromotionsController(IPromotionService promotionService) : Controll
     [HttpPost]
     public IActionResult CreatePromotion([FromBody] PromotionDto newPromotion)
     {
-        _promotionService.CreatePromotion(newPromotion);
+        var responsibleUser = User.Identity!.Name!;
+        _promotionService.CreatePromotion(newPromotion, responsibleUser);
         return Created(string.Empty, newPromotion);
     }
 
