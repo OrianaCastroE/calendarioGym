@@ -43,4 +43,23 @@ public class AuditRepositoryTests
 
         Assert.AreEqual(1, context!.AuditRecords.Count());
     }
+
+    [TestMethod]
+    public void GetByFilter_ValidFilter_ReturnsRecords()
+    {
+        var record = new AuditRecord
+        {
+            EntityName = "Product",
+            EntityId = 1,
+            ChangeDescription = "Product created",
+            ResponsibleUser = "admin@gmail.com",
+            DateTime = DateTime.UtcNow
+        };
+        context!.AuditRecords.Add(record);
+        context.SaveChanges();
+
+        var result = auditRepository!.GetByFilter("Product", null, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1));
+
+        Assert.AreEqual(1, result.Count());
+    }
 }
