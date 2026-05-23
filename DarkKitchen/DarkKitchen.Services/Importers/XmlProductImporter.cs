@@ -42,7 +42,7 @@ public class XmlProductImporter : IProductImporter
 
         var imagePaths = p.Element("imagePaths")?.Elements("imagePath")
             .Select(e => e.Value)
-            .ToList() ?? new List<string>();
+            .ToList() ?? [];
 
         return new ImportedProductDto(
             code: (string?)p.Element("code") ?? string.Empty,

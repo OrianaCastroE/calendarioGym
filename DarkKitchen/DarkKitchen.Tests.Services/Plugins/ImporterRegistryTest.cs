@@ -17,7 +17,7 @@ public class ImporterRegistryTest
     public void Setup()
     {
         loaderMock = new Mock<PluginLoader>();
-        loaderMock.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns(new List<IProductImporter>());
+        loaderMock.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns([]);
 
         configurationMock = new Mock<IConfiguration>();
         configurationMock.Setup(c => c["Plugins:Folder"]).Returns("test-plugins");
@@ -82,7 +82,7 @@ public class ImporterRegistryTest
     {
         var builtIn = new FakeImporter("JSON", ".json");
         var plugin = new FakeImporter("JSON", ".json");
-        loaderMock!.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns(new List<IProductImporter> { plugin });
+        loaderMock!.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns([plugin]);
 
         _ = new ImporterRegistry([builtIn], loaderMock.Object, configurationMock!.Object);
     }
