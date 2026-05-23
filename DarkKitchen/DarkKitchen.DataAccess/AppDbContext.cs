@@ -13,6 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Promotion> Promotion { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<RolePermissions> RolePermissions { get; set; }
+    public DbSet<AuditRecord> AuditRecords { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
