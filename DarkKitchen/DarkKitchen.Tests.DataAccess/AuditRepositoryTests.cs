@@ -1,0 +1,46 @@
+using DarkKitchen.DataAccess;
+using DarkKitchen.DataAccess.Repositories;
+using DarkKitchen.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace DarkKitchen.Tests.DataAccess;
+
+[TestClass]
+public class AuditRepositoryTests
+{
+    private AppDbContext? context;
+    private AuditRepository? auditRepository;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        context = new AppDbContext(options);
+        auditRepository = new AuditRepository(context);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        context!.Dispose();
+    }
+
+    [TestMethod]
+    public void Add_ValidAuditRecord_SavesRecord()
+    {
+        var record = new AuditRecord
+        {
+            EntityName = "Product",
+            EntityId = 1,
+            ChangeDescription = "Product created",
+            ResponsibleUser = "admin@gmail.com"
+        };
+
+        auditRepository!.Add(record);
+
+        Assert.AreEqual(1, context!.AuditRecords.Count());
+    }
+}
