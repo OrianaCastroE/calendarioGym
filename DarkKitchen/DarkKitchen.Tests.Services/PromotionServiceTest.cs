@@ -3,6 +3,7 @@ using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Repository;
 using DarkKitchen.Models.PromotionDTOs;
 using DarkKitchen.Services;
+using DarkKitchen.Domain.Interfaces.Service;
 using Moq;
 
 namespace DarkKitchen.Tests.Services;
@@ -11,6 +12,7 @@ namespace DarkKitchen.Tests.Services;
 public class PromotionServiceTest
 {
     private Mock<IPromotionRepository>? promotionRepositoryMock;
+    private Mock<IAuditService>? auditServiceMock;
     private PromotionService? promotionService;
     private PromotionDto validPromotion;
     private Promotion? promotionEntity;
@@ -19,7 +21,8 @@ public class PromotionServiceTest
     public void Setup()
     {
         promotionRepositoryMock = new Mock<IPromotionRepository>(MockBehavior.Strict);
-        promotionService = new PromotionService(promotionRepositoryMock.Object);
+        auditServiceMock = new Mock<IAuditService>(MockBehavior.Strict);
+        promotionService = new PromotionService(promotionRepositoryMock.Object, auditServiceMock.Object);
 
         validPromotion = new PromotionDto("Black Friday", 10, new DateTime(2026, 1, 25), new DateTime(2026, 1, 30));
 
@@ -187,5 +190,16 @@ public class PromotionServiceTest
     {
         Assert.ThrowsException<BadRequestException>(() =>
             promotionService!.GetPromotions(new PromotionFiltersDto()));
+    }
+
+    [TestMethod]
+    public void CreatePromotion_ValidData_AuditLogCreated()
+    {
+        promotionRepositoryMock!.Setup(r => r.Add(It.IsAny<Promotion>()));
+        auditServiceMock!.Setup(a => a.LogChange("Promotion", It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
+
+        promotionService!.CreatePromotion(validPromotion, "admin@gmail.com");
+
+        auditServiceMock!.Verify(a => a.LogChange("Promotion", It.IsAny<int>(), It.IsAny<string>(), "admin@gmail.com"), Times.Once);
     }
 }
