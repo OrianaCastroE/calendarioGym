@@ -51,6 +51,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.GetShippingTypes,
                         Permission.CreateShippingType,
                         Permission.UpdateShippingType,
+                        Permission.ImportProducts,
                     ]
                 },
                 new RolePermissions
