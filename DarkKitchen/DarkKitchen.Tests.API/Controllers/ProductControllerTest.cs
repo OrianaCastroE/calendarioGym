@@ -134,7 +134,7 @@ public class ProductControllerTest
     [TestMethod]
     public void UpdateProduct_WhenValidParams_ReturnsOk()
     {
-        productServiceMock!.Setup(s => s.UpdateProduct(validProduct));
+        productServiceMock!.Setup(s => s.UpdateProduct(validProduct, "admin@gmail.com"));
 
         var result = productController!.UpdateProduct(validProduct);
         var resultObj = result as ObjectResult;
@@ -146,7 +146,7 @@ public class ProductControllerTest
     [TestMethod]
     public void UpdateProduct_WhenProductNotFound_ThrowsNotFoundException()
     {
-        productServiceMock!.Setup(s => s.UpdateProduct(validProduct)).Throws(new NotFoundException("Product not found."));
+        productServiceMock!.Setup(s => s.UpdateProduct(validProduct, "admin@gmail.com")).Throws(new NotFoundException("Product not found."));
 
         Assert.ThrowsException<NotFoundException>(() => productController!.UpdateProduct(validProduct));
     }

@@ -26,7 +26,8 @@ public class ProductsController(IProductService productService) : ControllerBase
     [HttpPut]
     public IActionResult UpdateProduct([FromBody] ProductDto product)
     {
-        _productService.UpdateProduct(product);
+        var responsibleUser = User.Identity!.Name!;
+        _productService.UpdateProduct(product, responsibleUser);
         return Ok("Product updated correctly.");
     }
 

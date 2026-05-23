@@ -87,8 +87,9 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+        auditServiceMock!.Setup(a => a.LogChange(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
 
-        productService!.UpdateProduct(validProductDto);
+        productService!.UpdateProduct(validProductDto, "admin@gmail.com");
 
         productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
     }
@@ -98,7 +99,7 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
 
-        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateProduct(validProductDto));
+        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateProduct(validProductDto, "admin@gmail.com"));
     }
 
     [TestMethod]
@@ -206,10 +207,11 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+        auditServiceMock!.Setup(a => a.LogChange(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
 
         var dtoWithNulls = new ProductDto(1, null, null, null, null, null, null, null, null, null);
 
-        productService!.UpdateProduct(dtoWithNulls);
+        productService!.UpdateProduct(dtoWithNulls, "admin@gmail.com");
 
         productRepositoryMock.Verify(r => r.Update(It.Is<Product>(p =>
             p.Name == validProduct!.Name &&
@@ -270,10 +272,11 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+        auditServiceMock!.Setup(a => a.LogChange(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
 
         var dtoOnlyName = new ProductDto(1, null, "New Name", null, null, null, null, null, null, null);
 
-        productService!.UpdateProduct(dtoOnlyName);
+        productService!.UpdateProduct(dtoOnlyName, "admin@gmail.com");
 
         productRepositoryMock.Verify(r => r.Update(It.Is<Product>(p =>
             p.Name == "New Name" &&
