@@ -24,12 +24,14 @@ public class ProductControllerTest
     private CreateProductDto validCreateProduct;
     private ProductsController? productController;
     private Mock<IProductService>? productServiceMock;
+    private Mock<IProductImporterService>? productImporterServiceMock;
 
     [TestInitialize]
     public void Setup()
     {
         productServiceMock = new Mock<IProductService>(MockBehavior.Strict);
-        productController = new ProductsController(productServiceMock.Object);
+        productImporterServiceMock = new Mock<IProductImporterService>(MockBehavior.Strict);
+        productController = new ProductsController(productServiceMock.Object, productImporterServiceMock.Object);
 
         var user = new ClaimsPrincipal(new ClaimsIdentity(
         [
@@ -173,5 +175,63 @@ public class ProductControllerTest
         productServiceMock!.Setup(s => s.UpdateStatus(id, status)).Throws(new NotFoundException("Product not found."));
 
         Assert.ThrowsException<NotFoundException>(() => productController!.UpdateStatus(id, status));
+    }
+
+    [TestMethod]
+    public void GetAvailableImporters_ReturnsOkWithList()
+    {
+        var importers = new List<ImporterInfoDto>
+        {
+            new("JSON", ".json"),
+            new("XML", ".xml"),
+        };
+        productImporterServiceMock!.Setup(s => s.GetAvailableImporters()).Returns(importers);
+
+        var result = productController!.GetAvailableImporters();
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj!.StatusCode);
+        Assert.AreEqual(importers, resultObj.Value);
+    }
+
+    [TestMethod]
+    public void ImportProducts_WhenValidFile_ReturnsOk()
+    {
+        var fileMock = new Mock<IFormFile>();
+        var content = "[]";
+        var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
+        fileMock.Setup(f => f.Length).Returns(ms.Length);
+        fileMock.Setup(f => f.OpenReadStream()).Returns(ms);
+        productImporterServiceMock!.Setup(s => s.ImportProducts("JSON", It.IsAny<Stream>())).Returns(3);
+
+        var result = productController!.ImportProducts("JSON", fileMock.Object);
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(200, resultObj!.StatusCode);
+    }
+
+    [TestMethod]
+    public void ImportProducts_WhenFileIsNull_ReturnsBadRequest()
+    {
+        var result = productController!.ImportProducts("JSON", null!);
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj!.StatusCode);
+    }
+
+    [TestMethod]
+    public void ImportProducts_WhenFileIsEmpty_ReturnsBadRequest()
+    {
+        var fileMock = new Mock<IFormFile>();
+        fileMock.Setup(f => f.Length).Returns(0);
+
+        var result = productController!.ImportProducts("JSON", fileMock.Object);
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj!.StatusCode);
     }
 }
