@@ -5,8 +5,8 @@ namespace DarkKitchen.Domain.Interfaces.Service;
 
 public interface IProductService
 {
-    public void CreateProduct(CreateProductDto newProduct);
-    public void UpdateProduct(ProductDto updatedProduct);
+    public void CreateProduct(CreateProductDto newProduct, string responsibleUser);
+    public void UpdateProduct(ProductDto updatedProduct, string responsibleUser);
     public IEnumerable<ProductDto> GetProducts(ProductFilterDto filter);
     public ProductDto? GetByCode(string code);
     public IEnumerable<ProductDto> GetMostRequestedProducts(DateRangeDto dates);

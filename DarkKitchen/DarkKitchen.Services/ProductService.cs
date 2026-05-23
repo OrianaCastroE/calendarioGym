@@ -7,12 +7,13 @@ using DarkKitchen.Models.ProductDTOs;
 
 namespace DarkKitchen.Services;
 
-public class ProductService(IProductRepository repository, IPromotionService promotionService) : IProductService
+public class ProductService(IProductRepository repository, IPromotionService promotionService, IAuditService auditService) : IProductService
 {
     private readonly IProductRepository _repository = repository;
     private readonly IPromotionService _promotionService = promotionService;
+    private readonly IAuditService _auditService = auditService;
 
-    public void CreateProduct(CreateProductDto newProduct)
+    public void CreateProduct(CreateProductDto newProduct, string responsibleUser)
     {
         if(newProduct.name == null || newProduct.name == string.Empty)
         {
@@ -36,12 +37,13 @@ public class ProductService(IProductRepository repository, IPromotionService pro
             Images = newProduct.imageUrl!.Select(url => new ProductImage { Url = url }).ToList()
         };
         _repository.Add(product);
+        _auditService.LogChange("Product", product.Id, "Product created", responsibleUser);
     }
 
-    public void UpdateProduct(ProductDto updatedProduct)
+    public void UpdateProduct(ProductDto updatedProduct, string responsibleUser)
     {
         Product product = _repository.GetById(updatedProduct.id ?? 0)
-        ?? throw new NotFoundException("Product not found.");
+            ?? throw new NotFoundException("Product not found.");
 
         if(updatedProduct.name != null)
         {
@@ -79,6 +81,7 @@ public class ProductService(IProductRepository repository, IPromotionService pro
         }
 
         _repository.Update(product);
+        _auditService.LogChange("Product", product.Id, "Product updated", responsibleUser);
     }
 
     public ProductDto? GetByCode(string code)

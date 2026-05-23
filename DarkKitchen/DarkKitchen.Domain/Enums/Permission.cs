@@ -126,6 +126,11 @@ public enum Permission
     GetSalesReport,
 
     /// <summary>
+    /// Permission to retrieve audit records.
+    /// </summary>
+    GetAuditRecords,
+
+    /// <summary>
     /// Permission to retrieve the list of shipping types.
     /// </summary>
     GetShippingTypes,

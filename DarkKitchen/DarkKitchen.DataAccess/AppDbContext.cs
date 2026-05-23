@@ -13,6 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Promotion> Promotion { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<RolePermissions> RolePermissions { get; set; }
+    public DbSet<AuditRecord> AuditRecords { get; set; }
     public DbSet<ShippingType> ShippingTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -46,6 +47,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                         Permission.UpdatePromotion,
                         Permission.UpdatePromotionProducts,
                         Permission.GetSalesReport,
+                        Permission.GetAuditRecords,
                         Permission.GetShippingTypes,
                         Permission.CreateShippingType,
                         Permission.UpdateShippingType,

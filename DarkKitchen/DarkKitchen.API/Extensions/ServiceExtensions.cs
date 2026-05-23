@@ -15,6 +15,7 @@ public static class ServiceExtensions
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<ISessionService, SessionService>();
         services.AddScoped<IRolePermissionsService, RolePermissionsService>();
+        services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<IShippingTypeService, ShippingTypeService>();
         return services;
     }
