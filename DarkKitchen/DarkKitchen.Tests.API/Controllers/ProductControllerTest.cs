@@ -3,8 +3,10 @@ using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Service;
 using DarkKitchen.Models.DateDTOs;
 using DarkKitchen.Models.ProductDTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Security.Claims;
 
 namespace DarkKitchen.Tests.API.Controllers;
 
@@ -29,16 +31,26 @@ public class ProductControllerTest
         productServiceMock = new Mock<IProductService>(MockBehavior.Strict);
         productController = new ProductsController(productServiceMock.Object);
 
-        validProduct = new ProductDto(validProductId, null, validProductName, validProductDescription, null, validCategory, null, validImageUrl, isActive, 0);
+        var user = new ClaimsPrincipal(new ClaimsIdentity(
+        [
+            new Claim(ClaimTypes.Name, "admin@gmail.com")
+        ], "mock"));
 
+        productController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = user }
+        };
+
+        validProduct = new ProductDto(validProductId, null, validProductName, validProductDescription, null, validCategory, null, validImageUrl, isActive, 0);
         validCreateProduct = new CreateProductDto(null, validProductName, validProductDescription, null, validCategory, null, validImageUrl);
     }
 
     [TestMethod]
     public void CreateProduct_WhenValidParams_ReturnsCreated()
     {
-        productServiceMock.Setup(s => s.CreateProduct(validCreateProduct));
-        var result = productController.CreateProduct(validCreateProduct);
+        productServiceMock!.Setup(s => s.CreateProduct(validCreateProduct, "admin@gmail.com"));
+
+        var result = productController!.CreateProduct(validCreateProduct);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -49,10 +61,9 @@ public class ProductControllerTest
     public void CreateProduct_WhenNameIsNull_ThrowsBadRequestException()
     {
         var nullProductName = new CreateProductDto(null, null, validProductDescription, null, validCategory, null, validImageUrl);
+        productServiceMock!.Setup(s => s.CreateProduct(nullProductName, "admin@gmail.com")).Throws(new BadRequestException("Invalid name."));
 
-        productServiceMock.Setup(s => s.CreateProduct(nullProductName)).Throws(new BadRequestException("Invalid name."));
-
-        Assert.ThrowsException<BadRequestException>(() => productController.CreateProduct(nullProductName));
+        Assert.ThrowsException<BadRequestException>(() => productController!.CreateProduct(nullProductName));
     }
 
     [TestMethod]
@@ -65,9 +76,9 @@ public class ProductControllerTest
             Name = validProductName
         };
         var products = new List<ProductDto>();
-        productServiceMock.Setup(s => s.GetProducts(It.IsAny<ProductFilterDto>())).Returns(products!);
+        productServiceMock!.Setup(s => s.GetProducts(It.IsAny<ProductFilterDto>())).Returns(products!);
 
-        var result = productController.GetProducts(filters);
+        var result = productController!.GetProducts(filters);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -78,14 +89,14 @@ public class ProductControllerTest
     [TestMethod]
     public void GetProducts_WhenNoProducts_ThrowsNotFoundException()
     {
-        productServiceMock.Setup(s => s.GetProducts(It.IsAny<ProductFilterDto>())).Throws(new NotFoundException("No products found."));
+        productServiceMock!.Setup(s => s.GetProducts(It.IsAny<ProductFilterDto>())).Throws(new NotFoundException("No products found."));
         var filters = new ProductFilterDto
         {
             ProductLine = validProductLine,
             Name = validProductName
         };
 
-        Assert.ThrowsException<NotFoundException>(() => productController.GetProducts(filters));
+        Assert.ThrowsException<NotFoundException>(() => productController!.GetProducts(filters));
     }
 
     [TestMethod]
@@ -97,9 +108,9 @@ public class ProductControllerTest
             DateFrom = DateTime.Now.AddDays(-7),
             DateTo = DateTime.Now
         };
-        productServiceMock.Setup(s => s.GetMostRequestedProducts(It.IsAny<DateRangeDto>())).Returns(products);
+        productServiceMock!.Setup(s => s.GetMostRequestedProducts(It.IsAny<DateRangeDto>())).Returns(products);
 
-        var result = productController.GetMostRequestedProducts(dates);
+        var result = productController!.GetMostRequestedProducts(dates);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -115,16 +126,17 @@ public class ProductControllerTest
             DateFrom = DateTime.Now.AddDays(-7),
             DateTo = DateTime.Now
         };
-        productServiceMock.Setup(s => s.GetMostRequestedProducts(It.IsAny<DateRangeDto>())).Throws(new NotFoundException("No products found."));
+        productServiceMock!.Setup(s => s.GetMostRequestedProducts(It.IsAny<DateRangeDto>())).Throws(new NotFoundException("No products found."));
 
-        Assert.ThrowsException<NotFoundException>(() => productController.GetMostRequestedProducts(dates));
+        Assert.ThrowsException<NotFoundException>(() => productController!.GetMostRequestedProducts(dates));
     }
 
     [TestMethod]
     public void UpdateProduct_WhenValidParams_ReturnsOk()
     {
-        productServiceMock.Setup(s => s.UpdateProduct(validProduct));
-        var result = productController.UpdateProduct(validProduct);
+        productServiceMock!.Setup(s => s.UpdateProduct(validProduct));
+
+        var result = productController!.UpdateProduct(validProduct);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -134,9 +146,9 @@ public class ProductControllerTest
     [TestMethod]
     public void UpdateProduct_WhenProductNotFound_ThrowsNotFoundException()
     {
-        productServiceMock.Setup(s => s.UpdateProduct(validProduct)).Throws(new NotFoundException("Product not found."));
+        productServiceMock!.Setup(s => s.UpdateProduct(validProduct)).Throws(new NotFoundException("Product not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => productController.UpdateProduct(validProduct));
+        Assert.ThrowsException<NotFoundException>(() => productController!.UpdateProduct(validProduct));
     }
 
     [TestMethod]
@@ -144,8 +156,9 @@ public class ProductControllerTest
     {
         var id = 1;
         var status = new ProductStatusDto(true);
-        productServiceMock.Setup(s => s.UpdateStatus(id, status));
-        var result = productController.UpdateStatus(id, status);
+        productServiceMock!.Setup(s => s.UpdateStatus(id, status));
+
+        var result = productController!.UpdateStatus(id, status);
         var resultObj = result as ObjectResult;
 
         Assert.IsNotNull(resultObj);
@@ -157,8 +170,8 @@ public class ProductControllerTest
     {
         var id = 1;
         var status = new ProductStatusDto(true);
-        productServiceMock.Setup(s => s.UpdateStatus(id, status)).Throws(new NotFoundException("Product not found."));
+        productServiceMock!.Setup(s => s.UpdateStatus(id, status)).Throws(new NotFoundException("Product not found."));
 
-        Assert.ThrowsException<NotFoundException>(() => productController.UpdateStatus(id, status));
+        Assert.ThrowsException<NotFoundException>(() => productController!.UpdateStatus(id, status));
     }
 }

@@ -14,18 +14,17 @@ public class ProductServiceTest
 {
     private Mock<IProductRepository>? productRepositoryMock;
     private Mock<IPromotionService>? promotionServiceMock;
+    private Mock<IAuditService>? auditServiceMock;
     private ProductService? productService;
     private Product? validProduct;
     private CreateProductDto validCreateProductDto;
     private ProductDto validProductDto;
-    private Mock<IAuditService>? auditServiceMock;
 
     [TestInitialize]
     public void Setup()
     {
         productRepositoryMock = new Mock<IProductRepository>(MockBehavior.Strict);
         promotionServiceMock = new Mock<IPromotionService>(MockBehavior.Strict);
-        productService = new ProductService(productRepositoryMock.Object, promotionServiceMock.Object);
         auditServiceMock = new Mock<IAuditService>(MockBehavior.Strict);
         productService = new ProductService(productRepositoryMock.Object, promotionServiceMock.Object, auditServiceMock.Object);
 
@@ -52,8 +51,9 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetByCode(validCreateProductDto.code!)).Returns((Product?)null);
         productRepositoryMock!.Setup(r => r.Add(It.IsAny<Product>()));
+        auditServiceMock!.Setup(a => a.LogChange(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
 
-        productService!.CreateProduct(validCreateProductDto);
+        productService!.CreateProduct(validCreateProductDto, "admin@gmail.com");
 
         productRepositoryMock!.Verify(r => r.Add(It.IsAny<Product>()), Times.Once);
     }
@@ -63,7 +63,7 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetByCode(validCreateProductDto.code!)).Returns(validProduct!);
 
-        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(validCreateProductDto));
+        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(validCreateProductDto, "admin@gmail.com"));
     }
 
     [TestMethod]
@@ -71,7 +71,7 @@ public class ProductServiceTest
     {
         var dto = new CreateProductDto(null, null, null, null, null, null, null);
 
-        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
+        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto, "admin@gmail.com"));
     }
 
     [TestMethod]
@@ -79,7 +79,7 @@ public class ProductServiceTest
     {
         var dto = new CreateProductDto(null, string.Empty, null, null, null, null, null);
 
-        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto));
+        Assert.ThrowsException<BadRequestException>(() => productService!.CreateProduct(dto, "admin@gmail.com"));
     }
 
     [TestMethod]
