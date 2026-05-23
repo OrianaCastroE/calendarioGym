@@ -143,5 +143,10 @@ public enum Permission
     /// <summary>
     /// Permission to update an existing shipping type.
     /// </summary>
-    UpdateShippingType
+    UpdateShippingType,
+
+    /// <summary>
+    /// Permission to import products from external sources (JSON, XML, plugins).
+    /// </summary>
+    ImportProducts
 }
