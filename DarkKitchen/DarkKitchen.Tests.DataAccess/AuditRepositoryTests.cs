@@ -62,4 +62,19 @@ public class AuditRepositoryTests
 
         Assert.AreEqual(1, result.Count());
     }
+
+    [TestMethod]
+    public void GetByFilter_WithEntityId_ReturnsMatchingRecords()
+    {
+        context!.AuditRecords.AddRange(
+            new AuditRecord { EntityName = "Product", EntityId = 1, ChangeDescription = "Created", ResponsibleUser = "admin@gmail.com", DateTime = DateTime.UtcNow },
+            new AuditRecord { EntityName = "Product", EntityId = 2, ChangeDescription = "Created", ResponsibleUser = "admin@gmail.com", DateTime = DateTime.UtcNow }
+        );
+        context.SaveChanges();
+
+        var result = auditRepository!.GetByFilter("Product", 1, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1));
+
+        Assert.AreEqual(1, result.Count());
+        Assert.AreEqual(1, result.First().EntityId);
+    }
 }
