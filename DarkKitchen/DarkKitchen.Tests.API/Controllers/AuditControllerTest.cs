@@ -52,4 +52,21 @@ public class AuditControllerTest
         Assert.IsNotNull(resultObj);
         Assert.AreEqual(200, resultObj!.StatusCode);
     }
+
+    [TestMethod]
+    public void GetAuditRecords_DateFromGreaterThanDateTo_ReturnsBadRequest()
+    {
+        var filter = new AuditFilterDto
+        {
+            EntityName = "Product",
+            DateFrom = DateTime.UtcNow,
+            DateTo = DateTime.UtcNow.AddDays(-1)
+        };
+
+        var result = auditController!.GetAuditRecords(filter);
+        var resultObj = result as ObjectResult;
+
+        Assert.IsNotNull(resultObj);
+        Assert.AreEqual(400, resultObj!.StatusCode);
+    }
 }
