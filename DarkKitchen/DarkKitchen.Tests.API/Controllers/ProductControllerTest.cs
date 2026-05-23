@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using DarkKitchen.API.Controllers;
 using DarkKitchen.Domain.Exceptions;
 using DarkKitchen.Domain.Interfaces.Service;
@@ -6,7 +7,6 @@ using DarkKitchen.Models.ProductDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Security.Claims;
 
 namespace DarkKitchen.Tests.API.Controllers;
 
