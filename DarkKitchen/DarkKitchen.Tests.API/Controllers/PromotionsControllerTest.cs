@@ -63,7 +63,7 @@ public class PromotionsControllerTest
     [TestMethod]
     public void UpdatePromotion_ExistingPromotion_ReturnsOk()
     {
-        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion));
+        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion, "admin@gmail.com"));
 
         var result = promotionsController!.UpdatePromotion(promotionId, validPromotion);
         var resultObj = result as ObjectResult;
@@ -75,7 +75,7 @@ public class PromotionsControllerTest
     [TestMethod]
     public void UpdatePromotion_PromotionNotFound_ThrowsNotFoundException()
     {
-        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion)).Throws(new NotFoundException("Promotion not found."));
+        promotionServiceMock!.Setup(s => s.UpdatePromotion(promotionId, validPromotion, "admin@gmail.com")).Throws(new NotFoundException("Promotion not found."));
 
         Assert.ThrowsException<NotFoundException>(() => promotionsController!.UpdatePromotion(promotionId, validPromotion));
     }

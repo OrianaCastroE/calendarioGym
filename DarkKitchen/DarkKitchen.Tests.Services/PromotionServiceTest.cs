@@ -76,8 +76,9 @@ public class PromotionServiceTest
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns(promotionEntity!);
         promotionRepositoryMock!.Setup(r => r.Update(It.IsAny<Promotion>()));
+        auditServiceMock!.Setup(a => a.LogChange(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
 
-        promotionService!.UpdatePromotion(1, validPromotion);
+        promotionService!.UpdatePromotion(1, validPromotion, "admin@gmail.com");
 
         promotionRepositoryMock!.Verify(r => r.Update(It.IsAny<Promotion>()), Times.Once);
     }
@@ -87,7 +88,7 @@ public class PromotionServiceTest
     {
         promotionRepositoryMock!.Setup(r => r.GetById(1)).Returns((Promotion?)null);
 
-        Assert.ThrowsException<NotFoundException>(() => promotionService!.UpdatePromotion(1, validPromotion));
+        Assert.ThrowsException<NotFoundException>(() => promotionService!.UpdatePromotion(1, validPromotion, "admin@gmail.com"));
     }
 
     [TestMethod]

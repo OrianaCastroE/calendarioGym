@@ -40,7 +40,7 @@ public class PromotionService(IPromotionRepository promotionRepository, IAuditSe
         _auditService.LogChange("Promotion", promotion.Id, "Promotion created", responsibleUser);
     }
 
-    public void UpdatePromotion(int id, PromotionDto updatedPromotion)
+    public void UpdatePromotion(int id, PromotionDto updatedPromotion, string responsibleUser)
     {
         var promotion = _promotionRepository.GetById(id)
             ?? throw new NotFoundException("Promotion not found.");
@@ -51,6 +51,7 @@ public class PromotionService(IPromotionRepository promotionRepository, IAuditSe
         promotion.DateTo = updatedPromotion.dateTo;
 
         _promotionRepository.Update(promotion);
+        _auditService.LogChange("Promotion", promotion.Id, "Promotion updated", responsibleUser);
     }
 
     public void UpdatePromotionProducts(int promotionId, List<int> productIds)
