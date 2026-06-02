@@ -5,7 +5,7 @@
   </div>
 
   <div class="login-card">
-    <h2>Sign in</h2>
+    <h2>Log in</h2>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="field">
@@ -22,7 +22,7 @@
         <p class="error">{{ errorMessage }}</p>
       }
 
-      <button type="submit" [disabled]="form.invalid">Sign in</button>
+      <button type="submit" [disabled]="form.invalid">Log in</button>
     </form>
   </div>
 
