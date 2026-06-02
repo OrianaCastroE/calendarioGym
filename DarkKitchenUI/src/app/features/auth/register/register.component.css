@@ -1,39 +1,14 @@
-.login-container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--dk-base);
-}
-
-.brand {
-  flex: 1;
+.register-container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  padding: 2rem 0;
+  background-color: var(--dk-base);
 }
 
-.brand-icon {
-  width: 56px;
-  height: 56px;
-}
-
-.app-title {
-  font-family: "Playfair Display", serif;
-  font-style: italic;
-  font-weight: 900;
-  font-size: 2.25rem;
-  color: var(--dk-text);
-  letter-spacing: 0.02em;
-}
-
-.spacer {
-  flex: 1;
-}
-
-.login-card {
+.register-card {
   width: 100%;
   max-width: 380px;
   background-color: var(--dk-surface);
@@ -86,6 +61,40 @@ input:focus {
   border-color: var(--dk-accent);
 }
 
+.phone-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: var(--dk-crust);
+  border: 1px solid var(--dk-border);
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+
+.phone-wrapper:focus-within {
+  border-color: var(--dk-accent);
+}
+
+.phone-prefix {
+  padding: 10px 6px 10px 12px;
+  color: var(--dk-subtext);
+  font-size: 0.9rem;
+  font-family: system-ui, sans-serif;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.phone-wrapper input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 12px 10px 2px;
+  min-width: 0;
+}
+
+.phone-wrapper input:focus {
+  border-color: transparent;
+}
+
 .input-wrapper {
   position: relative;
   display: flex;
@@ -112,17 +121,6 @@ input:focus {
 
 .toggle-password:hover {
   color: var(--dk-text);
-}
-
-.session-notice {
-  color: var(--dk-subtext);
-  font-size: 0.85rem;
-  font-family: "Josefin Sans", system-ui;
-  text-align: center;
-  background-color: var(--dk-crust);
-  border: 1px solid var(--dk-border);
-  border-radius: 8px;
-  padding: 10px 14px;
 }
 
 .error {
@@ -159,27 +157,18 @@ button[type="submit"]:disabled {
   cursor: not-allowed;
 }
 
-.register-prompt {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-family: "Josefin Sans", system-ui;
-  font-size: 0.875rem;
-  color: var(--dk-subtext);
-}
-
-.register-btn {
+.back-btn {
   background: none;
   border: none;
-  color: var(--dk-accent);
+  color: var(--dk-subtext);
   font-family: "Josefin Sans", system-ui;
   font-size: 0.875rem;
   cursor: pointer;
   padding: 0;
-  text-decoration: underline;
+  align-self: flex-start;
+  transition: color 0.2s;
 }
 
-.register-btn:hover {
-  color: var(--dk-accent-hover);
+.back-btn:hover {
+  color: var(--dk-text);
 }

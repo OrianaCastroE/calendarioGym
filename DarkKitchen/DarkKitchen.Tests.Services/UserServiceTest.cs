@@ -22,7 +22,7 @@ public class UserServiceTest
         _userRepositoryMock = new Mock<IUserRepository>(MockBehavior.Strict);
         _userService = new UserService(_userRepositoryMock.Object);
 
-        _validUser = new UserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword1!2!3!");
+        _validUser = new UserDto("validName", "validSurname", "validEmail@gmail.com", "+59899123456", "validPassword1!2!3!");
 
         _user = new User
         {
@@ -324,6 +324,31 @@ public class UserServiceTest
         _userRepositoryMock!.Setup(repository => repository.GetByEmail(_validUser.email!)).Returns(_user!);
 
         Assert.ThrowsException<BadRequestException>(() => _userService!.CreateUser(_validUser));
+    }
+
+    [TestMethod]
+    public void CreateUser_WhenPhoneHasInvalidFormat_ShouldThrowBadRequestException()
+    {
+        _validUser = _validUser with { phone = "099123456" };
+
+        Assert.ThrowsException<BadRequestException>(() => _userService!.CreateUser(_validUser));
+    }
+
+    [TestMethod]
+    public void CreateUser_WhenPhoneIsNull_ShouldCreateUser()
+    {
+        var userWithNullPhone = _validUser with { phone = null };
+
+        _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail(userWithNullPhone.email!))
+            .Returns((User?)null);
+        _userRepositoryMock!
+            .Setup(repository => repository.Add(It.IsAny<User>()));
+
+        _userService!.CreateUser(userWithNullPhone);
+
+        _userRepositoryMock!
+            .Verify(repository => repository.Add(It.IsAny<User>()), Times.Once);
     }
 
     [TestMethod]

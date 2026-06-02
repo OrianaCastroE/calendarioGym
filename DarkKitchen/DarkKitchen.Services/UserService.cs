@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using DarkKitchen.Domain.Entities;
 using DarkKitchen.Domain.Enums;
 using DarkKitchen.Domain.Exceptions;
@@ -13,7 +14,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public void CreateUser(UserDto newUser)
     {
-        ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password);
+        ValidateUserFields(newUser.name, newUser.surname, newUser.email, newUser.password, newUser.phone);
 
         if(_userRepository.GetByEmail(newUser.email!) != null)
         {
@@ -131,7 +132,7 @@ public class UserService(IUserRepository userRepository) : IUserService
         _userRepository.Add(user);
     }
 
-    private static void ValidateUserFields(string? name, string? surname, string? email, string? password)
+    private static void ValidateUserFields(string? name, string? surname, string? email, string? password, string? phone = null)
     {
         var message = string.Empty;
 
@@ -196,6 +197,15 @@ public class UserService(IUserRepository userRepository) : IUserService
             }
 
             previousCharWasDigit = char.IsDigit(letter);
+        }
+
+        if(!string.IsNullOrEmpty(phone))
+        {
+            var digitsOnly = Regex.Replace(phone, @"[\s\-().]", string.Empty);
+            if(!Regex.IsMatch(digitsOnly, @"^\+[1-9]\d{6,14}$"))
+            {
+                message = "Phone number must include a country code and be in a valid format (e.g. +1 5551234567).";
+            }
         }
 
         if(!string.IsNullOrEmpty(message))
