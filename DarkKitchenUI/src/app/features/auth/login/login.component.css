@@ -86,6 +86,17 @@ input:focus {
   border-color: var(--dk-accent);
 }
 
+.session-notice {
+  color: var(--dk-subtext);
+  font-size: 0.85rem;
+  font-family: "Josefin Sans", system-ui;
+  text-align: center;
+  background-color: var(--dk-crust);
+  border: 1px solid var(--dk-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
 .error {
   color: var(--dk-error);
   font-size: 0.85rem;

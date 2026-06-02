@@ -21,6 +21,9 @@ export class LoginComponent {
   });
 
   errorMessage = '';
+  readonly sessionMessage = (history.state as { sessionExpired?: boolean })?.sessionExpired
+    ? 'Your session has expired. Please log in again.'
+    : '';
 
   onSubmit() {
     if (this.form.invalid) return;

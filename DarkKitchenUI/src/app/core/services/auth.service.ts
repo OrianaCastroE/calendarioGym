@@ -17,9 +17,9 @@ export class AuthService {
     );
   }
 
-  logout() {
+  logout(sessionExpired = false) {
     localStorage.removeItem(this.tokenKey);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'], sessionExpired ? { state: { sessionExpired: true } } : {});
   }
 
   getToken(): string | null {
@@ -28,5 +28,40 @@ export class AuthService {
 
   getAuthHeaders() {
     return { Authorization: `Bearer ${this.getToken()}` };
+  }
+
+  getPermissions(): string[] {
+    const token = this.getToken();
+    if (!token) return [];
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const perms = payload['permission'];
+      if (!perms) return [];
+      return Array.isArray(perms) ? perms : [perms];
+    } catch {
+      return [];
+    }
+  }
+
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload['exp'] * 1000 < Date.now();
+    } catch {
+      return true;
+    }
+  }
+
+  getUserName(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload['name'] ?? payload['unique_name'] ?? payload['email'] ?? null;
+    } catch {
+      return null;
+    }
   }
 }

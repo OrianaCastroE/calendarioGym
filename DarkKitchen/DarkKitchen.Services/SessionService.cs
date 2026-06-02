@@ -38,7 +38,8 @@ public class SessionService(
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email!),
-            new Claim(ClaimTypes.Role, user.Role.ToString())
+            new Claim(ClaimTypes.Role, user.Role.ToString()),
+            new Claim("name", user.Name)
         };
         claims.AddRange(permissions.Select(p => new Claim("permission", p.ToString())));
 
