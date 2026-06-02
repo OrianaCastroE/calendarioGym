@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Playfair+Display:ital,wght@1,400..900&display=swap');
 
 :root {
   /* Warm dark palette — darkness order: crust < base < surface < surface-alt */
@@ -28,13 +29,17 @@ html, body {
   height: 100%;
   background-color: var(--dk-base);
   color: var(--dk-text);
-  font-family: "Chelsea Market", system-ui;
-  font-weight: 400;
-  font-style: normal;
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: italic;
 }
 
 small,
 p,
 .description {
-  font-family: system-ui, sans-serif;
+  font-family: "Josefin Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
 }

@@ -99,6 +99,7 @@
 .nav-label {
   font-size: 0.875rem;
   font-weight: 500;
+  font-family: "Josefin Sans", system-ui;
   color: var(--dk-subtext);
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -106,8 +107,9 @@
 }
 
 .app-name {
-  font-size: 1rem;
+  font-size: 1.45rem;
   font-weight: 600;
+  font-family: "Playfair Display", serif;
   color: var(--dk-text);
 }
 

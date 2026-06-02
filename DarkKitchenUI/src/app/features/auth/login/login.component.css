@@ -1,9 +1,36 @@
 .login-container {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--dk-base);
+}
+
+.brand {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--dk-base);
+  gap: 0.75rem;
+}
+
+.brand-icon {
+  width: 56px;
+  height: 56px;
+}
+
+.app-title {
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 2.25rem;
+  color: var(--dk-text);
+  letter-spacing: 0.02em;
+}
+
+.spacer {
+  flex: 1;
 }
 
 .login-card {
@@ -39,7 +66,7 @@ form {
 label {
   color: var(--dk-subtext);
   font-size: 0.875rem;
-  font-family: system-ui, sans-serif;
+  font-family: "Josefin Sans", system-ui;
 }
 
 input {
@@ -61,8 +88,13 @@ input:focus {
 
 .error {
   color: var(--dk-error);
-  font-size: 0.8rem;
-  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-family: "Josefin Sans", system-ui;
+  text-align: center;
+  background-color: rgba(255, 111, 97, 0.1);
+  border: 1px solid var(--dk-error);
+  border-radius: 8px;
+  padding: 10px 14px;
 }
 
 button[type="submit"] {
@@ -74,7 +106,7 @@ button[type="submit"] {
   border: none;
   border-radius: 8px;
   font-size: 1rem;
-  font-family: "Chelsea Market", system-ui;
+  font-family: "Josefin Sans", system-ui;
   cursor: pointer;
   transition: background-color 0.2s;
 }
