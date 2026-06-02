@@ -1,0 +1,25 @@
+<nav class="navbar" [class.expanded]="isExpanded">
+  <div class="navbar-logo">
+    <img src="favicon.ico" alt="DarkKitchen" class="nav-icon" />
+    <span class="nav-label app-name">DarkKitchen</span>
+  </div>
+
+  <button class="toggle-btn" (click)="toggle()" title="Toggle menu">
+    <svg viewBox="0 0 24 24" fill="currentColor" class="nav-icon">
+      <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+    </svg>
+  </button>
+
+  <ul class="nav-list">
+    @for (item of navItems; track item.route) {
+      <li>
+        <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="nav-icon">
+            <path [attr.d]="item.icon" />
+          </svg>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</nav>
