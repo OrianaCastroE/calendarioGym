@@ -8,7 +8,7 @@ import { LoginRequest, LoginResponse } from '../models/user.model';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly apiUrl = 'http://localhost:5000/api';
+  private readonly apiUrl = 'https://localhost:7134/api';
   private readonly tokenKey = 'token';
 
   login(credentials: LoginRequest) {
