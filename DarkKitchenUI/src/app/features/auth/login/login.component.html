@@ -1,21 +1,30 @@
 <div class="login-container">
-  <h2>Sign in</h2>
+  <div class="brand">
+    <img src="favicon.ico" alt="DarkKitchen" class="brand-icon" />
+    <p class="app-title">DarkKitchen</p>
+  </div>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div>
-      <label for="email">Email</label>
-      <input id="email" type="email" formControlName="email" />
-    </div>
+  <div class="login-card">
+    <h2>Sign in</h2>
 
-    <div>
-      <label for="password">Password</label>
-      <input id="password" type="password" formControlName="password" />
-    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" />
+      </div>
 
-    @if (errorMessage) {
-      <p class="error">{{ errorMessage }}</p>
-    }
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" />
+      </div>
 
-    <button type="submit" [disabled]="form.invalid">Sign in</button>
-  </form>
+      @if (errorMessage) {
+        <p class="error">{{ errorMessage }}</p>
+      }
+
+      <button type="submit" [disabled]="form.invalid">Sign in</button>
+    </form>
+  </div>
+
+  <div class="spacer"></div>
 </div>
