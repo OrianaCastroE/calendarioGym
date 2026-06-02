@@ -327,6 +327,31 @@ public class UserServiceTest
     }
 
     [TestMethod]
+    public void CreateUser_WhenPhoneHasInvalidFormat_ShouldThrowBadRequestException()
+    {
+        _validUser = _validUser with { phone = "099123456" };
+
+        Assert.ThrowsException<BadRequestException>(() => _userService!.CreateUser(_validUser));
+    }
+
+    [TestMethod]
+    public void CreateUser_WhenPhoneIsNull_ShouldCreateUser()
+    {
+        var userWithNullPhone = _validUser with { phone = null };
+
+        _userRepositoryMock!
+            .Setup(repository => repository.GetByEmail(userWithNullPhone.email!))
+            .Returns((User?)null);
+        _userRepositoryMock!
+            .Setup(repository => repository.Add(It.IsAny<User>()));
+
+        _userService!.CreateUser(userWithNullPhone);
+
+        _userRepositoryMock!
+            .Verify(repository => repository.Add(It.IsAny<User>()), Times.Once);
+    }
+
+    [TestMethod]
     public void CreateUserWithRole_WhenDuplicateEmail_ShouldThrowBadRequestException()
     {
         _userRepositoryMock!.Setup(repository => repository.GetByEmail("validEmail@gmail.com")).Returns(_user!);
