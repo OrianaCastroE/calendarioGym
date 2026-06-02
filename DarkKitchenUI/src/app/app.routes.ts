@@ -16,5 +16,30 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () =>
       import('./features/home/home.component').then(m => m.HomeComponent)
+  },
+  {
+    path: 'products',
+    loadComponent: () =>
+      import('./features/products/list/products.component').then(m => m.ProductsComponent)
+  },
+  {
+    path: 'products/new',
+    loadComponent: () =>
+      import('./features/products/form/product-form.component').then(m => m.ProductFormComponent)
+  },
+  {
+    path: 'products/import',
+    loadComponent: () =>
+      import('./features/products/importer/product-importer.component').then(m => m.ProductImporterComponent)
+  },
+  {
+    path: 'products/most-requested',
+    loadComponent: () =>
+      import('./features/products/most-requested/most-requested.component').then(m => m.MostRequestedComponent)
+  },
+  {
+    path: 'products/:id/edit',
+    loadComponent: () =>
+      import('./features/products/form/product-form.component').then(m => m.ProductFormComponent)
   }
 ];
