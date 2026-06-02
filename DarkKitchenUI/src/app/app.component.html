@@ -2,7 +2,7 @@
   @if (showNavbar()) {
     <app-navbar />
   }
-  <main class="app-content">
+  <main class="app-content" [class.with-navbar]="showNavbar()">
     <router-outlet />
   </main>
 </div>

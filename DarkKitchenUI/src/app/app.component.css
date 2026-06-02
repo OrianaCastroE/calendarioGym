@@ -3,7 +3,10 @@
 }
 
 .app-content {
-  margin-left: 64px;
   height: 100%;
   overflow-y: auto;
+}
+
+.app-content.with-navbar {
+  margin-left: 64px;
 }

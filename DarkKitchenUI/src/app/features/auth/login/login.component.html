@@ -1,21 +1,23 @@
 <div class="login-container">
-  <h2>Sign in</h2>
+  <div class="login-card">
+    <h2>Sign in</h2>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div>
-      <label for="email">Email</label>
-      <input id="email" type="email" formControlName="email" />
-    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" />
+      </div>
 
-    <div>
-      <label for="password">Password</label>
-      <input id="password" type="password" formControlName="password" />
-    </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" />
+      </div>
 
-    @if (errorMessage) {
-      <p class="error">{{ errorMessage }}</p>
-    }
+      @if (errorMessage) {
+        <p class="error">{{ errorMessage }}</p>
+      }
 
-    <button type="submit" [disabled]="form.invalid">Sign in</button>
-  </form>
+      <button type="submit" [disabled]="form.invalid">Sign in</button>
+    </form>
+  </div>
 </div>

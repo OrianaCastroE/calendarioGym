@@ -1,5 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap');
 
+:root {
+  /* Warm dark palette — darkness order: crust < base < surface < surface-alt */
+  --dk-crust:        #141414;  /* sidebar / darkest chrome           */
+  --dk-base:         #1c1c1c;  /* page background                    */
+  --dk-surface:      #252525;  /* cards, panels                      */
+  --dk-surface-alt:  #333333;  /* input backgrounds, elevated items  */
+  --dk-border:       #3d3d3d;
+
+  --dk-text:         #f5e8d8;  /* warm beige — primary text          */
+  --dk-subtext:      #a08870;  /* muted warm tone — secondary text   */
+
+  --dk-accent:       #ff6f61;  /* muted coral — primary accent       */
+  --dk-accent-2:     #daa520;  /* golden yellow — secondary accent   */
+  --dk-accent-hover: #ff4500;  /* burnt orange — hover / pressed     */
+
+  --dk-error:        #ff6f61;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -8,6 +26,8 @@
 
 html, body {
   height: 100%;
+  background-color: var(--dk-base);
+  color: var(--dk-text);
   font-family: "Chelsea Market", system-ui;
   font-weight: 400;
   font-style: normal;
