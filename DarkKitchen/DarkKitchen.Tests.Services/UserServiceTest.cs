@@ -22,7 +22,7 @@ public class UserServiceTest
         _userRepositoryMock = new Mock<IUserRepository>(MockBehavior.Strict);
         _userService = new UserService(_userRepositoryMock.Object);
 
-        _validUser = new UserDto("validName", "validSurname", "validEmail@gmail.com", "099123456", "validPassword1!2!3!");
+        _validUser = new UserDto("validName", "validSurname", "validEmail@gmail.com", "+59899123456", "validPassword1!2!3!");
 
         _user = new User
         {
