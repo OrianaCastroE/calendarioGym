@@ -21,9 +21,14 @@ export class LoginComponent {
   });
 
   errorMessage = '';
+  showPassword = false;
   readonly sessionMessage = (history.state as { sessionExpired?: boolean })?.sessionExpired
     ? 'Your session has expired. Please log in again.'
     : '';
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit() {
     if (this.form.invalid) return;
@@ -33,5 +38,9 @@ export class LoginComponent {
       next: () => this.router.navigate(['/home']),
       error: () => this.errorMessage = 'Invalid email or password.'
     });
+  }
+
+  goToRegister() {
+    this.router.navigate(['/register']);
   }
 }
