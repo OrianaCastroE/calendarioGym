@@ -7,6 +7,10 @@
   <div class="login-card">
     <h2>Log in</h2>
 
+    @if (sessionMessage) {
+      <p class="session-notice">{{ sessionMessage }}</p>
+    }
+
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="field">
         <label for="email">Email</label>
