@@ -49,7 +49,7 @@ export class RegisterComponent {
   onSubmit() {
     const { name, surname, email, phone, password, confirmPassword } = this.form.value;
 
-    if (!name || !surname || !email || !password || !confirmPassword) {
+    if (!name || !surname || !email || !phone || !password || !confirmPassword) {
       this.errorMessage = 'Please fill in all required fields.';
       return;
     }

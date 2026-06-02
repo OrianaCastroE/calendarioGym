@@ -44,11 +44,6 @@ label {
   font-family: "Josefin Sans", system-ui;
 }
 
-.optional {
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-
 input {
   width: 100%;
   padding: 10px 12px;
