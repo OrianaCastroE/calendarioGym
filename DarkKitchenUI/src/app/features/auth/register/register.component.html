@@ -22,7 +22,7 @@
         <label for="phone">Phone <span class="optional">(optional)</span></label>
         <div class="phone-wrapper">
           <span class="phone-prefix">+598</span>
-          <input id="phone" type="tel" formControlName="phone" placeholder="099 123 456" />
+          <input id="phone" type="tel" formControlName="phone" placeholder="099 123 456" (input)="onPhoneInput($event)" />
         </div>
       </div>
 

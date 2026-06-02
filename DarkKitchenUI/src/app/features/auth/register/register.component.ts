@@ -36,6 +36,16 @@ export class RegisterComponent {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
 
+  onPhoneInput(event: Event) {
+    const digits = (event.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 9);
+    let formatted = '';
+    for (let i = 0; i < digits.length; i++) {
+      if (i === 3 || i === 6) formatted += ' ';
+      formatted += digits[i];
+    }
+    this.form.get('phone')?.setValue(formatted, { emitEvent: false });
+  }
+
   onSubmit() {
     const { name, surname, email, phone, password, confirmPassword } = this.form.value;
 
@@ -54,7 +64,7 @@ export class RegisterComponent {
       name,
       surname,
       email,
-      phone: phone ? `+598${phone}` : undefined,
+      phone: phone ? `+598${phone.replace(/\s/g, '')}` : undefined,
       password
     }).subscribe({
       next: () => this.router.navigate(['/login']),
