@@ -1,0 +1,9 @@
+.app-shell {
+  height: 100vh;
+}
+
+.app-content {
+  margin-left: 64px;
+  height: 100%;
+  overflow-y: auto;
+}
