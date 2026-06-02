@@ -21,5 +21,9 @@ export class AppComponent {
     { initialValue: this.router.url }
   );
 
-  showNavbar = computed(() => !['/login', '/register'].some(p => this.currentUrl().startsWith(p)));
+  showNavbar = computed(() => {
+    const url = this.currentUrl();
+    if (url === '' || url === '/') return false;
+    return !['/login', '/register'].some(p => url.startsWith(p));
+  });
 }
