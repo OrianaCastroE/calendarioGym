@@ -41,5 +41,20 @@ export const routes: Routes = [
     path: 'products/:id/edit',
     loadComponent: () =>
       import('./features/products/form/product-form.component').then(m => m.ProductFormComponent)
+  },
+  {
+    path: 'users',
+    loadComponent: () =>
+      import('./features/users/list/users.component').then(m => m.UsersComponent)
+  },
+  {
+    path: 'users/new',
+    loadComponent: () =>
+      import('./features/users/form/user-form.component').then(m => m.UserFormComponent)
+  },
+  {
+    path: 'users/:email/edit',
+    loadComponent: () =>
+      import('./features/users/form/user-form.component').then(m => m.UserFormComponent)
   }
 ];
