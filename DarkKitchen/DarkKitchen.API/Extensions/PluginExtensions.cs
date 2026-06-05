@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using DarkKitchen.Domain.Interfaces.Service;
 
 namespace DarkKitchen.API.Extensions;
 
@@ -17,11 +16,5 @@ public static class PluginExtensions
 
         Directory.CreateDirectory(pluginsFolder);
         return builder;
-    }
-
-    public static WebApplication LoadPlugins(this WebApplication app)
-    {
-        _ = app.Services.GetRequiredService<IImporterRegistry>();
-        return app;
     }
 }
