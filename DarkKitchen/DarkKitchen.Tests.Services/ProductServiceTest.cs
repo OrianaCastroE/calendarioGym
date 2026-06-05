@@ -204,6 +204,26 @@ public class ProductServiceTest
     }
 
     [TestMethod]
+    public void RegisterSale_WhenProductExists_IncrementsUnitsSold()
+    {
+        validProduct!.UnitsSold = 5;
+        productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+        productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+
+        productService!.RegisterSale(1, 3);
+
+        productRepositoryMock.Verify(r => r.Update(It.Is<Product>(p => p.UnitsSold == 8)), Times.Once);
+    }
+
+    [TestMethod]
+    public void RegisterSale_WhenProductNotFound_ThrowsNotFoundException()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
+
+        Assert.ThrowsException<NotFoundException>(() => productService!.RegisterSale(1, 3));
+    }
+
+    [TestMethod]
     public void UpdateProduct_WhenFieldsAreNull_DoesNotUpdate()
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
