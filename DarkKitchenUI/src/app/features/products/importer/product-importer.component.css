@@ -37,6 +37,18 @@ h2 {
   font-size: 1.5rem;
 }
 
+.section-title {
+  color: var(--dk-text);
+  font-size: 1.5rem;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--dk-border);
+  margin: 0.5rem 0;
+  width: 100%;
+}
+
 .subtitle {
   color: var(--dk-subtext);
   font-size: 0.9rem;
