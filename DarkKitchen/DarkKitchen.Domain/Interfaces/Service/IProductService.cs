@@ -10,6 +10,6 @@ public interface IProductService
     public IEnumerable<ProductDto> GetProducts(ProductFilterDto filter);
     public ProductDto? GetByCode(string code);
     public IEnumerable<ProductDto> GetMostRequestedProducts(DateRangeDto dates);
-    public void UpdateStatus(int id, ProductStatusDto status);
+    public void UpdateStatus(int id, ProductStatusDto status, string responsibleUser);
     public Dictionary<int, int> GetBestDiscountByProduct(IEnumerable<int> productIds, DateTime date);
 }
