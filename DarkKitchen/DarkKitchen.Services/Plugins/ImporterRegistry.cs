@@ -8,22 +8,35 @@ public class ImporterRegistry : IImporterRegistry
 {
     private readonly Dictionary<string, IProductImporter> _importers
         = new(StringComparer.OrdinalIgnoreCase);
+    private readonly PluginLoader _loader;
+    private readonly string _pluginsFolder;
 
     public ImporterRegistry(IEnumerable<IProductImporter> builtIns, PluginLoader loader, IConfiguration configuration)
     {
-        foreach(var importer in builtIns)
-        {
-            Register(importer);
-        }
+        _loader = loader;
+        _pluginsFolder = configuration["Plugins:Folder"] ?? "Plugins";
 
-        var pluginsFolder = configuration["Plugins:Folder"] ?? "Plugins";
-        foreach(var importer in loader.LoadFrom(pluginsFolder))
+        foreach(var importer in builtIns)
         {
             Register(importer);
         }
     }
 
     public IEnumerable<IProductImporter> GetAll() => _importers.Values;
+
+    public void Refresh()
+    {
+        foreach(var importer in _loader.LoadFrom(_pluginsFolder))
+        {
+            _importers.TryAdd(importer.Name, importer);
+        }
+    }
+
+    public void InstallImporter(string fileName, Stream content)
+    {
+        _loader.Save(_pluginsFolder, fileName, content);
+        Refresh();
+    }
 
     public IProductImporter Get(string name)
     {
