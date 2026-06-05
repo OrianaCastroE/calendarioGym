@@ -156,7 +156,7 @@ public class ProductControllerTest
     {
         var id = 1;
         var status = new ProductStatusDto(true);
-        productServiceMock!.Setup(s => s.UpdateStatus(id, status));
+        productServiceMock!.Setup(s => s.UpdateStatus(id, status, "admin@gmail.com"));
 
         var result = productController!.UpdateStatus(id, status);
         var resultObj = result as ObjectResult;
@@ -170,7 +170,7 @@ public class ProductControllerTest
     {
         var id = 1;
         var status = new ProductStatusDto(true);
-        productServiceMock!.Setup(s => s.UpdateStatus(id, status)).Throws(new NotFoundException("Product not found."));
+        productServiceMock!.Setup(s => s.UpdateStatus(id, status, "admin@gmail.com")).Throws(new NotFoundException("Product not found."));
 
         Assert.ThrowsException<NotFoundException>(() => productController!.UpdateStatus(id, status));
     }

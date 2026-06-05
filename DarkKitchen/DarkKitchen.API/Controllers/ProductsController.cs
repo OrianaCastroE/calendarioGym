@@ -51,7 +51,8 @@ public class ProductsController(IProductService productService) : ControllerBase
     [HttpPatch("{id}")]
     public IActionResult UpdateStatus(int id, [FromBody] ProductStatusDto status)
     {
-        _productService.UpdateStatus(id, status);
+        var responsibleUser = User.Identity!.Name!;
+        _productService.UpdateStatus(id, status, responsibleUser);
         return Ok("Product status updated correctly.");
     }
 }
