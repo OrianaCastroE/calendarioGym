@@ -129,6 +129,15 @@ public class ProductService(IProductRepository repository, IPromotionService pro
         _auditService.LogChange("Product", product.Id, "Product status updated", responsibleUser);
     }
 
+    public void RegisterSale(int productId, int quantity)
+    {
+        Product product = _repository.GetById(productId)
+            ?? throw new NotFoundException("Product not found.");
+
+        product.UnitsSold += quantity;
+        _repository.Update(product);
+    }
+
     public Dictionary<int, int> GetBestDiscountByProduct(IEnumerable<int> productIds, DateTime date)
     {
         return _promotionService.GetBestDiscountByProduct(productIds, date);
