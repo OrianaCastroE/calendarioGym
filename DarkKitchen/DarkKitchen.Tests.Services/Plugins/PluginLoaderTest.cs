@@ -80,7 +80,7 @@ public class PluginLoaderTest
     public void Save_WhenFolderDoesNotExist_CreatesItAndWritesFile()
     {
         var nested = Path.Combine(tempFolder!, "nested");
-        using var content = new MemoryStream(new byte[] { 9 });
+        using var content = new MemoryStream([9]);
 
         loader!.Save(nested, "Custom.dll", content);
 
