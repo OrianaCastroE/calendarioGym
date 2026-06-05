@@ -88,6 +88,11 @@ public class OrderService(IOrderRepository orderRepository, IUserService userSer
 
         orderRepository.Add(order);
 
+        foreach(var line in orderProducts)
+        {
+            productService.RegisterSale(line.ProductId, line.Quantity);
+        }
+
         return new OrderResponseDto(order.Id, order.ClientId, order.Status, order.CreatedAt, order.Subtotal, order.Discount, order.Iva, order.ShippingCost, order.Total, []);
     }
 
