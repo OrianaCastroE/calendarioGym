@@ -56,6 +56,7 @@ public class OrderServiceTest
         productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns(productDto);
         productServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
             .Returns([]);
+        productServiceMock!.Setup(s => s.RegisterSale(It.IsAny<int>(), It.IsAny<int>()));
         orderRepositoryMock!.Setup(r => r.Add(It.IsAny<Order>()));
 
         var result = orderService!.CreateOrder(validOrder, 1);
@@ -71,6 +72,7 @@ public class OrderServiceTest
         productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns(productDto);
         productServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
             .Returns(new Dictionary<int, int> { { 1, 25 } });
+        productServiceMock!.Setup(s => s.RegisterSale(It.IsAny<int>(), It.IsAny<int>()));
         orderRepositoryMock!.Setup(r => r.Add(It.IsAny<Order>()));
 
         var result = orderService!.CreateOrder(validOrder, 1);
@@ -267,6 +269,7 @@ public class OrderServiceTest
         productServiceMock!.Setup(s => s.GetByCode("PROD01")).Returns(productDto);
         productServiceMock!.Setup(s => s.GetBestDiscountByProduct(It.IsAny<IEnumerable<int>>(), It.IsAny<DateTime>()))
             .Returns([]);
+        productServiceMock!.Setup(s => s.RegisterSale(It.IsAny<int>(), It.IsAny<int>()));
         orderRepositoryMock!.Setup(r => r.Add(It.IsAny<Order>()));
 
         var result = orderService!.CreateOrder(validOrder, 1);
