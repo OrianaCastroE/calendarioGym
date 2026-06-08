@@ -25,7 +25,6 @@ builder.Services.AddServices();
 builder.ConfigurePluginsFolder();
 
 var app = builder.Build();
-app.LoadPlugins();
 
 app.UseSwagger();
 app.UseSwaggerUI();

@@ -26,15 +26,26 @@ export class ProductImporterComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
+  showImporterUpload = false;
+  importerFile: File | null = null;
+  isInstalling = false;
+  importerErrorMessage = '';
+  importerSuccessMessage = '';
+
   ngOnInit(): void {
     if (this.auth.isTokenExpired()) {
       this.auth.logout(true);
       return;
     }
+    this.loadImporters();
+  }
+
+  private loadImporters(): void {
+    this.isLoading = true;
     this.productService.getImporters().subscribe({
       next: list => {
         this.importers = list;
-        if (list.length) this.selectedImporter = list[0].name;
+        if (list.length && !this.selectedImporter) this.selectedImporter = list[0].name;
         this.isLoading = false;
       },
       error: () => {
@@ -74,6 +85,44 @@ export class ProductImporterComponent implements OnInit {
       error: err => {
         this.errorMessage = err?.error?.message ?? err?.error ?? 'Import failed.';
         this.isUploading = false;
+      }
+    });
+  }
+
+  toggleImporterUpload(): void {
+    this.showImporterUpload = !this.showImporterUpload;
+    this.importerErrorMessage = '';
+    this.importerSuccessMessage = '';
+    if (!this.showImporterUpload) this.importerFile = null;
+  }
+
+  onImporterFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.importerFile = input.files?.[0] ?? null;
+    this.importerSuccessMessage = '';
+    this.importerErrorMessage = '';
+  }
+
+  uploadImporter(): void {
+    if (!this.importerFile) {
+      this.importerErrorMessage = 'Please choose a .dll file.';
+      return;
+    }
+
+    this.isInstalling = true;
+    this.importerErrorMessage = '';
+    this.importerSuccessMessage = '';
+
+    this.productService.uploadImporter(this.importerFile).subscribe({
+      next: res => {
+        this.importerSuccessMessage = res.message ?? 'Importer uploaded.';
+        this.importerFile = null;
+        this.isInstalling = false;
+        this.loadImporters();
+      },
+      error: err => {
+        this.importerErrorMessage = err?.error?.message ?? err?.error ?? 'Upload failed.';
+        this.isInstalling = false;
       }
     });
   }

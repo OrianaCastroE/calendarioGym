@@ -30,13 +30,52 @@ public class ProductImporterServiceTest
     {
         importerMock!.Setup(i => i.Name).Returns("JSON");
         importerMock.Setup(i => i.Extension).Returns(".json");
-        registryMock!.Setup(r => r.GetAll()).Returns([importerMock.Object]);
+        registryMock!.Setup(r => r.Refresh());
+        registryMock.Setup(r => r.GetAll()).Returns([importerMock.Object]);
 
         var result = service!.GetAvailableImporters().ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual("JSON", result[0].name);
         Assert.AreEqual(".json", result[0].extension);
+    }
+
+    [TestMethod]
+    public void GetAvailableImporters_WhenCalled_RefreshesRegistry()
+    {
+        registryMock!.Setup(r => r.Refresh());
+        registryMock.Setup(r => r.GetAll()).Returns([]);
+
+        _ = service!.GetAvailableImporters().ToList();
+
+        registryMock.Verify(r => r.Refresh(), Times.Once);
+    }
+
+    [TestMethod]
+    public void UploadImporter_WhenValidDll_InstallsIntoRegistry()
+    {
+        using var stream = new MemoryStream();
+        registryMock!.Setup(r => r.InstallImporter("Custom.dll", stream));
+
+        service!.UploadImporter("Custom.dll", stream);
+
+        registryMock.Verify(r => r.InstallImporter("Custom.dll", stream), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(BadRequestException))]
+    public void UploadImporter_WhenFileNameEmpty_ThrowsBadRequest()
+    {
+        using var stream = new MemoryStream();
+        service!.UploadImporter(string.Empty, stream);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(BadRequestException))]
+    public void UploadImporter_WhenNotDll_ThrowsBadRequest()
+    {
+        using var stream = new MemoryStream();
+        service!.UploadImporter("Custom.txt", stream);
     }
 
     [TestMethod]
@@ -187,7 +226,8 @@ public class ProductImporterServiceTest
     [ExpectedException(typeof(NotFoundException))]
     public void ImportProducts_WhenImporterUnknown_ThrowsNotFound()
     {
-        registryMock!.Setup(r => r.Get("Bogus")).Throws(new NotFoundException("Importer 'Bogus' not found."));
+        registryMock!.Setup(r => r.Refresh());
+        registryMock.Setup(r => r.Get("Bogus")).Throws(new NotFoundException("Importer 'Bogus' not found."));
 
         using var stream = new MemoryStream();
         service!.ImportProducts("Bogus", stream);
@@ -196,6 +236,7 @@ public class ProductImporterServiceTest
     private void SetupImporterAndRegistry(List<ImportedProductDto> items)
     {
         importerMock!.Setup(i => i.Import(It.IsAny<Stream>())).Returns(items);
-        registryMock!.Setup(r => r.Get("JSON")).Returns(importerMock.Object);
+        registryMock!.Setup(r => r.Refresh());
+        registryMock.Setup(r => r.Get("JSON")).Returns(importerMock.Object);
     }
 }

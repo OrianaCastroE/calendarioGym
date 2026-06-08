@@ -186,9 +186,10 @@ public class ProductServiceTest
     {
         productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
         productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+        auditServiceMock!.Setup(a => a.LogChange(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()));
         var status = new ProductStatusDto(false);
 
-        productService!.UpdateStatus(1, status);
+        productService!.UpdateStatus(1, status, "admin@gmail.com");
 
         productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
     }
@@ -199,7 +200,27 @@ public class ProductServiceTest
         productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
         var status = new ProductStatusDto(false);
 
-        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateStatus(1, status));
+        Assert.ThrowsException<NotFoundException>(() => productService!.UpdateStatus(1, status, "admin@gmail.com"));
+    }
+
+    [TestMethod]
+    public void RegisterSale_WhenProductExists_IncrementsUnitsSold()
+    {
+        validProduct!.UnitsSold = 5;
+        productRepositoryMock!.Setup(r => r.GetById(1)).Returns(validProduct!);
+        productRepositoryMock!.Setup(r => r.Update(It.IsAny<Product>()));
+
+        productService!.RegisterSale(1, 3);
+
+        productRepositoryMock.Verify(r => r.Update(It.Is<Product>(p => p.UnitsSold == 8)), Times.Once);
+    }
+
+    [TestMethod]
+    public void RegisterSale_WhenProductNotFound_ThrowsNotFoundException()
+    {
+        productRepositoryMock!.Setup(r => r.GetById(It.IsAny<int>())).Returns((Product?)null);
+
+        Assert.ThrowsException<NotFoundException>(() => productService!.RegisterSale(1, 3));
     }
 
     [TestMethod]

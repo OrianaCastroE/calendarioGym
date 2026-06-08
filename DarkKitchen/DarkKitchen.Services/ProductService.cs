@@ -119,12 +119,22 @@ public class ProductService(IProductRepository repository, IPromotionService pro
         return products.Select(p => new ProductDto(p.Id, p.Code, p.Name, p.Description, p.ProductLine, p.Category, p.Price, p.Images?.Select(i => i.Url).ToArray(), p.IsActive, p.UnitsSold));
     }
 
-    public void UpdateStatus(int id, ProductStatusDto status)
+    public void UpdateStatus(int id, ProductStatusDto status, string responsibleUser)
     {
         Product product = _repository.GetById(id)
             ?? throw new NotFoundException("Product not found.");
 
         product.IsActive = status.isActive;
+        _repository.Update(product);
+        _auditService.LogChange("Product", product.Id, "Product status updated", responsibleUser);
+    }
+
+    public void RegisterSale(int productId, int quantity)
+    {
+        Product product = _repository.GetById(productId)
+            ?? throw new NotFoundException("Product not found.");
+
+        product.UnitsSold += quantity;
         _repository.Update(product);
     }
 
