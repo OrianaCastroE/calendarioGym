@@ -61,7 +61,7 @@ export class UserFormComponent implements OnInit {
           name: navState.user.name,
           surname: navState.user.surname,
           email: navState.user.email,
-          phone: navState.user.phone,
+          phone: this.toDisplayPhone(navState.user.phone),
           role: navState.user.role
         });
       } else {
@@ -75,6 +75,26 @@ export class UserFormComponent implements OnInit {
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
+  }
+
+  onPhoneInput(event: Event): void {
+    const digits = (event.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 9);
+    this.form.get('phone')?.setValue(this.formatPhoneDigits(digits), { emitEvent: false });
+  }
+
+  private formatPhoneDigits(digits: string): string {
+    let formatted = '';
+    for (let i = 0; i < digits.length; i++) {
+      if (i === 3 || i === 6) formatted += ' ';
+      formatted += digits[i];
+    }
+    return formatted;
+  }
+
+  private toDisplayPhone(stored: string): string {
+    let digits = stored.replace(/\D/g, '');
+    if (digits.startsWith('598')) digits = digits.slice(3);
+    return this.formatPhoneDigits(digits.slice(0, 9));
   }
 
   onSubmit(): void {
@@ -92,7 +112,7 @@ export class UserFormComponent implements OnInit {
         email: this.originalEmail,
         name: raw.name || undefined,
         surname: raw.surname || undefined,
-        phone: raw.phone || undefined,
+        phone: raw.phone ? `+598${raw.phone.replace(/\s/g, '')}` : undefined,
         password: raw.password ? raw.password : undefined
       };
       this.users.updateUser(payload).subscribe({
@@ -107,7 +127,7 @@ export class UserFormComponent implements OnInit {
         name: raw.name!,
         surname: raw.surname!,
         email: raw.email!,
-        phone: raw.phone!,
+        phone: `+598${raw.phone!.replace(/\s/g, '')}`,
         password: raw.password!,
         role: raw.role!
       };

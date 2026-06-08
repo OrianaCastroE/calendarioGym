@@ -86,6 +86,40 @@ select:disabled {
   cursor: not-allowed;
 }
 
+.phone-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: var(--dk-crust);
+  border: 1px solid var(--dk-border);
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+
+.phone-wrapper:focus-within {
+  border-color: var(--dk-accent);
+}
+
+.phone-prefix {
+  padding: 10px 6px 10px 12px;
+  color: var(--dk-subtext);
+  font-size: 0.9rem;
+  font-family: system-ui, sans-serif;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.phone-wrapper input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 12px 10px 2px;
+  min-width: 0;
+}
+
+.phone-wrapper input:focus {
+  border-color: transparent;
+}
+
 .input-wrapper {
   position: relative;
   display: flex;
