@@ -47,6 +47,14 @@ public class PluginLoader
         return importers;
     }
 
+    public virtual void Save(string pluginsFolder, string fileName, Stream content)
+    {
+        Directory.CreateDirectory(pluginsFolder);
+        var destination = Path.Combine(pluginsFolder, Path.GetFileName(fileName));
+        using var file = File.Create(destination);
+        content.CopyTo(file);
+    }
+
     [ExcludeFromCodeCoverage]
     private static Type[] GetTypesSafely(Assembly assembly)
     {

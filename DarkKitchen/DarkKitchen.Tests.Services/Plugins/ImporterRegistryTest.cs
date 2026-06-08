@@ -77,22 +77,26 @@ public class ImporterRegistryTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
-    public void Constructor_WhenPluginNameCollidesWithBuiltIn_Throws()
+    public void Refresh_WhenPluginNameCollidesWithBuiltIn_KeepsBuiltIn()
     {
         var builtIn = new FakeImporter("JSON", ".json");
         var plugin = new FakeImporter("JSON", ".json");
-        loaderMock!.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns([plugin]);
+        var registry = new ImporterRegistry([builtIn], loaderMock!.Object, configurationMock!.Object);
+        loaderMock.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns([plugin]);
 
-        _ = new ImporterRegistry([builtIn], loaderMock.Object, configurationMock!.Object);
+        registry.Refresh();
+
+        Assert.AreSame(builtIn, registry.Get("JSON"));
+        Assert.AreEqual(1, registry.GetAll().Count());
     }
 
     [TestMethod]
-    public void Constructor_WhenPluginsFolderNotConfigured_FallsBackToDefault()
+    public void Refresh_WhenPluginsFolderNotConfigured_FallsBackToDefault()
     {
         var emptyConfig = new Mock<IConfiguration>();
+        var registry = new ImporterRegistry([], loaderMock!.Object, emptyConfig.Object);
 
-        _ = new ImporterRegistry([], loaderMock!.Object, emptyConfig.Object);
+        registry.Refresh();
 
         loaderMock.Verify(l => l.LoadFrom("Plugins"), Times.Once);
     }
@@ -105,9 +109,48 @@ public class ImporterRegistryTest
         var builtIn = new FakeImporter("JSON", ".json");
 
         var registry = new ImporterRegistry([builtIn], loaderMock.Object, configurationMock!.Object);
+        registry.Refresh();
         var all = registry.GetAll().ToList();
 
         Assert.AreEqual(2, all.Count);
+        Assert.AreSame(plugin, registry.Get("CSV"));
+    }
+
+    [TestMethod]
+    public void Refresh_WhenNewPluginAppears_AddsImporter()
+    {
+        var registry = new ImporterRegistry([], loaderMock!.Object, configurationMock!.Object);
+        var plugin = new FakeImporter("CSV", ".csv");
+        loaderMock.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns([plugin]);
+
+        registry.Refresh();
+
+        Assert.AreSame(plugin, registry.Get("CSV"));
+    }
+
+    [TestMethod]
+    public void Refresh_WhenPluginAlreadyRegistered_DoesNotDuplicateOrThrow()
+    {
+        var plugin = new FakeImporter("CSV", ".csv");
+        loaderMock!.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns([plugin]);
+        var registry = new ImporterRegistry([], loaderMock.Object, configurationMock!.Object);
+
+        registry.Refresh();
+
+        Assert.AreEqual(1, registry.GetAll().Count());
+    }
+
+    [TestMethod]
+    public void InstallImporter_WhenCalled_SavesFileAndRefreshes()
+    {
+        var registry = new ImporterRegistry([], loaderMock!.Object, configurationMock!.Object);
+        var plugin = new FakeImporter("CSV", ".csv");
+        loaderMock.Setup(l => l.LoadFrom(It.IsAny<string>())).Returns([plugin]);
+        using var content = new MemoryStream();
+
+        registry.InstallImporter("Custom.dll", content);
+
+        loaderMock.Verify(l => l.Save("test-plugins", "Custom.dll", content), Times.Once);
         Assert.AreSame(plugin, registry.Get("CSV"));
     }
 

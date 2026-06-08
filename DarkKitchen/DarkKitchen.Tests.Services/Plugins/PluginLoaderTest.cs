@@ -62,4 +62,28 @@ public class PluginLoaderTest
 
         Assert.AreEqual(0, result.Count);
     }
+
+    [TestMethod]
+    public void Save_WhenCalled_WritesFileContentToFolder()
+    {
+        var bytes = new byte[] { 1, 2, 3, 4 };
+        using var content = new MemoryStream(bytes);
+
+        loader!.Save(tempFolder!, "Custom.dll", content);
+
+        var saved = Path.Combine(tempFolder!, "Custom.dll");
+        Assert.IsTrue(File.Exists(saved));
+        CollectionAssert.AreEqual(bytes, File.ReadAllBytes(saved));
+    }
+
+    [TestMethod]
+    public void Save_WhenFolderDoesNotExist_CreatesItAndWritesFile()
+    {
+        var nested = Path.Combine(tempFolder!, "nested");
+        using var content = new MemoryStream([9]);
+
+        loader!.Save(nested, "Custom.dll", content);
+
+        Assert.IsTrue(File.Exists(Path.Combine(nested, "Custom.dll")));
+    }
 }

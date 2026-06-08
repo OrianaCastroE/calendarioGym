@@ -1,11 +1,11 @@
-.products-container {
+.users-container {
   padding: 3rem 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-.products-header {
+.users-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -29,14 +29,9 @@ h1 {
   font-size: 0.95rem;
 }
 
-.header-actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
 .primary-btn,
-.ghost-btn {
+.ghost-btn,
+.danger-btn {
   padding: 0.55rem 1rem;
   border-radius: 8px;
   font-family: "Josefin Sans", system-ui;
@@ -70,9 +65,25 @@ h1 {
   color: var(--dk-accent);
 }
 
+.danger-btn {
+  background-color: transparent;
+  color: var(--dk-error);
+  border-color: var(--dk-border);
+}
+
+.danger-btn:hover {
+  border-color: var(--dk-error);
+  background-color: rgba(255, 111, 97, 0.1);
+}
+
+.small {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
 .filters {
   display: grid;
-  grid-template-columns: repeat(3, minmax(160px, 1fr)) auto;
+  grid-template-columns: 1fr 1fr auto;
   gap: 1rem;
   align-items: end;
   background-color: var(--dk-surface);
@@ -87,19 +98,10 @@ h1 {
   gap: 6px;
 }
 
-.field.grow {
-  grid-column: span 1;
-}
-
 label {
   color: var(--dk-subtext);
   font-size: 0.8rem;
   font-family: "Josefin Sans", system-ui;
-}
-
-.hint {
-  opacity: 0.7;
-  font-weight: 300;
 }
 
 input {
@@ -124,154 +126,91 @@ input:focus {
   gap: 0.5rem;
 }
 
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
-}
-
-.product-card {
+.table-wrap {
   background-color: var(--dk-surface);
   border: 1px solid var(--dk-border);
   border-radius: 12px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: border-color 0.2s, transform 0.2s;
 }
 
-.product-card:hover {
-  border-color: var(--dk-accent);
-  transform: translateY(-2px);
-}
-
-.product-card.inactive {
-  opacity: 0.65;
-}
-
-.product-thumb {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  background-color: var(--dk-surface-alt);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-thumb img {
+.users-table {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  border-collapse: collapse;
+  font-family: "Josefin Sans", system-ui;
 }
 
-.thumb-placeholder {
-  font-family: "Playfair Display", serif;
-  font-style: italic;
-  font-weight: 900;
-  font-size: 3rem;
+.users-table thead {
+  background-color: var(--dk-crust);
+}
+
+.users-table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--dk-subtext);
 }
 
-.status-pill {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.6);
+.users-table td {
+  padding: 0.9rem 1rem;
+  font-size: 0.9rem;
   color: var(--dk-text);
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-family: "Josefin Sans", system-ui;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  border-top: 1px solid var(--dk-border);
 }
 
-.status-pill.active {
+.users-table tbody tr:hover {
+  background-color: rgba(255, 111, 97, 0.04);
+}
+
+.user-name {
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-weight: 900;
+}
+
+.muted {
+  color: var(--dk-subtext);
+  font-size: 0.85rem;
+}
+
+.role {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.role-admin {
+  background-color: rgba(255, 111, 97, 0.15);
+  color: var(--dk-accent);
+}
+
+.role-client {
+  background-color: rgba(218, 165, 32, 0.15);
   color: var(--dk-accent-2);
 }
 
-.product-body {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  flex: 1;
+.role-dispatcher {
+  background-color: rgba(160, 136, 112, 0.15);
+  color: var(--dk-subtext);
 }
 
-.product-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem;
+.actions-col {
+  text-align: right;
 }
 
-h3 {
-  font-family: "Playfair Display", serif;
-  font-style: italic;
-  font-weight: 900;
-  font-size: 1.15rem;
-  color: var(--dk-text);
-  margin: 0;
-}
-
-.price {
-  color: var(--dk-accent);
-  font-family: "Josefin Sans", system-ui;
-  font-weight: 700;
-  font-size: 1rem;
+.actions {
+  text-align: right;
   white-space: nowrap;
 }
 
-.code {
-  font-family: "Josefin Sans", system-ui;
-  font-size: 0.75rem;
-  color: var(--dk-subtext);
-  letter-spacing: 0.05em;
-}
-
-.description {
-  font-family: "Josefin Sans", system-ui;
-  font-weight: 300;
-  color: var(--dk-subtext);
-  font-size: 0.85rem;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: auto;
-}
-
-.tag {
-  background-color: rgba(255, 111, 97, 0.12);
-  color: var(--dk-accent);
-  border-radius: 999px;
-  padding: 3px 10px;
-  font-family: "Josefin Sans", system-ui;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.tag.muted {
-  background-color: var(--dk-surface-alt);
-  color: var(--dk-subtext);
-}
-
-.product-actions {
-  border-top: 1px solid var(--dk-border);
-  padding: 0.75rem 1rem;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+.actions button + button {
+  margin-left: 0.5rem;
 }
 
 .empty,
@@ -282,23 +221,39 @@ h3 {
   font-family: "Josefin Sans", system-ui;
 }
 
-.error {
-  color: var(--dk-error);
+.error,
+.success {
   font-family: "Josefin Sans", system-ui;
   font-size: 0.9rem;
   text-align: center;
-  background-color: rgba(255, 111, 97, 0.1);
-  border: 1px solid var(--dk-error);
   border-radius: 8px;
   padding: 10px 14px;
 }
 
+.error {
+  color: var(--dk-error);
+  background-color: rgba(255, 111, 97, 0.1);
+  border: 1px solid var(--dk-error);
+}
+
+.success {
+  color: var(--dk-accent-2);
+  background-color: rgba(218, 165, 32, 0.1);
+  border: 1px solid var(--dk-accent-2);
+}
+
 @media (max-width: 720px) {
-  .products-container {
+  .users-container {
     padding: 2rem 1.25rem;
   }
 
   .filters {
     grid-template-columns: 1fr;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 0.6rem;
+    font-size: 0.8rem;
   }
 }

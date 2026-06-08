@@ -43,6 +43,31 @@ export const routes: Routes = [
       import('./features/products/form/product-form.component').then(m => m.ProductFormComponent)
   },
   {
+    path: 'sales-report',
+    loadComponent: () =>
+      import('./features/sales-report/sales-report.component').then(m => m.SalesReportComponent)
+  },
+  {
+    path: 'audit',
+    loadComponent: () =>
+      import('./features/audit/audit.component').then(m => m.AuditComponent)
+  },
+  {
+    path: 'users',
+    loadComponent: () =>
+      import('./features/users/list/users.component').then(m => m.UsersComponent)
+  },
+  {
+    path: 'users/new',
+    loadComponent: () =>
+      import('./features/users/form/user-form.component').then(m => m.UserFormComponent)
+  },
+  {
+    path: 'users/:email/edit',
+    loadComponent: () =>
+      import('./features/users/form/user-form.component').then(m => m.UserFormComponent)
+  },
+  {
     path: 'promotions',
     loadComponent: () =>
       import('./features/promotions/list/promotions.component').then(m => m.PromotionsComponent)

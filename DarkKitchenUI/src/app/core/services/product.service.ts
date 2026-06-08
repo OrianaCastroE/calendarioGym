@@ -83,4 +83,12 @@ export class ProductService {
       headers: this.auth.getAuthHeaders()
     });
   }
+
+  uploadImporter(file: File): Observable<{ message: string }> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<{ message: string }>(`${this.apiUrl}/importers`, form, {
+      headers: this.auth.getAuthHeaders()
+    });
+  }
 }

@@ -6,4 +6,5 @@ public interface IProductImporterService
 {
     IEnumerable<ImporterInfoDto> GetAvailableImporters();
     int ImportProducts(string importerName, Stream source);
+    void UploadImporter(string fileName, Stream content);
 }

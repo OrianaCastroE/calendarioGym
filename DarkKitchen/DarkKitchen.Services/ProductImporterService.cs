@@ -11,8 +11,22 @@ public class ProductImporterService(IImporterRegistry registry, IProductReposito
     private readonly IImporterRegistry _registry = registry;
     private readonly IProductRepository _productRepository = productRepository;
 
-    public IEnumerable<ImporterInfoDto> GetAvailableImporters() =>
-        _registry.GetAll().Select(i => new ImporterInfoDto(i.Name, i.Extension));
+    public IEnumerable<ImporterInfoDto> GetAvailableImporters()
+    {
+        _registry.Refresh();
+        return _registry.GetAll().Select(i => new ImporterInfoDto(i.Name, i.Extension));
+    }
+
+    public void UploadImporter(string fileName, Stream content)
+    {
+        if(string.IsNullOrWhiteSpace(fileName)
+            || !fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new BadRequestException("Importer file must be a .dll.");
+        }
+
+        _registry.InstallImporter(fileName, content);
+    }
 
     public int ImportProducts(string importerName, Stream source)
     {
@@ -21,6 +35,7 @@ public class ProductImporterService(IImporterRegistry registry, IProductReposito
             throw new BadRequestException("Importer name is required.");
         }
 
+        _registry.Refresh();
         var importer = _registry.Get(importerName);
         var items = importer.Import(source).ToList();
 
