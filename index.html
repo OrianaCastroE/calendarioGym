@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIAAQUA — Calendario de Clases</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-brand">
+      <span class="logo">VIA<span class="accent">AQUA</span></span>
+      <span class="tagline">Calendario de Clases</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-filter-toggle" id="btn-filter-toggle" aria-label="Filtros">
+        ☰ Filtros
+      </button>
+      <div class="view-tabs" role="tablist">
+        <button class="view-tab active" data-view="cards" role="tab" aria-selected="true">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="6" height="6" rx="1"/><rect x="8" y="0" width="6" height="6" rx="1"/><rect x="0" y="8" width="6" height="6" rx="1"/><rect x="8" y="8" width="6" height="6" rx="1"/></svg>
+          Cards
+        </button>
+        <button class="view-tab" data-view="grid" role="tab" aria-selected="false">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="2" height="14"/><rect x="4" y="0" width="10" height="2"/><rect x="4" y="4" width="10" height="2"/><rect x="4" y="8" width="10" height="2"/><rect x="4" y="12" width="10" height="2"/></svg>
+          Grilla
+        </button>
+        <button class="view-tab" data-view="rutina" role="tab" aria-selected="false">
+          ★ Mi Rutina
+        </button>
+      </div>
+      <button class="btn-share" id="btn-share" title="Copiar URL con filtros activos">
+        ⬆ Compartir filtros
+      </button>
+    </div>
+  </header>
+
+  <div id="filter-overlay" class="filter-overlay"></div>
+
+  <div class="app-layout">
+
+    <aside class="filters-panel" id="filters-panel">
+      <div class="filters-header">
+        <h2>Filtros</h2>
+        <button class="btn-clear" id="btn-clear-filters">Limpiar todo</button>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Sede</span>
+        <div class="checkbox-group" id="filter-sede">
+          <label class="chip">
+            <input type="checkbox" value="Buceo">
+            <span class="chip-dot" style="background:#378ADD"></span>
+            <span>Buceo</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" value="Malvín">
+            <span class="chip-dot" style="background:#1D9E75"></span>
+            <span>Malvín</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" value="Punta Carretas">
+            <span class="chip-dot" style="background:#D4537E"></span>
+            <span>Punta Carretas</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" value="Pocitos">
+            <span class="chip-dot" style="background:#BA7517"></span>
+            <span>Pocitos</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" value="Punta del Este">
+            <span class="chip-dot" style="background:#9333EA"></span>
+            <span>Punta del Este</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Día</span>
+        <div class="checkbox-group" id="filter-dia">
+          <label class="chip"><input type="checkbox" value="Lunes"><span>Lunes</span></label>
+          <label class="chip"><input type="checkbox" value="Martes"><span>Martes</span></label>
+          <label class="chip"><input type="checkbox" value="Miércoles"><span>Miércoles</span></label>
+          <label class="chip"><input type="checkbox" value="Jueves"><span>Jueves</span></label>
+          <label class="chip"><input type="checkbox" value="Viernes"><span>Viernes</span></label>
+          <label class="chip"><input type="checkbox" value="Sábado"><span>Sábado</span></label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Horario</span>
+        <div class="time-slider-wrap">
+          <div class="time-slider-labels">
+            <span class="time-label" id="label-from">07:00</span>
+            <span class="time-label-sep">—</span>
+            <span class="time-label" id="label-to">22:00</span>
+          </div>
+          <div class="time-slider-track">
+            <div class="time-slider-bg"></div>
+            <div class="time-slider-range" id="slider-range"></div>
+            <input type="range" id="slider-from" min="420" max="1320" value="420" step="15" aria-label="Desde">
+            <input type="range" id="slider-to"   min="420" max="1320" value="1320" step="15" aria-label="Hasta">
+          </div>
+          <div class="time-slider-axis">
+            <span>07:00</span><span>12:00</span><span>17:00</span><span>22:00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Actividad</span>
+        <div class="checkbox-group activities-group" id="filter-actividad"></div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label" for="filter-search">Buscar actividad</label>
+        <input type="search" id="filter-search" class="search-input" placeholder="Ej: Pilates, Yoga, Ciclismo…" autocomplete="off">
+      </div>
+
+      <div class="sala-horarios">
+        <span class="filter-label">Horarios de sala</span>
+        <div class="sala-rows">
+          <div class="sala-row">
+            <span class="sala-dia">Lun – Vie</span>
+            <span class="sala-time">06:30 – 22:00</span>
+          </div>
+          <div class="sala-row">
+            <span class="sala-dia">Sábado</span>
+            <span class="sala-time">09:00 – 18:00</span>
+          </div>
+          <div class="sala-row sala-excepcion">
+            <span class="sala-dia">Domingo</span>
+            <span class="sala-time">09:00 – 13:00</span>
+          </div>
+          <div class="sala-excepcion-label">Solo Punta Carretas y Punta del Este</div>
+        </div>
+      </div>
+
+      <div class="filter-legend">
+        <div class="legend-item">
+          <span class="legend-dot available"></span>
+          <span>Tu franja (14:00–18:00)</span>
+        </div>
+        <div class="legend-item">
+          <span class="badge badge-sim">X sim.</span>
+          <span>Clases simultáneas</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <div class="results-header">
+        <span id="results-count" class="results-count"></span>
+        <span id="sim-warning" class="sim-warning" style="display:none">
+          ⚠ Hay clases simultáneas — solo podés asistir a una por horario
+        </span>
+      </div>
+
+      <div id="view-cards" class="view active">
+        <div class="cards-grid" id="cards-grid"></div>
+      </div>
+
+      <div id="view-grid" class="view"></div>
+
+      <div id="view-rutina" class="view"></div>
+    </main>
+
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
